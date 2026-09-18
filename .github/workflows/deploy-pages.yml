@@ -53,7 +53,7 @@ jobs:
           avatar-field: avatar
           rss-field: rss
 
-      -      - name: Build site
+      - name: Build site
         env:
           NEXT_PUBLIC_TINA_CLIENT_ID: ${{ secrets.TINA_PUBLIC_CLIENT_ID }}
           TINA_TOKEN: ${{ secrets.TINA_TOKEN }}
