@@ -4,6 +4,9 @@ import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
+import node from '@astrojs/node';
+import tina from '@tinacms/astro/integration';
+import { tinaAdminDevRedirect } from '@tinacms/astro/vite';
 import { defineConfig } from 'astro/config';
 import { parse } from 'smol-toml';
 
@@ -70,10 +73,14 @@ export default defineConfig({
     remarkPlugins: astroPluginConfig.remarkPlugins,
     rehypePlugins: astroPluginConfig.rehypePlugins,
   },
-  integrations: [...astroPluginConfig.integrations, mdx(), sitemap()],
+  integrations: [...astroPluginConfig.integrations, mdx(), sitemap(), tina()],
 
   vite: {
-    plugins: [tailwindcss()],
+    build: { cssMinify: false },
+    plugins: [tailwindcss(), tinaAdminDevRedirect()],
+    ssr: {
+      noExternal: ['@tinacms/astro', '@tinacms/bridge'],
+    },
     resolve: {
       alias: {
         'virtual:navfolio/page-runtime': fileURLToPath(
@@ -83,3 +90,4 @@ export default defineConfig({
     },
   },
 });
+

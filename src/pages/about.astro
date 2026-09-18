@@ -1,21 +1,1304 @@
 ---
-import { getCollection, render } from 'astro:content';
-import BlogArticle from '../layouts/BlogArticle.astro';
-
-const [about] = await getCollection('about');
-
-if (!about) {
-  throw new Error('Missing src/content/about.mdx content entry.');
-}
-
-const { Content, headings } = await render(about);
+import BlogTopNav from '../components/blog/BlogTopNav.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
 ---
 
-<BlogArticle
-  post={about}
-  headings={headings}
-  sidebar={{ enable: false, ...about.data.sidebar }}
-  contentFont="ui"
->
-  <Content />
-</BlogArticle>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>ABOUT | NEXUS</title>
+  </head>
+
+  <body>
+    <BlogTopNav />
+
+    <main class="about-page">
+
+      <header class="about-hero">
+        <p class="about-kicker">IDENTITY / CONTACT / STATEMENT</p>
+
+        <h1>ABOUT</h1>
+
+        <p class="about-quote">
+          Ma théorie de la vie est que, plutôt que la vérité, le mensonge est une vérité plus humaine.
+          <br />
+          Car la vérité existe même sans les hommes, mais le mensonge n'existe jamais sans les hommes.
+        </p>
+      </header>
+
+      <section class="about-sections">
+
+        <section class="about-block profile-panel">
+          <div class="panel-code">IDENTITY.DATA <span>//</span></div>
+
+          <div class="about-block-head">
+            <span>01</span>
+            <div>
+              <small>SECTION</small>
+              <h2>PROFILE</h2>
+            </div>
+          </div>
+
+          <div class="profile-grid">
+            <figure class="profile-visual">
+              <span class="figure-label">FIG.01 / 2017</span>
+
+              <img
+                src="/images/about/profile.jpg"
+                alt="Black-and-white photograph used for the profile section."
+                width="1488"
+                height="1024"
+                loading="lazy"
+              />
+            </figure>
+
+            <div class="profile-copy">
+              <div class="profile-id-row">
+                <img
+                  class="profile-cat-icon"
+                  src="/images/about/cat-icon.gif"
+                  alt=""
+                  width="46"
+                  height="46"
+                />
+
+                <p class="profile-lead">
+                  My name is "猫学" (NEKO GAKU).<br />
+                  "猫学" means "catology".
+                </p>
+              </div>
+
+              <p>
+                Bipolar affective disorder, ADHD, ASD, Tourette syndrome,
+                narcolepsy, social anxiety disorder / Domestic violence witness,
+                bullying, abuse survivor / Recovering meth addict /
+                17 criminal convictions / Juvenile training school,
+                juvenile prison, ex-offender
+              </p>
+
+              <p lang="ja">
+                双極性感情障害、ADHD、ASD、トゥレット症候群、ナルコレプシー、
+                社交不安障害 / 面前DV、イジメ、虐待サバイバー /
+                元薬物依存症者 / 前科17犯 / 少年院、少年刑務所、元受刑者
+              </p>
+            </div>
+
+            <aside class="profile-data">
+              <div>
+                <span>NAME</span>
+                <strong>猫学 / NEKO GAKU</strong>
+              </div>
+
+              <div>
+                <span>ALIAS</span>
+                <strong>CATOLOGY</strong>
+              </div>
+
+              <div>
+                <span>FIELD</span>
+                <strong>PHOTOGRAPHY / WRITING / MUSIC / RESEARCH</strong>
+              </div>
+
+              <div>
+                <span>LOCATION</span>
+                <strong>OSAKA, JAPAN</strong>
+              </div>
+
+              <div>
+                <span>STATUS</span>
+                <strong>ARCHIVING</strong>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="about-block">
+          <div class="panel-code">STATEMENT.LOG <span>//</span></div>
+
+          <div class="about-block-head">
+            <span>02</span>
+            <div>
+              <small>SECTION</small>
+              <h2>STATEMENT</h2>
+            </div>
+          </div>
+
+          <div class="statement-copy">
+            <p>NEXUS is not designed around a single medium. Images, language, memory and perception intersect here.</p>
+
+            <p>Right now, the scenery you are looking at is something you yourself imagined and created, and it has nothing to do with me whatsoever.</p>
+
+            <p>Please don't ever forget that.</p>
+
+            <p>This is nothing more than a poem—a hallucination—created by yourself.</p>
+
+            <p>I haven't written anything, and I have never once taken a photo.</p>
+
+            <div class="statement-divider"></div>
+
+            <p lang="ja">ここには何も書かれていないし、写真など１枚も撮られていない。</p>
+
+            <p lang="ja">１０人の者がこの風景と相対したら、１０通りの記号の残像のようなものが明滅し、その明滅の光源と漆黒の狭間で瞬間的に見えたかのような錯視のことを人は＜現実＞と呼び、一時の安堵を得ようと試みる。</p>
+
+            <p lang="ja">僕は無関係です。</p>
+
+            <p lang="ja">どうぞご自由に、アナタ自身のポエムと戯れてください。</p>
+          </div>
+        </section>
+
+        <section class="about-block contact-block">
+          <div class="panel-code">CONTACT.CHANNEL <span>//</span></div>
+
+          <div class="about-block-head">
+            <span>03</span>
+            <div>
+              <small>SECTION</small>
+              <h2>CONTACT</h2>
+            </div>
+          </div>
+
+          <form class="anonymous-channel" data-contact-form action="https://formspree.io/f/xwlkdygp" method="POST">
+            <span class="contact-section-label">ANONYMOUS MESSAGE</span>
+
+            <div class="contact-form-grid">
+              <label>
+                <span>NAME <em>OPTIONAL</em></span>
+                <input type="text" name="name" placeholder="Anonymous" />
+              </label>
+
+              <label>
+                <span>EMAIL <strong class="contact-required-dot">●</strong></span>
+                <input type="email" name="email" required placeholder="Email address" />
+              </label>
+            </div>
+
+            <label class="contact-message">
+              <span>MESSAGE <strong>*</strong></span>
+              <textarea
+                name="message"
+                rows="6"
+                required
+                placeholder="Write anything. Name is optional."
+              ></textarea>
+            </label>
+
+            <button class="contact-send" type="submit" data-contact-submit>
+              SEND MESSAGE
+              <span>→</span>
+            </button>
+
+            <p class="contact-form-status" data-contact-status>
+              MESSAGE DELIVERY / READY
+            </p>
+          </form>
+
+          <div class="direct-channel">
+            <span class="contact-section-label">DIRECT CHANNEL</span>
+
+            <div class="direct-mail-row">
+              <div>
+                <span class="direct-label">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+                    <path d="m3 7 9 6 9-6"></path>
+                  </svg>
+                  EMAIL
+                </span>
+
+                <a
+                  class="direct-email"
+                  data-public-email
+                  href="mailto:catlogy110@gmail.com"
+                >
+                  catlogy110@gmail.com
+                </a>
+              </div>
+
+              <button
+                class="copy-email"
+                type="button"
+                data-copy-email
+                aria-label="Copy email address"
+              >
+                COPY EMAIL
+              </button>
+            </div>
+
+            <div class="direct-phone">
+              <span class="direct-label">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.62 2.63a2 2 0 0 1-.45 2.11L8 9.73a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.85.29 1.73.5 2.63.62A2 2 0 0 1 22 16.92z"></path>
+                </svg>
+                TEL
+              </span>
+
+              <a class="direct-phone-link" href="tel:07012587322">
+                07012587322
+              </a>
+            </div>
+          </div>
+        </section>
+
+      </section>
+
+    </main>
+
+    <Footer />
+  
+    <script>
+      const copyButton = document.querySelector('[data-copy-email]');
+      const emailNode = document.querySelector('[data-public-email]');
+
+      copyButton?.addEventListener('click', async () => {
+        const email = emailNode?.textContent?.trim();
+        if (!email) return;
+
+        await navigator.clipboard.writeText(email);
+
+        copyButton.textContent = 'COPIED!';
+        copyButton.classList.add('is-copied');
+
+        window.setTimeout(() => {
+          copyButton.textContent = 'COPY EMAIL';
+          copyButton.classList.remove('is-copied');
+        }, 1600);
+      });
+
+      const contactForm = document.querySelector('[data-contact-form]');
+      const contactStatus = document.querySelector('[data-contact-status]');
+      const contactSubmit = document.querySelector('[data-contact-submit]');
+
+      contactForm?.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        if (!(contactForm instanceof HTMLFormElement)) return;
+        if (!(contactSubmit instanceof HTMLButtonElement)) return;
+
+        const originalButton = contactSubmit.innerHTML;
+
+        contactSubmit.disabled = true;
+        contactSubmit.textContent = 'SENDING...';
+
+        if (contactStatus) {
+          contactStatus.textContent = 'MESSAGE DELIVERY / SENDING...';
+        }
+
+        try {
+          const response = await fetch(contactForm.action, {
+            method: 'POST',
+            body: new FormData(contactForm),
+            headers: {
+              Accept: 'application/json'
+            }
+          });
+
+          if (!response.ok) {
+            throw new Error('Formspree submission failed.');
+          }
+
+          contactForm.reset();
+
+          if (contactStatus) {
+            contactStatus.textContent = 'MESSAGE DELIVERY / SENT';
+          }
+
+          contactSubmit.textContent = 'MESSAGE SENT';
+
+          window.setTimeout(() => {
+            contactSubmit.innerHTML = originalButton;
+
+            if (contactStatus) {
+              contactStatus.textContent = 'MESSAGE DELIVERY / READY';
+            }
+          }, 3000);
+        } catch (error) {
+          console.error(error);
+
+          contactSubmit.innerHTML = originalButton;
+
+          if (contactStatus) {
+            contactStatus.textContent = 'MESSAGE DELIVERY / ERROR - TRY AGAIN';
+          }
+        } finally {
+          contactSubmit.disabled = false;
+        }
+      });
+    </script>
+</body>
+</html>
+
+<style>
+  :global(html),
+  :global(body) {
+    background: #050606;
+  }
+
+  :global(body) {
+    margin: 0;
+    color: #d8dbd6;
+  }
+
+  .about-page {
+    width: min(calc(100% - 208px), 1440px);
+    margin: 0 auto;
+    padding: 126px 0 120px;
+  }
+
+  /* =========================
+     HERO
+     ========================= */
+
+  .about-hero {
+    position: relative;
+    padding-bottom: 38px;
+    margin-bottom: 72px;
+  }
+
+  .about-hero::after {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 1px;
+    content: "";
+
+    background:
+      linear-gradient(
+        90deg,
+        rgba(201, 71, 19, 0) 0%,
+        rgba(201, 71, 19, 0.08) 16%,
+        rgba(201, 71, 19, 0.22) 34%,
+        rgba(201, 71, 19, 0.72) 72%,
+        rgba(201, 71, 19, 0.96) 100%
+      );
+
+    box-shadow:
+      0 0 3px rgba(201, 71, 19, 0.16);
+  }
+
+  .about-kicker {
+    margin: 0 0 12px;
+
+    color: #b7ff00;
+
+    font-family: "Maple Mono", monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0.16em;
+
+    text-transform: uppercase;
+  }
+
+  .about-hero h1 {
+    margin: 0;
+
+    color: #f1f2ef;
+
+    font-family:
+      "Host Grotesk Variable",
+      "Host Grotesk",
+      "Segoe UI",
+      "Noto Sans JP",
+      sans-serif;
+
+    font-size: clamp(2.8rem, 4.4vw, 4.3rem);
+    font-weight: 700;
+    line-height: 0.9;
+    letter-spacing: -0.055em;
+  }
+
+  .about-quote {
+    max-width: 850px;
+    margin: 24px 0 0;
+
+    color: #8d938c;
+
+    font-family:
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      "Noto Sans JP",
+      sans-serif;
+
+    font-size: clamp(0.92rem, 1.18vw, 1.08rem);
+    font-weight: 400;
+    line-height: 1.65;
+  }
+
+  /* =========================
+     ABOUT CYBER PANELS
+     ========================= */
+
+  .about-sections {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 34px 38px;
+  }
+
+  .about-block {
+    position: relative;
+    min-width: 0;
+    padding: 34px 38px 38px;
+
+    border: 1px solid rgba(144, 154, 148, 0.22);
+    border-left: 0;
+    border-radius: 9px;
+
+    background:
+      linear-gradient(
+        to bottom,
+        #6dff00 0%,
+        #aaff00 36%,
+        #e8ff2f 68%,
+        #ffe04a 100%
+      ) left top / 2px calc(100% - 28px) no-repeat,
+      linear-gradient(
+        135deg,
+        rgba(183, 255, 0, 0.014),
+        rgba(255, 255, 255, 0.008) 46%,
+        rgba(201, 71, 19, 0.014)
+      );
+  }
+
+  .profile-panel {
+    grid-column: 1 / -1;
+  }
+
+  /* Orange corners sit exactly on the 1px panel border. */
+  .about-block::before {
+    position: absolute;
+    top: -1px;
+    right: -1px;
+
+    width: 28px;
+    height: 28px;
+
+    content: "";
+
+    border-top: 2px solid #c94713;
+    border-right: 2px solid #c94713;
+    border-top-right-radius: 9px;
+
+    box-sizing: border-box;
+    pointer-events: none;
+  }
+
+  .about-block::after {
+    position: absolute;
+    bottom: -1px;
+    left: -1px;
+
+    width: 28px;
+    height: 28px;
+
+    content: "";
+
+    border-bottom: 2px solid #c94713;
+    border-left: 2px solid #c94713;
+    border-bottom-left-radius: 9px;
+
+    box-sizing: border-box;
+    pointer-events: none;
+  }
+
+  .panel-code {
+    position: absolute;
+    top: 25px;
+    right: 34px;
+
+    color: #707871;
+
+    font-family: "Maple Mono", monospace;
+    font-size: 0.61rem;
+    letter-spacing: 0.12em;
+  }
+
+  .panel-code span {
+    margin-left: 12px;
+    color: #c94713;
+  }
+
+  .about-block-head {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+
+    margin: 0 0 30px;
+  }
+
+  .about-block-head > span {
+    color: #f2ff3d;
+
+    font-family: "Maple Mono", monospace;
+    font-size: 0.90rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+
+    text-shadow: 0 0 7px rgba(242, 255, 61, 0.28);
+  }
+
+  .about-block-head small {
+    display: block;
+    margin: 0 0 8px;
+
+    color: #747c75;
+
+    font-family: "Maple Mono", monospace;
+    font-size: 0.57rem;
+    letter-spacing: 0.14em;
+  }
+
+  .about-block-head h2 {
+    margin: 0;
+
+    color: #f1f2ef;
+
+    font-family:
+      "Host Grotesk Variable",
+      "Host Grotesk",
+      "Segoe UI",
+      sans-serif;
+
+    font-size: 1.72rem;
+    font-weight: 650;
+    line-height: 1;
+    letter-spacing: -0.035em;
+  }
+
+  .profile-grid {
+    display: grid;
+    grid-template-columns:
+      minmax(220px, 0.82fr)
+      minmax(300px, 1.35fr)
+      minmax(220px, 0.72fr);
+
+    gap: 34px;
+    align-items: stretch;
+  }
+
+  .profile-visual {
+    position: relative;
+    min-height: 230px;
+    margin: 0;
+    overflow: hidden;
+
+    border: 1px solid rgba(144, 154, 148, 0.22);
+    border-radius: 3px;
+    background: #080a09;
+  }
+
+  .profile-visual img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 230px;
+    object-fit: cover;
+    object-position: center;
+    filter: grayscale(100%) contrast(1.06) brightness(0.88);
+  }
+
+  .profile-visual::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+    pointer-events: none;
+
+    background:
+      linear-gradient(
+        to bottom,
+        rgba(183, 255, 0, 0.015),
+        transparent 35%,
+        rgba(0, 0, 0, 0.16)
+      );
+  }
+
+  .figure-label {
+    position: absolute;
+    z-index: 2;
+    top: 15px;
+    left: 17px;
+
+    color: #7b837d;
+
+    font-family: "Maple Mono", monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+  }
+
+
+
+  .profile-copy {
+    padding-top: 6px;
+  }
+
+  .profile-id-row {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin: 0 0 24px;
+  }
+
+  .profile-cat-icon {
+    display: block;
+    flex: 0 0 46px;
+
+    width: 46px;
+    height: 46px;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+
+    box-shadow:
+      0 0 5px rgba(183, 255, 0, 0.22),
+      0 0 12px rgba(183, 255, 0, 0.08);
+  }
+
+  .profile-id-row .profile-lead {
+    margin: 0;
+  }
+
+  .profile-copy p,
+  .about-block > p {
+    margin: 0 0 18px;
+
+    color: #9da49e;
+
+    font-family:
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      "Noto Sans JP",
+      sans-serif;
+
+    font-size: 0.96rem;
+    line-height: 1.8;
+  }
+
+  .profile-copy .profile-lead {
+    color: #e0e3de;
+  }
+
+  .profile-data {
+    display: grid;
+    align-content: start;
+    gap: 24px;
+
+    padding: 7px 0 7px 30px;
+
+    border-left: 1px solid rgba(144, 154, 148, 0.25);
+  }
+
+  .profile-data div {
+    display: grid;
+    gap: 5px;
+  }
+
+  .profile-data span {
+    color: #6f7771;
+
+    font-family: "Maple Mono", monospace;
+    font-size: 0.56rem;
+    letter-spacing: 0.14em;
+  }
+
+  .profile-data strong {
+    color: #aab0aa;
+
+    font-family: "Maple Mono", monospace;
+    font-size: 0.66rem;
+    font-weight: 500;
+    line-height: 1.55;
+    letter-spacing: 0.09em;
+  }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .contact-grid > div {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    padding: 18px;
+
+    border: 1px solid rgba(144, 154, 148, 0.18);
+    border-radius: 4px;
+
+    background: rgba(255, 255, 255, 0.006);
+  }
+
+  .contact-label {
+    color: #b7ff00;
+
+    font-family: "Maple Mono", monospace;
+    font-size: 0.61rem;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+  }
+
+  .contact-value {
+    color: #e3e5e1;
+
+    font-family:
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif;
+
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 720px) {
+    .about-page {
+      width: calc(100% - 36px);
+      padding-top: 98px;
+    }
+
+    .about-hero {
+      margin-bottom: 48px;
+      padding-bottom: 30px;
+    }
+
+    .about-quote br {
+      display: none;
+    }
+
+    .about-sections {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .about-block:first-child {
+      grid-column: auto;
+      min-height: 0;
+    }
+
+    .about-block {
+      padding: 26px 22px 28px;
+    }
+
+    .contact-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .statement-copy p {
+    margin: 0 0 14px;
+
+    color: #9da49e;
+
+    font-family:
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      "Noto Sans JP",
+      sans-serif;
+
+    font-size: 0.92rem;
+    line-height: 1.78;
+  }
+
+  .statement-copy p:last-child {
+    margin-bottom: 0;
+  }
+
+  .statement-divider {
+    width: 100%;
+    height: 1px;
+
+    margin: 24px 0;
+
+    background:
+      linear-gradient(
+        90deg,
+        rgba(183, 255, 0, 0.46) 0%,
+        rgba(242, 255, 61, 0.32) 35%,
+        rgba(201, 71, 19, 0.30) 72%,
+        rgba(201, 71, 19, 0) 100%
+      );
+  }
+
+  /* CONTACT FRAME START */
+
+  .contact-block {
+    display: block;
+  }
+
+  .anonymous-channel,
+  .direct-channel {
+    margin-top: 28px;
+  }
+
+  .contact-section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+
+    width: fit-content;
+    margin-bottom: 18px;
+    padding: 7px 14px;
+
+    border: 1px solid rgba(183, 255, 0, 0.28);
+    border-radius: 999px;
+
+    background: rgba(183, 255, 0, 0.055);
+    color: #c8ff32;
+
+    font-family: "Maple Mono", monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.08em;
+  }
+
+  .contact-section-label::before {
+    width: 7px;
+    height: 7px;
+    flex: 0 0 7px;
+
+    content: "";
+
+    border-radius: 50%;
+    background: #b7ff00;
+
+    box-shadow:
+      0 0 5px rgba(183, 255, 0, 0.85),
+      0 0 10px rgba(183, 255, 0, 0.28);
+
+    animation: contact-signal-pulse 2.6s ease-in-out infinite;
+  }
+
+  @keyframes contact-signal-pulse {
+    0%,
+    100% {
+      opacity: 0.30;
+      transform: scale(0.82);
+    }
+
+    50% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .direct-label {
+    display: block;
+    margin-bottom: 9px;
+
+    color: #b9a640;
+
+    font-family: "Maple Mono", monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+  }
+
+  .contact-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .contact-form-grid label,
+  .contact-message {
+    display: grid;
+    gap: 8px;
+  }
+
+  .contact-form-grid label > span,
+  .contact-message > span {
+    color: #e6e8e4;
+
+    font-family:
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif;
+
+    font-size: 0.66rem;
+    font-weight: 650;
+  }
+
+  .contact-form-grid em {
+    margin-left: 7px;
+
+    color: #70776f;
+
+    font-family: "Maple Mono", monospace;
+    font-size: 0.54rem;
+    font-style: normal;
+    letter-spacing: 0.10em;
+  }
+
+  .contact-message {
+    margin-top: 16px;
+  }
+
+  .contact-message strong {
+    color: #c94713;
+  }
+
+  .contact-form-grid input,
+  .contact-message textarea {
+    width: 100%;
+    box-sizing: border-box;
+
+    border: 1px solid rgba(150, 160, 153, 0.24);
+    border-radius: 7px;
+
+    outline: none;
+
+    background: rgba(255, 255, 255, 0.018);
+    color: #e6e8e4;
+
+    font: inherit;
+
+    transition:
+      border-color 150ms ease,
+      background 150ms ease,
+      box-shadow 150ms ease;
+  }
+
+  .contact-form-grid input {
+    height: 48px;
+    padding: 0 14px;
+    font-size: 0.78rem;
+  }
+
+  .contact-message textarea {
+    min-height: 138px;
+    padding: 14px;
+    resize: vertical;
+  }
+
+  .contact-form-grid input:focus,
+  .contact-message textarea:focus {
+    border-color: rgba(183, 255, 0, 0.58);
+
+    background: rgba(183, 255, 0, 0.022);
+
+    box-shadow:
+      0 0 0 1px rgba(183, 255, 0, 0.05),
+      0 0 12px rgba(183, 255, 0, 0.05);
+  }
+
+  .contact-send {
+    width: 100%;
+    min-height: 50px;
+
+    margin-top: 16px;
+
+    border: 1px solid rgba(183, 255, 0, 0.30);
+    border-radius: 7px;
+
+    background: rgba(183, 255, 0, 0.045);
+    color: #dbe0d8;
+
+    font-family:
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif;
+
+    font-size: 0.80rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+
+    cursor: pointer;
+
+    transition:
+      color 150ms ease,
+      border-color 150ms ease,
+      background 150ms ease,
+      transform 150ms ease;
+  }
+
+  .contact-send span {
+    margin-left: 9px;
+  }
+
+  .contact-send:hover {
+    color: #b7ff00;
+    border-color: rgba(183, 255, 0, 0.62);
+    background: rgba(183, 255, 0, 0.07);
+    transform: translateY(-1px);
+  }
+
+  .contact-form-status {
+    margin: 11px 0 0 !important;
+
+    color: #697169 !important;
+
+    font-family: "Maple Mono", monospace !important;
+    font-size: 0.64rem !important;
+    letter-spacing: 0.10em;
+  }
+
+  .direct-channel {
+    padding-top: 26px;
+    border-top: 0;
+    background:
+      linear-gradient(
+        90deg,
+        rgba(183, 255, 0, 0.46) 0%,
+        rgba(242, 255, 61, 0.32) 35%,
+        rgba(201, 71, 19, 0.30) 72%,
+        rgba(201, 71, 19, 0) 100%
+      ) left top / 100% 1px no-repeat;
+  }
+
+  .direct-mail-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .direct-email {
+    display: block;
+
+    color: #f0f2ee;
+
+    font-family:
+      "Host Grotesk Variable",
+      "Host Grotesk",
+      "Segoe UI",
+      sans-serif;
+
+    font-size: clamp(1.45rem, 2.25vw, 2.15rem);
+    font-weight: 650;
+    line-height: 1;
+    letter-spacing: -0.035em;
+  }
+
+  .copy-email {
+    flex: 0 0 auto;
+
+    min-width: 110px;
+    height: 38px;
+
+    padding: 0 14px;
+
+    border: 1px solid rgba(150, 160, 153, 0.28);
+    border-radius: 6px;
+
+    background: rgba(255, 255, 255, 0.012);
+    color: #a1a8a1;
+
+    font-family: "Maple Mono", monospace;
+    font-size: 0.60rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+
+    cursor: pointer;
+
+    transition:
+      color 150ms ease,
+      border-color 150ms ease,
+      background 150ms ease,
+      transform 150ms ease;
+  }
+
+  .copy-email:hover {
+    color: #b7ff00;
+  }
+
+  .copy-email.is-copied {
+    color: #b7ff00;
+    border-color: rgba(183, 255, 0, 0.58);
+    background: rgba(183, 255, 0, 0.065);
+
+    transform: translateY(-1px);
+  }
+
+  .direct-phone {
+    display: grid;
+    gap: 7px;
+
+    margin-top: 24px;
+
+    color: #f0f2ee;
+    font-size: 1.05rem;
+    font-weight: 500;
+    letter-spacing: 0.015em;
+  }
+
+  @media (max-width: 760px) {
+    .contact-form-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .direct-mail-row {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+
+  /* CONTACT FRAME END */
+
+  /* CONTACT DIRECT ICON/LINK POLISH START */
+
+  .direct-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    width: fit-content;
+
+    color: #b8bdb9;
+  }
+
+  .direct-label svg {
+    width: 15px;
+    height: 15px;
+
+    color: #f2ff3d;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+
+    filter:
+      drop-shadow(0 0 3px rgba(242, 255, 61, 0.18));
+  }
+
+  .direct-email {
+    text-decoration: none;
+
+    transition:
+      color 150ms ease,
+      text-shadow 150ms ease;
+  }
+
+  .direct-email:hover {
+    color: #b7ff00;
+
+    text-shadow:
+      0 0 8px rgba(183, 255, 0, 0.14);
+  }
+
+  .direct-phone-link {
+    width: fit-content;
+
+    color: #f0f2ee;
+
+    font-size: 1.05rem;
+    font-weight: 500;
+    letter-spacing: 0.015em;
+    text-decoration: none;
+
+    transition:
+      color 150ms ease,
+      text-shadow 150ms ease;
+  }
+
+  .direct-phone-link:hover {
+    color: #b7ff00;
+
+    text-shadow:
+      0 0 7px rgba(183, 255, 0, 0.14);
+  }
+
+  /* CONTACT DIRECT ICON/LINK POLISH END */
+</style>
+
+
+<style>
+  /* PROFILE LEAD POSITION FIX */
+  .profile-lead {
+    transform: translate(2mm, -1mm) !important;
+  }
+</style>
+<style is:global>
+/* CONTACT DIRECT INFO — DARK GRAY */
+.about-page .direct-email,
+.about-page .direct-phone-link {
+    color: #747873 !important;
+}
+
+.about-page .direct-email:hover,
+.about-page .direct-phone-link:hover {
+    color: #a1a69f !important;
+}
+</style>
+<style is:global>
+.contact-required-dot {
+    color: #ff4d3d !important;
+    font-size: 0.55em !important;
+    vertical-align: 0.18em !important;
+}
+
+.contact-dark-label {
+    color: #5f625f !important;
+}
+
+/* 実際のメールアドレス・電話番号は白 */
+a[href^="mailto:"],
+a[href^="tel:"] {
+    color: #f5f5f2 !important;
+}
+
+a[href^="mailto:"]:hover,
+a[href^="tel:"]:hover {
+    color: #ffffff !important;
+}
+</style>
+<style is:global>
+.contact-required-dot {
+    color: #ff4d3d !important;
+    font-size: 0.55em !important;
+    vertical-align: 0.18em !important;
+}
+
+.contact-dark-label {
+    color: #5f625f !important;
+}
+
+/* 実際のメールアドレス・電話番号は白 */
+a[href^="mailto:"],
+a[href^="tel:"] {
+    color: #f5f5f2 !important;
+}
+
+a[href^="mailto:"]:hover,
+a[href^="tel:"]:hover {
+    color: #ffffff !important;
+}
+</style>
+<style is:global>
+/* CONTACT VALUE WHITE */
+a[href^="mailto:"],
+a[href^="tel:"] {
+    color: #f5f5f2 !important;
+}
+
+a[href^="mailto:"]:visited,
+a[href^="tel:"]:visited {
+    color: #f5f5f2 !important;
+}
+</style>
+<style is:global>
+.about-page .direct-email,
+.about-page .direct-phone-link {
+    color: #ffffff !important;
+}
+
+.about-page .direct-email:visited,
+.about-page .direct-phone-link:visited {
+    color: #ffffff !important;
+}
+</style>

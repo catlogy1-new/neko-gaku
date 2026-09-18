@@ -1,4 +1,4 @@
----
+﻿---
 import { getCollection } from 'astro:content';
 import BaseHead from '../../../components/BaseHead.astro';
 import Footer from '../../../components/Footer.astro';
@@ -76,10 +76,10 @@ const { page, postOffset } = Astro.props;
       <BlogArchive
         page={page}
         postOffset={postOffset}
-        headerKicker={pageMeta.kicker}
-        headerTitle={pageMeta.title}
-        headerSubtitle={pageMeta.subtitle}
-        headerNote={pageMeta.note}
+        headerKicker="TRANSMISSION / ARCHIVE"
+        headerTitle="FRAGMENTS"
+        headerSubtitle={`The pulsation and gleaming of an unsightly residual reality,
+thoroughly corroded by signs.`}
         coverImageStyle={pageMeta.coverImageStyle}
       >
         <GroupNav slot="after-header" />
@@ -88,3 +88,4 @@ const { page, postOffset } = Astro.props;
     <Footer />
   </body>
 </html>
+

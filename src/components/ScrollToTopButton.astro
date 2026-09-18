@@ -1,17 +1,28 @@
----
+﻿---
 import { ArrowUp } from 'lucide-astro';
 ---
 
-<span class="scroll-top-marker" data-scroll-top-marker aria-hidden="true"></span>
+<span
+  class="scroll-top-marker"
+  data-scroll-top-marker
+  aria-hidden="true"
+></span>
+
 <button
   class="scroll-top-button"
   type="button"
-  aria-label="返回顶部"
-  title="返回顶部"
+  aria-label="Back to top"
+  title="Back to top"
   data-scroll-top-button
 >
-  <ArrowUp size={18} stroke-width={2} aria-hidden="true" focusable="false" />
+  <ArrowUp
+    size={18}
+    stroke-width={2}
+    aria-hidden="true"
+    focusable="false"
+  />
 </button>
+
 
 <script>
   type ScrollToTopState = {
@@ -22,132 +33,290 @@ import { ArrowUp } from 'lucide-astro';
   const scrollTopWindow = window as Window & {
     __navfolioScrollTopState?: ScrollToTopState;
   };
-  const scrollTopState = (scrollTopWindow.__navfolioScrollTopState ??= {
-    lifecycleReady: false,
-    observers: new Set<IntersectionObserver>(),
-  });
+
+  const scrollTopState =
+    (scrollTopWindow.__navfolioScrollTopState ??= {
+      lifecycleReady: false,
+      observers: new Set<IntersectionObserver>(),
+    });
+
 
   const disconnectScrollToTopObservers = () => {
+
     for (const observer of scrollTopState.observers) {
       observer.disconnect();
     }
 
     scrollTopState.observers.clear();
+
   };
 
+
   const initScrollToTopButton = () => {
-    for (const button of document.querySelectorAll<HTMLButtonElement>('[data-scroll-top-button]')) {
+
+    for (
+      const button of
+      document.querySelectorAll<HTMLButtonElement>(
+        '[data-scroll-top-button]',
+      )
+    ) {
+
       if (button.dataset.scrollTopReady === 'true') {
         continue;
       }
 
+
       button.dataset.scrollTopReady = 'true';
+
       const marker = button.previousElementSibling;
-      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+      const prefersReducedMotion =
+        window.matchMedia(
+          '(prefers-reduced-motion: reduce)',
+        );
+
 
       const setVisible = (visible: boolean) => {
-        button.dataset.visible = visible ? 'true' : 'false';
-        button.setAttribute('aria-hidden', String(!visible));
+
+        button.dataset.visible =
+          visible ? 'true' : 'false';
+
+        button.setAttribute(
+          'aria-hidden',
+          String(!visible),
+        );
+
         button.tabIndex = visible ? 0 : -1;
+
       };
+
 
       setVisible(false);
 
+
       if (marker) {
-        const observer = new IntersectionObserver(([entry]) => {
-          setVisible(entry.boundingClientRect.top < 0 && !entry.isIntersecting);
-        });
+
+        const observer =
+          new IntersectionObserver(([entry]) => {
+
+            setVisible(
+              entry.boundingClientRect.top < 0 &&
+              !entry.isIntersecting,
+            );
+
+          });
+
 
         observer.observe(marker);
+
         scrollTopState.observers.add(observer);
+
       }
 
+
       button.addEventListener('click', () => {
+
         window.scrollTo({
           top: 0,
-          behavior: prefersReducedMotion.matches ? 'auto' : 'smooth',
+          behavior:
+            prefersReducedMotion.matches
+              ? 'auto'
+              : 'smooth',
         });
+
       });
+
     }
+
   };
+
 
   initScrollToTopButton();
 
+
   if (!scrollTopState.lifecycleReady) {
+
     scrollTopState.lifecycleReady = true;
-    document.addEventListener('astro:before-swap', disconnectScrollToTopObservers);
-    document.addEventListener('astro:page-load', initScrollToTopButton);
+
+    document.addEventListener(
+      'astro:before-swap',
+      disconnectScrollToTopObservers,
+    );
+
+    document.addEventListener(
+      'astro:page-load',
+      initScrollToTopButton,
+    );
+
   }
 </script>
 
+
 <style>
+
   .scroll-top-marker {
     position: absolute;
+
     top: 100vh;
     left: 0;
+
     width: 1px;
     height: 1px;
+
     pointer-events: none;
   }
 
+
   .scroll-top-button {
     position: fixed;
-    right: max(18px, env(safe-area-inset-right));
-    bottom: max(18px, env(safe-area-inset-bottom));
+
+    right:
+      max(18px, env(safe-area-inset-right));
+
+    bottom:
+      max(18px, env(safe-area-inset-bottom));
+
     z-index: 45;
+
     display: inline-grid;
+
     place-items: center;
+
     width: 42px;
     height: 42px;
+
     padding: 0;
-    border: 1px solid var(--paper-line);
+
+    border:
+      1px solid rgba(255, 255, 255, 0.14);
+
     border-radius: 8px;
-    background: var(--paper-nav);
-    color: var(--paper-ink-soft);
-    box-shadow: var(--paper-shadow);
+
+    background:
+      #171a17;
+
+    color:
+      #9ca19b;
+
+    box-shadow:
+      0 3px 14px rgba(0, 0, 0, 0.25);
+
     cursor: pointer;
+
     opacity: 0;
+
     pointer-events: none;
-    transform: translateY(8px) scale(0.98);
+
+    transform:
+      translateY(8px)
+      scale(0.98);
+
     transition:
       opacity 180ms ease,
       transform 180ms ease,
       border-color 180ms ease,
-      background 180ms ease,
-      color 180ms ease;
+      background-color 180ms ease,
+      color 180ms ease,
+      box-shadow 180ms ease;
   }
+
 
   .scroll-top-button[data-visible='true'] {
     opacity: 1;
+
     pointer-events: auto;
-    transform: translateY(0) scale(1);
+
+    transform:
+      translateY(0)
+      scale(1);
   }
 
-  .scroll-top-button:hover,
-  .scroll-top-button:focus-visible {
-    border-color: var(--paper-line-strong);
-    background: var(--paper-control-hover);
-    color: var(--paper-accent);
+
+  /*
+   * NEXUS GLOBAL HOVER
+   */
+
+  .scroll-top-button:hover {
+    border-color:
+      #b7ff00 !important;
+
+    background:
+      rgba(183, 255, 0, 0.12) !important;
+
+    color:
+      #b7ff00 !important;
+
+    box-shadow:
+      0 0 0 1px
+        rgba(183, 255, 0, 0.10),
+      0 0 18px
+        rgba(183, 255, 0, 0.22) !important;
+
+    transform:
+      translateY(-2px)
+      scale(1.045);
   }
 
+
   .scroll-top-button:focus-visible {
-    outline: 2px solid color-mix(in srgb, var(--paper-accent), transparent 58%);
+    border-color:
+      #b7ff00 !important;
+
+    background:
+      rgba(183, 255, 0, 0.12) !important;
+
+    color:
+      #b7ff00 !important;
+
+    outline:
+      1px solid
+      rgba(183, 255, 0, 0.72);
+
     outline-offset: 3px;
+
+    box-shadow:
+      0 0 18px
+      rgba(183, 255, 0, 0.22) !important;
   }
+
+
+  .scroll-top-button:active {
+    border-color:
+      #b7ff00 !important;
+
+    color:
+      #b7ff00 !important;
+
+    transform:
+      translateY(0)
+      scale(0.96);
+  }
+
 
   @media (max-width: 720px) {
+
     .scroll-top-button {
-      right: max(14px, env(safe-area-inset-right));
-      bottom: max(14px, env(safe-area-inset-bottom));
+      right:
+        max(14px, env(safe-area-inset-right));
+
+      bottom:
+        max(14px, env(safe-area-inset-bottom));
+
       width: 40px;
       height: 40px;
+
       border-radius: 7px;
     }
+
   }
 
+
   @media (prefers-reduced-motion: reduce) {
+
     .scroll-top-button {
       transition: none;
     }
+
   }
+
 </style>

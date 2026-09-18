@@ -1,4 +1,4 @@
----
+﻿---
 import { Search, X } from 'lucide-astro';
 import { getSiteConfig, type SiteSearch as SiteSearchConfig } from '../../data/site';
 import navfolioConfig from '../../../navfolio.config';
@@ -60,6 +60,7 @@ const vibeRoute = getPageModuleRoute(navfolioConfig, 'vibe');
           <p id="site-search-title">{ui.search.title}</p>
           <span>{shortcutLabel}</span>
         </div>
+
         <button
           class="site-search-close"
           type="button"
@@ -73,6 +74,7 @@ const vibeRoute = getPageModuleRoute(navfolioConfig, 'vibe');
 
       <label class="site-search-input-wrap">
         <Search size={16} stroke-width={2} aria-hidden="true" />
+
         <input
           type="search"
           placeholder={search.placeholder}
@@ -82,7 +84,10 @@ const vibeRoute = getPageModuleRoute(navfolioConfig, 'vibe');
         />
       </label>
 
-      <p class="site-search-status" data-site-search-status>{ui.search.idle}</p>
+      <p class="site-search-status" data-site-search-status>
+        {ui.search.idle}
+      </p>
+
       <ol class="site-search-results" data-site-search-results></ol>
     </section>
   </div>
@@ -99,44 +104,84 @@ const vibeRoute = getPageModuleRoute(navfolioConfig, 'vibe');
     display: contents;
   }
 
-  .site-search-trigger,
-  .site-search-close {
+  /* ======================================================
+     TOP SEARCH BUTTON
+     ====================================================== */
+
+  .site-search-trigger {
     display: inline-grid;
     place-items: center;
+
     width: 38px;
     height: 38px;
     padding: 0;
-    border: 1px solid var(--paper-line);
+
+    border: 1px solid rgba(183, 255, 0, 0.22);
     border-radius: 8px;
-    background: var(--paper-control);
-    color: var(--paper-ink);
+
+    background:
+      radial-gradient(
+        circle at 50% 45%,
+        rgba(183, 255, 0, 0.05),
+        rgba(183, 255, 0, 0.015) 58%,
+        rgba(5, 5, 5, 0.96) 100%
+      );
+
+    color: rgba(183, 255, 0, 0.72);
+
     cursor: pointer;
+
+    transition:
+      color 260ms ease,
+      border-color 260ms ease,
+      box-shadow 300ms ease,
+      transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .site-search-trigger:hover,
-  .site-search-trigger:focus-visible,
-  .site-search-close:hover,
-  .site-search-close:focus-visible {
-    background: var(--paper-control-hover);
-    color: var(--paper-accent);
+  .site-search-trigger:focus-visible {
+    border-color: rgba(183, 255, 0, 0.36);
+
+    color: #ff7a38;
+
     outline: none;
+
+    box-shadow:
+      0 0 10px rgba(183, 255, 0, 0.06),
+      0 0 14px rgba(255, 103, 52, 0.06);
+
+    transform: translateY(-1px);
   }
+
+  .site-search-trigger:hover :global(svg),
+  .site-search-trigger:focus-visible :global(svg) {
+    filter:
+      drop-shadow(0 0 3px rgba(255, 103, 52, 0.58))
+      drop-shadow(0 0 8px rgba(255, 103, 52, 0.18));
+  }
+
+  /* ======================================================
+     BACKDROP
+     ====================================================== */
 
   .site-search-layer {
     position: fixed;
     inset: 0;
     z-index: 90;
+
     display: grid;
     place-items: start center;
+
     padding: 96px 18px 24px;
-    background: rgba(17, 20, 17, 0.58);
+
+    background: rgba(0, 0, 0, 0.82);
+
     opacity: 0;
     pointer-events: none;
-    transition: opacity 160ms ease;
-  }
 
-  :root[data-theme='dark'] .site-search-layer {
-    background: rgba(0, 0, 0, 0.68);
+    backdrop-filter: blur(2px);
+
+    transition: opacity 180ms ease;
   }
 
   .site-search-layer[data-search-open='true'] {
@@ -144,106 +189,259 @@ const vibeRoute = getPageModuleRoute(navfolioConfig, 'vibe');
     pointer-events: auto;
   }
 
+  /* ======================================================
+     DIALOG
+     ====================================================== */
+
   .site-search-dialog {
     display: grid;
-    width: min(100%, 620px);
+
+    width: min(100%, 650px);
     max-height: min(72vh, 620px);
+
     overflow: hidden;
-    border: 1px solid var(--paper-line);
-    border-radius: 8px;
-    background: var(--paper-nav);
-    box-shadow: var(--paper-shadow-lift);
-    color: var(--paper-ink);
-    transform: translateY(-6px) scale(0.992);
+
+    border: 1px solid rgba(255, 103, 52, 0.62);
+    border-radius: 10px;
+
+    background:
+      radial-gradient(
+        circle at 18% 10%,
+        rgba(183, 255, 0, 0.025),
+        transparent 28%
+      ),
+      #050505;
+
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 103, 52, 0.025),
+      0 18px 70px rgba(0, 0, 0, 0.72),
+      0 0 20px rgba(255, 103, 52, 0.035);
+
+    color: #e7e8e4;
+
+    transform: translateY(-10px) scale(0.985);
+
+    opacity: 0;
+
     transition:
-      transform 160ms ease,
-      opacity 160ms ease;
+      transform 280ms cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 180ms ease;
   }
 
   .site-search-layer[data-search-open='true'] .site-search-dialog {
     transform: translateY(0) scale(1);
+    opacity: 1;
   }
+
+  /* ======================================================
+     HEADER
+     ====================================================== */
 
   .site-search-head {
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     gap: 14px;
-    padding: 12px 12px 10px 16px;
-    border-bottom: 1px solid var(--paper-line);
+
+    padding: 18px 18px 15px 20px;
+
+    border-bottom: 1px solid rgba(183, 255, 0, 0.08);
   }
 
   .site-search-head p,
   .site-search-head span,
   .site-search-status {
-    font-family: var(--font-ui-label);
+    font-family: 'Maple Mono', monospace;
   }
 
   .site-search-head p {
     margin: 0;
-    font-size: 0.9rem;
+
+    color: #b7ff00;
+
+    font-size: 1rem;
     font-weight: 700;
+
     line-height: 1.2;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
   }
 
   .site-search-head span {
     display: inline-block;
-    margin-top: 2px;
-    color: var(--paper-ink-faint);
-    font-size: 0.72rem;
-    font-weight: 600;
+
+    margin-top: 6px;
+
+    color: #777b74;
+
+    font-size: 0.7rem;
+    font-weight: 500;
+
+    letter-spacing: 0.06em;
   }
+
+  /* ======================================================
+     CLOSE BUTTON
+     ====================================================== */
+
+  .site-search-close {
+    display: inline-grid;
+    place-items: center;
+
+    width: 40px;
+    height: 40px;
+    padding: 0;
+
+    border: 1px solid rgba(255, 103, 52, 0.38);
+    border-radius: 8px;
+
+    background: rgba(255, 103, 52, 0.015);
+
+    color: #ff7a38;
+
+    cursor: pointer;
+
+    transition:
+      background 250ms ease,
+      border-color 250ms ease,
+      box-shadow 280ms ease,
+      transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .site-search-close:hover,
+  .site-search-close:focus-visible {
+    border-color: rgba(255, 103, 52, 0.72);
+
+    background: rgba(255, 103, 52, 0.06);
+
+    outline: none;
+
+    box-shadow:
+      0 0 8px rgba(255, 103, 52, 0.16),
+      0 0 18px rgba(255, 103, 52, 0.07);
+
+    transform: scale(1.04);
+  }
+
+  /* ======================================================
+     INPUT
+     ====================================================== */
 
   .site-search-input-wrap {
     display: grid;
+
     grid-template-columns: auto minmax(0, 1fr);
-    gap: 10px;
+
+    gap: 12px;
+
     align-items: center;
-    margin: 12px;
-    padding: 10px 12px;
-    border: 1px solid var(--paper-line);
+
+    margin: 18px 18px 14px;
+    padding: 13px 14px;
+
+    border: 1px solid rgba(183, 255, 0, 0.32);
     border-radius: 8px;
-    background: var(--paper-control);
-    color: var(--paper-ink-soft);
+
+    background:
+      radial-gradient(
+        circle at 20% 50%,
+        rgba(183, 255, 0, 0.035),
+        transparent 48%
+      ),
+      #070807;
+
+    color: rgba(183, 255, 0, 0.72);
+
+    transition:
+      border-color 250ms ease,
+      box-shadow 300ms ease,
+      background 250ms ease;
+  }
+
+  .site-search-input-wrap :global(svg) {
+    color: #b7ff00;
+
+    filter:
+      drop-shadow(0 0 5px rgba(183, 255, 0, 0.14));
   }
 
   .site-search-input-wrap:focus-within {
-    border-color: var(--paper-line-strong);
-    background: var(--paper-surface);
-    color: var(--paper-accent);
+    border-color: rgba(183, 255, 0, 0.72);
+
+    background:
+      radial-gradient(
+        circle at 20% 50%,
+        rgba(183, 255, 0, 0.06),
+        transparent 50%
+      ),
+      #070807;
+
+    box-shadow:
+      0 0 10px rgba(183, 255, 0, 0.06),
+      inset 0 0 12px rgba(183, 255, 0, 0.015);
   }
 
   .site-search-input-wrap input {
     min-width: 0;
+
     border: 0;
     outline: 0;
+
     background: transparent;
-    color: var(--paper-ink);
-    font-family: var(--font-body);
+
+    color: #e7e8e4;
+
+    font-family: 'Maple Mono', monospace;
     font-size: 1rem;
+
     line-height: 1.4;
+
+    caret-color: #b7ff00;
   }
 
   .site-search-input-wrap input::placeholder {
-    color: var(--paper-ink-faint);
+    color: rgba(183, 255, 0, 0.45);
   }
+
+  /* ======================================================
+     STATUS
+     ====================================================== */
 
   .site-search-status {
     min-height: 20px;
+
     margin: 0;
-    padding: 0 16px 10px;
-    color: var(--paper-ink-faint);
-    font-size: 0.75rem;
-    font-weight: 600;
+
+    padding: 0 20px 16px;
+
+    color: #777b74;
+
+    font-size: 0.73rem;
+    font-weight: 500;
+
+    letter-spacing: 0.02em;
   }
+
+  /* ======================================================
+     RESULTS
+     ====================================================== */
 
   .site-search-results {
     display: grid;
-    gap: 6px;
+
+    gap: 7px;
+
     max-height: min(46vh, 430px);
+
     margin: 0;
+
     overflow: auto;
-    padding: 0 10px 12px;
+
+    padding: 0 12px 14px;
+
     list-style: none;
   }
 
@@ -253,81 +451,123 @@ const vibeRoute = getPageModuleRoute(navfolioConfig, 'vibe');
 
   .site-search-results :global(a) {
     display: grid;
+
     gap: 7px;
+
     min-width: 0;
-    padding: 11px 12px 12px;
-    border: 1px solid transparent;
+
+    padding: 12px 13px;
+
+    border: 1px solid rgba(183, 255, 0, 0.06);
     border-radius: 7px;
-    color: var(--paper-ink);
+
+    background: rgba(183, 255, 0, 0.008);
+
+    color: #e7e8e4;
+
     text-decoration: none;
+
     transition:
-      border-color 150ms ease,
-      background-color 150ms ease,
-      transform 150ms ease;
+      border-color 180ms ease,
+      background 180ms ease,
+      transform 180ms ease,
+      box-shadow 180ms ease;
   }
 
   .site-search-results :global(a:hover),
   .site-search-results :global(a:focus-visible) {
-    border-color: var(--paper-line);
-    background: var(--paper-control-hover);
+    border-color: rgba(255, 103, 52, 0.42);
+
+    background: rgba(255, 103, 52, 0.025);
+
     outline: none;
+
+    box-shadow:
+      0 0 12px rgba(255, 103, 52, 0.03);
+
     transform: translateY(-1px);
   }
 
   .site-search-results :global(.site-search-result-title) {
     overflow: hidden;
+
     text-overflow: ellipsis;
     white-space: nowrap;
+
     font-size: 0.96rem;
-    font-weight: 700;
+    font-weight: 650;
+
     line-height: 1.35;
   }
 
   .site-search-results :global(.site-search-result-meta),
   .site-search-results :global(.site-search-result-match-label) {
-    color: var(--paper-ink-faint);
-    font-family: var(--font-ui-label);
+    color: #777b74;
+
+    font-family: 'Maple Mono', monospace;
+
     font-size: 0.68rem;
-    font-weight: 700;
+    font-weight: 600;
+
     line-height: 1.2;
   }
 
   .site-search-results :global(.site-search-result-meta) {
     overflow: hidden;
+
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
   .site-search-results :global(.site-search-result-match) {
     display: grid;
+
     grid-template-columns: auto minmax(0, 1fr);
+
     gap: 9px;
+
     align-items: start;
+
     padding-top: 2px;
   }
 
   .site-search-results :global(.site-search-result-match-label) {
     padding-top: 2px;
+
     white-space: nowrap;
   }
 
   .site-search-results :global(.site-search-result-excerpt) {
     min-width: 0;
-    color: var(--paper-ink-soft);
+
+    color: #9a9d97;
+
     font-size: 0.86rem;
+
     line-height: 1.55;
   }
 
   .site-search-results :global(mark) {
-    border-radius: 4px;
-    background: var(--paper-control-hover);
-    color: var(--paper-accent);
+    border-radius: 3px;
+
+    background: rgba(183, 255, 0, 0.13);
+
+    color: #b7ff00;
+
     font-weight: 700;
+
     box-decoration-break: clone;
     -webkit-box-decoration-break: clone;
   }
 
+  /* ======================================================
+     REDUCED MOTION
+     ====================================================== */
+
   @media (prefers-reduced-motion: reduce) {
+    .site-search-dialog,
+    .site-search-trigger,
+    .site-search-close,
     .site-search-results :global(a) {
       transition: none;
     }
@@ -338,20 +578,48 @@ const vibeRoute = getPageModuleRoute(navfolioConfig, 'vibe');
     }
   }
 
+  /* ======================================================
+     MOBILE
+     ====================================================== */
+
   @media (max-width: 720px) {
     .site-search-trigger {
       width: 36px;
       height: 36px;
+
       border-radius: 7px;
     }
 
     .site-search-layer {
       align-items: start;
+
       padding-top: 74px;
     }
 
     .site-search-dialog {
       max-height: calc(100vh - 96px);
+    }
+
+    .site-search-head {
+      padding:
+        15px
+        14px
+        13px
+        16px;
+    }
+
+    .site-search-input-wrap {
+      margin:
+        14px
+        14px
+        12px;
+    }
+
+    .site-search-status {
+      padding:
+        0
+        16px
+        14px;
     }
 
     .site-search-results {
@@ -364,7 +632,106 @@ const vibeRoute = getPageModuleRoute(navfolioConfig, 'vibe');
 
     .site-search-results :global(.site-search-result-match) {
       grid-template-columns: minmax(0, 1fr);
+
       gap: 5px;
     }
   }
+
+  /* =========================================================
+     SEARCH TRIGGER 窶・HOVER REFINEMENT
+     orange border / strong lime icon
+     ========================================================= */
+
+  .site-search-trigger {
+    color: rgba(183, 255, 0, 0.72) !important;
+
+    border-color: rgba(183, 255, 0, 0.22) !important;
+  }
+
+  .site-search-trigger :global(svg) {
+    color: rgba(183, 255, 0, 0.72) !important;
+
+    filter:
+      drop-shadow(0 0 3px rgba(183, 255, 0, 0.10)) !important;
+
+    transition:
+      color 280ms ease,
+      filter 320ms ease !important;
+  }
+
+  .site-search-trigger:hover,
+  .site-search-trigger:focus-visible {
+    color: #b7ff00 !important;
+
+    border-color: rgba(255, 103, 52, 0.72) !important;
+
+    background:
+      radial-gradient(
+        circle at 50% 45%,
+        rgba(183, 255, 0, 0.065),
+        rgba(183, 255, 0, 0.016) 58%,
+        rgba(5, 5, 5, 0.96) 100%
+      ) !important;
+
+    box-shadow:
+      0 0 8px rgba(255, 103, 52, 0.08),
+      inset 0 0 12px rgba(183, 255, 0, 0.018) !important;
+
+    transform: translateY(-1px) !important;
+  }
+
+  .site-search-trigger:hover :global(svg),
+  .site-search-trigger:focus-visible :global(svg) {
+    color: #b7ff00 !important;
+
+    filter:
+      drop-shadow(0 0 4px rgba(183, 255, 0, 0.55))
+      drop-shadow(0 0 9px rgba(183, 255, 0, 0.18)) !important;
+  }
+
+
+  /* =========================================================
+     SEARCH TRIGGER 窶・FORCE FINAL HOVER COLORS
+     ========================================================= */
+
+  .site-search .site-search-trigger {
+    color: #8fca18 !important;
+    border-color: rgba(183, 255, 0, 0.22) !important;
+  }
+
+  .site-search .site-search-trigger :global(svg) {
+    color: #8fca18 !important;
+    stroke: currentColor !important;
+    filter: none !important;
+  }
+
+  .site-search .site-search-trigger:hover,
+  .site-search .site-search-trigger:focus-visible {
+    color: #b7ff00 !important;
+
+    border-color: #b7ff00 !important;
+
+    box-shadow:
+      0 0 0 1px rgba(183, 255, 0, 0.08),
+      0 0 10px rgba(183, 255, 0, 0.16) !important;
+
+    background:
+      radial-gradient(
+        circle at 50% 45%,
+        rgba(183, 255, 0, 0.07),
+        rgba(183, 255, 0, 0.018) 58%,
+        rgba(5, 5, 5, 0.96) 100%
+      ) !important;
+  }
+
+  .site-search .site-search-trigger:hover :global(svg),
+  .site-search .site-search-trigger:focus-visible :global(svg) {
+    color: #b7ff00 !important;
+    stroke: #b7ff00 !important;
+
+    filter:
+      drop-shadow(0 0 3px rgba(183, 255, 0, 0.5))
+      drop-shadow(0 0 8px rgba(183, 255, 0, 0.16)) !important;
+  }
+
 </style>

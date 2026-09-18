@@ -1,49 +1,2708 @@
----
-import IntroCard from '../components/cards/IntroCard.astro';
-import ConnectCard from '../components/cards/ConnectCard.astro';
-import NavigationCard from '../components/cards/NavigationCard.astro';
-import ProfileCard from '../components/cards/ProfileCard.astro';
-import DashboardFlow from '../components/layout/DashboardFlow.astro';
-import BlogHeatmap from '../components/widgets/BlogHeatmap.astro';
-import DoingCard from '../components/widgets/DoingCard.astro';
+﻿---
+import { getCollection } from 'astro:content';
 import { getSiteConfig } from '../data/site';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Footer from '../components/Footer.astro';
 
-const { home, profile, site } = await getSiteConfig();
+const { site } = await getSiteConfig();
+
+const blogPosts = await getCollection('blog', ({ data }) => !data.draft);
+const projectPosts = await getCollection('projects', ({ data }) => !data.draft);
+const vibePosts = await getCollection('vibe', ({ data }) => !data.draft);
+const mediaPosts = await getCollection('media', ({ data }) => !data.draft);
+
+const MATRIX_DAYS = 84;
+
+const toDateKey = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+const matrixStart = new Date(today);
+const mondayOffset = (matrixStart.getDay() + 6) % 7;
+matrixStart.setDate(matrixStart.getDate() - mondayOffset - 11 * 7);
+
+const blogByDate = new Map();
+const blogHrefByDate = new Map();
+const projectsByDate = new Map();
+const projectHrefByDate = new Map();
+const vibeByDate = new Map();
+const vibeHrefByDate = new Map();
+const mediaByDate = new Map();
+const mediaHrefByDate = new Map();
+
+for (const post of blogPosts) {
+  const key = toDateKey(post.data.date);
+  blogByDate.set(key, (blogByDate.get(key) ?? 0) + 1);
+  if (!blogHrefByDate.has(key)) {
+    blogHrefByDate.set(key, `/blog/${post.id}/`);
+  }
+}
+
+for (const project of projectPosts) {
+  const key = toDateKey(project.data.date);
+  projectsByDate.set(key, (projectsByDate.get(key) ?? 0) + 1);
+  if (!projectHrefByDate.has(key)) projectHrefByDate.set(key, `/projects/${project.id}/`);
+}
+
+
+for (const vibe of vibePosts) {
+  const key = toDateKey(vibe.data.date);
+  vibeByDate.set(key, (vibeByDate.get(key) ?? 0) + 1);
+  if (!vibeHrefByDate.has(key)) vibeHrefByDate.set(key, `/vibe/${vibe.id}/`);
+}
+
+for (const media of mediaPosts) {
+  if (!media.data.completedAt) continue;
+
+  const key = toDateKey(media.data.completedAt);
+  mediaByDate.set(key, (mediaByDate.get(key) ?? 0) + 1);
+  if (!mediaHrefByDate.has(key)) mediaHrefByDate.set(key, `/media/${media.id}/`);
+}
+
+/* TEMP: one MEDIA-only dot for matrix visual test */
+const mediaOnlyTestDate = Array.from({ length: MATRIX_DAYS }, (_, index) => {
+  const date = new Date(matrixStart);
+  date.setDate(matrixStart.getDate() + index);
+  return toDateKey(date);
+}).find((key) =>
+  (blogByDate.get(key) ?? 0) === 0 &&
+  (projectsByDate.get(key) ?? 0) === 0 &&
+  (vibeByDate.get(key) ?? 0) === 0 &&
+  (mediaByDate.get(key) ?? 0) === 0
+);
+
+if (mediaOnlyTestDate) {
+  mediaByDate.set(mediaOnlyTestDate, 1);
+  mediaHrefByDate.set(mediaOnlyTestDate, '/media/');
+}
+
+const matrixDays = Array.from({ length: MATRIX_DAYS }, (_, index) => {
+  const date = new Date(matrixStart);
+  date.setDate(matrixStart.getDate() + index);
+
+  const key = toDateKey(date);
+
+  return {
+    date: key,
+    blogCount: blogByDate.get(key) ?? 0,
+    blogHref: blogHrefByDate.get(key),
+    projectCount: projectsByDate.get(key) ?? 0,
+    projectHref: projectHrefByDate.get(key),
+    vibeCount: vibeByDate.get(key) ?? 0,
+    vibeHref: vibeHrefByDate.get(key),
+    mediaCount: mediaByDate.get(key) ?? 0,
+    mediaHref: mediaHrefByDate.get(key),
+  };
+});
+
+const dotLinks = [
+  { label: 'BLOG', href: '/blog', className: 'dot-blog' },
+  { label: 'PORTFOLIO', href: '/projects', className: 'dot-portfolio' },
+  { label: 'VIBE', href: '/vibe', className: 'dot-vibe' },
+  { label: 'MEDIA', href: '/media', className: 'dot-media' },
+];
 ---
-
 <BaseLayout title={site.pageTitle} description={site.pageDescription}>
-  <div class="publication-bg" aria-hidden="true"></div>
-  <DashboardFlow>
-    <Fragment slot="profile">
-      <ProfileCard profile={profile} />
-    </Fragment>
+  <main class="hero">
+    <div class="hero-grid">
+      <section class="hero-copy">
+        <div class="eyebrow-mask">
+          <p class="eyebrow hero-motion motion-1">
+            TRANSMISSION / 2026
+          </p>
+        </div>
+        <h1 class="hero-title">
+          <span class="title-mask">
+            <span class="title-line hero-motion motion-2">
+              POUR EN FINIR
+            </span>
+          </span>
+          <span class="title-mask">
+            <span class="title-line title-outline hero-motion motion-3">
+              AVEC LE JUGEMENT
+            </span>
+          </span>
+          <span class="title-mask">
+            <span class="title-line title-lime hero-motion motion-4">
+              DE DIEU
+            </span>
+          </span>
+        </h1>
+        <div class="description-mask">
+          <p class="hero-description hero-motion motion-5">
+            Writing, projects, media and fragments from one digital space.
+          </p>
+        </div>
+      </section>
+      <section class="dot-visual" aria-label="Content navigation">
+        <div class="dot-stage hero-motion motion-5">
+          <div class="matrix-heading">
+            <span class="matrix-kicker">NAVIGATION MATRIX</span>
+            <span class="matrix-subtitle">LIVE CONTENT SYSTEM</span>
+          </div>
+          <div class="matrix-days" aria-hidden="true">
+            <span>MON</span>
+            <span></span>
+            <span>WED</span>
+            <span></span>
+            <span>FRI</span>
+            <span></span>
+            <span>SUN</span>
+          </div>
 
-    <Fragment slot="intro">
-      <IntroCard intro={home.intro} quote={home.quote} />
-    </Fragment>
+          <div class="matrix-date-axis" aria-hidden="true">
+            {
+              matrixDays
+                .filter((_, index) => index % 7 === 0)
+                .map((day) => {
+                  const [, month, date] = day.date.split('-');
 
-    <Fragment slot="latest">
-      <BlogHeatmap
-        weeks={home.latest.heatmapWeeks}
-        showLatest={home.latest.showHeatmapLatest}
-        latestCount={home.latest.count}
-        excludeDraft={home.latest.excludeDraft}
-        startDate={home.latest.startDate || null}
-        dateArchiveBaseHref={home.latest.dateArchiveBaseHref || undefined}
-      />
-    </Fragment>
+                  return (
+                    <span>
+                      {date === '01' ? `${month}/${date}` : date}
+                    </span>
+                  );
+                })
+            }
+          </div>
 
-    <Fragment slot="navigation">
-      <NavigationCard items={home.navigation} />
-    </Fragment>
+          <div class="dot-grid" aria-hidden="true">
+            {
+              matrixDays.map((day) => (
+                <div
+                  class:list={[
+                    'grid-dot',
+                    {
+                      bright: day.blogCount > 0,
+                      orange: day.projectCount > 0,
+                      both: day.blogCount > 0 && day.projectCount > 0,
+                      vibe: day.vibeCount > 0,
+                      media: day.mediaCount > 0,
+                    },
+                  ]}
+                  data-date={day.date}
+                  data-blog={day.blogCount}
+                  data-portfolio={day.projectCount}
+                  data-vibe={day.vibeCount}
+                  data-media={day.mediaCount}
+                  data-blog-href={day.blogHref ?? ''}
+                  data-portfolio-href={day.projectHref ?? ''}
+                  data-vibe-href={day.vibeHref ?? ''}
+                  data-media-href={day.mediaHref ?? ''}
+                >
+                  <span class="grid-dot-copy">
+                    <strong></strong>
+                    <span class="grid-dot-actions"></span>
+                  </span>
+                </div>
+              ))
+            }
+          </div>
+          <div class="matrix-hover-info" aria-hidden="true">
+            <span class="matrix-hover-date"></span>
+            <span class="matrix-hover-kind"></span>
+          </div>
 
-    <Fragment slot="connect">
-      <ConnectCard links={home.links} />
-    </Fragment>
-
-    <Fragment slot="doing">
-      <DoingCard items={home.doing} />
-    </Fragment>
-  </DashboardFlow>
+          <div class="signal">
+            <span class="signal-light"></span>
+            LIVE SIGNAL
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+  <Footer />
 </BaseLayout>
+
+
+<style>
+  .hero {
+    min-height: 100svh;
+    overflow: visible;
+    background: #050505;
+    color: #f5f5f2;
+    font-family: 'Inter Variable', Arial, sans-serif;
+  }
+
+  .hero-grid {
+    width: min(calc(100% - 32px), 1480px);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) clamp(292px, 26.5vw, 350px);
+    gap: 46px;
+    align-items: start;
+    padding-top: 170px;
+    padding-bottom: 56px;
+    transform: translateY(-105px);
+  }
+
+  .hero-copy {
+    min-width: 0;
+    position: relative;
+    left: 0;
+    transform: translateY(-3mm);
+  }
+
+  .eyebrow-mask,
+  .title-mask,
+  .description-mask {
+    display: block;
+    overflow: hidden;
+  }
+
+  .eyebrow-mask {
+    overflow: visible;
+  }
+
+  .eyebrow {
+    margin: 0 0 22px;
+    color: #b7ff00;
+    font-family: 'Maple Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.19em;
+  }
+
+  .hero-title {
+    display: flex;
+    flex-direction: column;
+    gap: 2mm;
+    width: 100%;
+    margin: 0;
+    font-family: 'Host Grotesk Variable', Arial, sans-serif;
+    font-size: clamp(3.4rem, 5.4vw, 6.2rem);
+    font-weight: 800;
+    line-height: 0.92;
+    letter-spacing: -0.07em;
+  }
+
+  .title-mask {
+    display: block;
+    padding: 0.055em 0 0.085em;
+    overflow: visible;
+  }
+
+  .title-line {
+    display: block;
+    overflow: visible;
+    white-space: nowrap;
+  }
+
+  .title-outline {
+    color: transparent;
+    -webkit-text-stroke: 1.6px #b7ff00;
+  }
+
+  .title-lime {
+    color: #b7ff00;
+  }
+
+  .hero-description {
+    max-width: 520px;
+    margin: 30px 0 0;
+    color: #92958f;
+    font-family: 'Inter Variable', Arial, sans-serif;
+    font-size: clamp(0.95rem, 1.15vw, 1.1rem);
+    font-weight: 400;
+    line-height: 1.55;
+    letter-spacing: -0.02em;
+  }
+
+  .dot-visual {
+    position: relative;
+    top: -30px;
+    left: 12mm;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    min-width: 0;
+    width: 100%;
+    max-width: 350px;
+    justify-self: end;
+  }
+
+  .dot-stage {
+    position: relative;
+    width: 100%;
+    max-width: 350px;
+    aspect-ratio: 0.96;
+    overflow: hidden;
+    border: 1.5px solid rgba(255, 92, 32, 0.28);
+    border-radius: 20px;
+    background:
+      radial-gradient(
+        circle at 50% 48%,
+        rgba(183, 255, 0, 0.055),
+        transparent 52%
+      ),
+      #070807;
+    box-shadow: 0 0 5px rgba(255, 92, 32, 0.13), 0 0 12px rgba(255, 92, 32, 0.05);
+  }
+
+  .matrix-heading {
+    position: absolute;
+    top: 25px;
+    left: 27px;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-family: 'Maple Mono', monospace;
+  }
+
+  .matrix-kicker {
+    color: #b7ff00;
+    font-size: 0.96rem;
+    font-weight: 700;
+    letter-spacing: 0.17em;
+  }
+
+  .matrix-subtitle {
+    color: #8f948c;
+    font-size: 0.80rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+  }
+
+  .dot-grid,
+  .dot-links {
+    position: absolute;
+    inset: 120px 38px 68px;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: repeat(7, 1fr);
+    grid-auto-flow: column;
+    place-items: center;
+    gap: clamp(8px, 1vw, 13px);
+    align-content: center;
+  }
+
+  .dot-grid {
+    opacity: 0.72;
+  }
+
+  .grid-dot {
+    display: block;
+    width: 5px;
+    height: 5px;
+    justify-self: center;
+    border-radius: 50%;
+    background: rgba(183, 255, 0, 0.36);
+    box-shadow: 0 0 5px rgba(183, 255, 0, 0.10);
+  
+    position: relative;
+  }
+
+  .grid-dot.bright {
+    width: 10px;
+    height: 10px;
+    border: 1px solid #b7ff00;
+    background: #050505;
+    box-shadow:
+      0 0 8px rgba(183, 255, 0, 0.52),
+      0 0 18px rgba(183, 255, 0, 0.18);
+  }
+
+  .grid-dot.orange {
+    background: #ff4d00;
+    box-shadow:
+      0 0 8px rgba(255, 77, 0, 0.7),
+      0 0 20px rgba(255, 77, 0, 0.25);
+  }
+
+  .grid-dot.both:not(.vibe):not(.media) {
+    background: #f5f5f2;
+    box-shadow:
+      0 0 8px rgba(245, 245, 242, 0.72),
+      0 0 20px rgba(183, 255, 0, 0.30),
+      0 0 24px rgba(255, 77, 0, 0.18);
+  }
+
+  .dot-links {
+    pointer-events: none;
+  }
+
+  .dot-link {
+    position: relative;
+    display: block;
+    width: 10px;
+    height: 10px;
+    color: #f5f5f2;
+    font-family: 'Maple Mono', monospace;
+    text-decoration: none;
+    pointer-events: auto;
+  }
+
+  .nav-dot {
+    display: block;
+    width: 10px;
+    height: 10px;
+    border: 1px solid #b7ff00;
+    border-radius: 50%;
+    background: #050505;
+    transition:
+      background 300ms ease,
+      transform 350ms cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 300ms ease;
+  }
+
+  .dot-blog {
+    display: none;
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .dot-portfolio {
+    grid-column: 8;
+    grid-row: 3;
+  }
+
+  .dot-vibe {
+    grid-column: 9;
+    grid-row: 7;
+  }
+
+  .dot-media {
+    grid-column: 2;
+    grid-row: 7;
+  }
+
+  .dot-link-copy {
+    position: absolute;
+    top: 50%;
+    left: 22px;
+    display: grid;
+    width: max-content;
+    gap: 3px;
+    opacity: 0;
+    transform: translate(-8px, -50%);
+    transition:
+      opacity 250ms ease,
+      transform 350ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .dot-link-copy strong {
+    font-size: 0.80rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+  }
+
+  .dot-link-copy small {
+    color: #777b74;
+    font-size: 0.64rem;
+    letter-spacing: 0.12em;
+  }
+
+  .dot-link:hover .nav-dot {
+    background: #b7ff00;
+    transform: scale(1.35);
+    box-shadow:
+      0 0 10px rgba(183, 255, 0, 0.85),
+      0 0 28px rgba(183, 255, 0, 0.3);
+  }
+
+  .dot-link:hover .dot-link-copy {
+    opacity: 1;
+    transform: translate(0, -50%);
+  }
+
+  .dot-link:nth-child(2) .nav-dot {
+    border-color: #ff4d00;
+  }
+
+  .dot-link:nth-child(2):hover .nav-dot {
+    background: #ff4d00;
+    box-shadow:
+      0 0 10px rgba(255, 77, 0, 0.8),
+      0 0 28px rgba(255, 77, 0, 0.3);
+  }
+
+
+  /* VIBE navigation dot = white ring */
+  .dot-vibe .nav-dot {
+    border-color: rgba(245, 245, 242, 0.82);
+    background: #050505;
+    box-shadow: 0 0 5px rgba(245, 245, 242, 0.10);
+  }
+
+  .dot-vibe:hover .nav-dot {
+    background: #050505;
+    border-color: #f5f5f2;
+    transform: scale(1.35);
+    box-shadow:
+      0 0 8px rgba(245, 245, 242, 0.55),
+      0 0 18px rgba(245, 245, 242, 0.18);
+  }
+
+  /* MEDIA navigation dot = small white center point */
+  .dot-media .nav-dot {
+    width: 4px;
+    height: 4px;
+
+    margin: 3px;
+
+    border: 0;
+    background: #f5f5f2;
+
+    box-shadow:
+      0 0 5px rgba(245, 245, 242, 0.55);
+  }
+
+  .dot-media:hover .nav-dot {
+    background: #f5f5f2;
+    transform: scale(1.55);
+
+    box-shadow:
+      0 0 7px rgba(245, 245, 242, 0.85),
+      0 0 16px rgba(245, 245, 242, 0.24);
+  }
+
+  .signal {
+    position: absolute;
+    right: 24px;
+    bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #8f948c;
+    font-family: 'Maple Mono', monospace;
+    font-size: 0.80rem;
+    letter-spacing: 0.14em;
+  }
+
+  .signal-light {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #b7ff00;
+    box-shadow:
+      0 0 8px rgba(183, 255, 0, 0.72),
+      0 0 16px rgba(183, 255, 0, 0.22);
+    animation: signal-pulse 1.8s ease-in-out infinite;
+  }
+
+  .hero-motion {
+    opacity: 0;
+    transform: translateY(105%);
+    will-change: transform, opacity;
+    animation: hero-line-up 2.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .motion-1 { animation-delay: 0.05s; }
+  .motion-2 { animation-delay: 0.15s; }
+  .motion-3 { animation-delay: 0.25s; }
+  .motion-4 { animation-delay: 0.4s; }
+  .motion-5 { animation-delay: 1.05s; }
+
+  @keyframes hero-line-up {
+    from {
+      opacity: 0;
+      transform: translateY(105%);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(-3mm);
+    }
+  }
+
+  @keyframes signal-pulse {
+    0%,
+    100% {
+      opacity: 0.4;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: 1100px) and (min-width: 821px) {
+    .hero-grid {
+      grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+      gap: 40px;
+    }
+
+
+    .hero-title {
+      font-size: clamp(3.1rem, 5.1vw, 5.4rem);
+    }
+  }
+
+  @media (max-width: 820px) {
+    .hero {
+      overflow: visible;
+    }
+
+    .hero-grid {
+      width: calc(100% - 32px);
+      grid-template-columns: 1fr;
+      gap: 54px;
+      padding-top: 120px;
+      padding-bottom: 54px;
+      transform: translateY(-28px);
+    }
+
+    .hero-copy {
+      left: 0;
+    }
+    
+
+    .hero-title {
+      font-size: clamp(2.7rem, 9.7vw, 4.8rem);
+      line-height: 0.88;
+    }
+
+    .dot-visual {
+      left: 0;
+      width: 100%;
+      justify-self: center;
+      justify-content: center;
+    }
+
+    .dot-stage {
+      width: min(100%, 460px);
+      max-width: 460px;
+      margin: 0 auto;
+    }
+
+    .dot-links {
+      pointer-events: auto;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .hero-grid {
+      width: calc(100% - 28px);
+    }
+
+    .eyebrow {
+      margin-bottom: 18px;
+      font-size: 0.6rem;
+    }
+
+    .hero-title {
+      font-size: clamp(2rem, 9.2vw, 3.2rem);
+      line-height: 0.9;
+      letter-spacing: -0.05em;
+    }
+
+    .title-outline {
+      -webkit-text-stroke-width: 1.2px;
+    }
+
+    .hero-description {
+      margin-top: 25px;
+      font-size: 0.95rem;
+    }
+
+    .dot-stage {
+      border-radius: 14px;
+    }
+
+    .dot-grid,
+    .dot-links {
+      inset: 96px 28px 78px;
+      gap: 8px;
+    }
+
+    .dot-link-copy {
+      opacity: 1;
+      transform: translate(0, -50%);
+    }
+
+    .matrix-heading {
+      top: 21px;
+      left: 22px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .jp-ghost-title.jp-run .jp-ghost-text::before {
+      animation: none;
+      opacity: 0;
+    }
+  }
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- =========================================================
+     JAPANESE GHOST TITLE
+     ========================================================= -->
+<div class="jp-ghost-title" aria-hidden="true">
+  <div class="jp-ghost-text">
+    <span style="--i:0; --x:-7px; --y:8px; --r:-2deg;">神</span>
+    <span style="--i:1; --x:4px;  --y:-6px; --r:1deg;">の</span>
+    <span style="--i:2; --x:-3px; --y:10px; --r:-1deg;">裁</span>
+    <span style="--i:3; --x:6px;  --y:-8px; --r:2deg;">き</span>
+    <span style="--i:4; --x:-5px; --y:5px; --r:-1deg;">と</span>
+    <span style="--i:5; --x:3px;  --y:-9px; --r:1deg;">訣</span>
+    <span style="--i:6; --x:-6px; --y:7px; --r:-2deg;">別</span>
+    <span style="--i:7; --x:5px;  --y:-5px; --r:1deg;">す</span>
+    <span style="--i:8; --x:-4px; --y:9px; --r:-1deg;">る</span>
+    <span style="--i:9; --x:6px;  --y:-7px; --r:2deg;">た</span>
+    <span style="--i:10;--x:-3px; --y:6px; --r:-1deg;">め</span>
+  </div>
+
+  <span class="jp-lime-cloud" aria-hidden="true"></span>
+  <span class="jp-ghost-line"></span>
+</div>
+
+<style>
+  /* =========================================================
+     JAPANESE GHOST TITLE
+     Hero finishes at approx. 4.55s
+     ========================================================= */
+
+  .jp-ghost-title {
+    position: fixed;
+    top: 108px;
+    left: 50%;
+    z-index: 20;
+
+    width: max-content;
+
+    pointer-events: none;
+
+    transform: translateX(-50%);
+  }
+
+  .jp-ghost-text {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #f5f5f2;
+
+    font-family:
+      'BIZ UDPMincho', 'Yu Mincho', 'YuMincho', serif;
+
+    font-size: clamp(1.40rem, 1.95vw, 2.10rem);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0.38em;
+
+    white-space: nowrap;
+  }
+
+  .jp-ghost-text > span {
+    display: inline-block;
+
+    opacity: 0;
+
+    filter: blur(7px);
+
+    transform:
+      translate(var(--x), var(--y))
+      rotate(var(--r));
+
+    animation:
+      jp-character-lock 1400ms
+      cubic-bezier(0.16, 1, 0.3, 1)
+      forwards,
+
+      jp-character-vanish 650ms
+      cubic-bezier(0.4, 0, 1, 1)
+      forwards;
+
+    animation-delay:
+      calc(0.45s + (var(--i) * 180ms)),
+      3.35s;
+  }
+
+  .jp-ghost-title.jp-run .jp-ghost-line {
+    position: absolute;
+
+    left: 50%;
+    bottom: -13px;
+
+    width: calc(100% - 4px);
+    height: 1px;
+
+    opacity: 0;
+
+    background: rgba(255, 92, 32, 0.68);
+
+    box-shadow:
+      0 0 4px rgba(255, 92, 32, 0.28),
+      0 0 9px rgba(255, 92, 32, 0.10);
+
+    transform:
+      translateX(-50%)
+      scaleX(0);
+
+    transform-origin: center center;
+
+    animation:
+      jp-line-open 1100ms
+        cubic-bezier(0.16, 1, 0.3, 1)
+        0.28s
+        forwards,
+
+      jp-line-close 900ms
+        cubic-bezier(0.45, 0, 0.35, 1)
+        4.80s
+        forwards;
+  }
+
+  @keyframes jp-character-lock {
+    0% {
+      opacity: 0;
+      filter: blur(4px);
+
+      clip-path: inset(48% 48% 48% 48%);
+
+      transform:
+        translate(var(--x), var(--y))
+        rotate(var(--r))
+        scaleX(0.16);
+    }
+
+    22% {
+      opacity: 0.38;
+      filter: blur(2px);
+
+      clip-path: inset(34% 36% 34% 36%);
+
+      transform:
+        translate(calc(var(--x) * 0.55), calc(var(--y) * 0.55))
+        rotate(calc(var(--r) * 0.5))
+        scaleX(0.32);
+    }
+
+    58% {
+      opacity: 0.78;
+      filter: blur(0.8px);
+
+      clip-path: inset(12% 10% 12% 10%);
+
+      transform:
+        translate(0, 0)
+        rotate(0)
+        scaleX(0.78);
+    }
+
+    100% {
+      opacity: 1;
+      filter: blur(0);
+
+      clip-path: inset(0 0 0 0);
+
+      transform:
+        translate(0, 0)
+        rotate(0)
+        scaleX(1);
+    }
+  }
+
+  @keyframes jp-line-open {
+    0% {
+      opacity: 0;
+      transform: translateX(-50%) scaleX(0);
+    }
+
+    12% {
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateX(-50%) scaleX(1);
+    }
+  }
+
+  @keyframes jp-line-close {
+  0% {
+    opacity: 1;
+    transform:
+      translateX(-50%)
+      scaleX(1);
+  }
+
+  78% {
+    opacity: 1;
+    transform:
+      translateX(-50%)
+      scaleX(0.18);
+  }
+
+  100% {
+    opacity: 0;
+    transform:
+      translateX(-50%)
+      scaleX(0);
+  }
+}
+
+  @keyframes jp-character-vanish {
+    0% {
+      opacity: 1;
+      filter: blur(0);
+      transform: translateY(-3mm);
+    }
+
+    100% {
+      opacity: 0;
+      filter: blur(6px);
+      transform: translateY(-3px);
+    }
+  }
+
+  @media (max-width: 820px) {
+    .jp-ghost-title {
+      top: 92px;
+    }
+
+    .jp-ghost-text {
+      font-size: clamp(1.40rem, 1.95vw, 2.10rem);
+      letter-spacing: 0.38em;
+    }
+
+    .jp-ghost-line {
+      bottom: -9px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .jp-ghost-title.jp-run .jp-ghost-text::before {
+      animation: none;
+      opacity: 0;
+    }
+  }
+</style>
+
+
+
+<script is:inline>
+  const startHeroSequence = () => {
+    const jp = document.querySelector('.jp-ghost-title');
+    const matrix = document.querySelector('.dot-stage');
+
+    if (jp) {
+      jp.classList.remove('jp-run');
+      void jp.offsetWidth;
+      jp.classList.add('jp-run');
+    }
+
+    if (matrix) {
+      matrix.classList.remove('matrix-run');
+      void matrix.offsetWidth;
+
+      setTimeout(() => {
+        matrix.classList.add('matrix-run');
+      }, 500);
+    }
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', startHeroSequence, { once: true });
+  } else {
+    startHeroSequence();
+  }
+
+  document.addEventListener('astro:page-load', startHeroSequence);
+</script>
+
+
+<style>
+  /* =========================================================
+     MATRIX DAY AXIS
+     ========================================================= */
+
+  .matrix-days {
+    position: absolute;
+    top: 120px;
+    bottom: 68px;
+    left: 12px;
+    z-index: 4;
+
+    display: grid;
+    grid-template-rows: repeat(7, 1fr);
+    gap: clamp(8px, 1vw, 13px);
+    align-content: center;
+
+    color: rgba(245, 245, 242, 0.42);
+
+    font-family: 'BIZ UDPMincho', 'Yu Mincho', 'YuMincho', serif;
+    font-size: 0.46rem;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.05em;
+
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .matrix-days span {
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+
+
+
+
+  @media (max-width: 520px) {
+    .matrix-days {
+    position: absolute;
+    top: 120px;
+    bottom: 68px;
+    left: 12px;
+    z-index: 4;
+
+    display: grid;
+    grid-template-rows: repeat(7, 1fr);
+    gap: clamp(8px, 1vw, 13px);
+    align-content: center;
+
+    color: rgba(245, 245, 242, 0.42);
+
+    font-family: 'Maple Mono', monospace;
+    font-size: 0.46rem;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.05em;
+
+    pointer-events: none;
+    user-select: none;
+  }
+  }
+</style>
+
+
+
+
+
+
+
+
+
+
+<style>
+  /* =========================================================
+     JP GHOST APPEAR EFFECT
+     center lime glow + subtle ghost image
+     ========================================================= */
+
+  .jp-ghost-text {
+    isolation: isolate;
+  }
+
+  /* 中央から一瞬だけ広がるライム光 */
+  .jp-ghost-title.jp-run .jp-ghost-text::before {
+    content: "";
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: -1;
+
+    width: 110%;
+    height: 120%;
+
+    pointer-events: none;
+
+    opacity: 0;
+
+    background:
+      radial-gradient(
+        ellipse at center,
+        rgba(183, 255, 0, 0.70) 0%,
+        rgba(183, 255, 0, 0.46) 18%,
+        rgba(183, 255, 0, 0.26) 38%,
+        rgba(183, 255, 0, 0.11) 62%,
+        transparent 82%
+      );
+
+    filter: blur(9px);
+
+    transform:
+      translate(-50%, -50%)
+      scaleX(0.03)
+      scaleY(0.55);
+
+    transform-origin: center center;
+
+    animation: jp-lime-cloud-cycle 6000ms linear 0s forwards;
+  }
+
+  /*
+     出現初期だけライムの残像。
+     元の文字収束animationは変更しない。
+  */
+  .jp-ghost-title.jp-run .jp-ghost-text > span {
+    display: inline-block;
+
+    opacity: 0;
+
+    animation:
+      jp-character-lock 1400ms
+        cubic-bezier(0.16, 1, 0.3, 1)
+        forwards,
+
+      jp-character-blink 260ms
+        linear
+        forwards,
+
+      jp-character-vanish 700ms
+        cubic-bezier(0.4, 0, 1, 1)
+        forwards;
+
+    animation-delay:
+      calc(0s + (var(--i) * 180ms)),
+      4.50s,
+      4.82s;
+  }
+
+  @keyframes jp-center-flash {
+    0% {
+      opacity: 0;
+      transform:
+        translate(-50%, -50%)
+        scaleX(0.20);
+    }
+
+    28% {
+      opacity: 1;
+    }
+
+    72% {
+      opacity: 0.48;
+      transform:
+        translate(-50%, -50%)
+        scaleX(3.8);
+    }
+
+    100% {
+      opacity: 0;
+      transform:
+        translate(-50%, -50%)
+        scaleX(5.2);
+    }
+  }
+
+  @keyframes jp-ghost-shadow {
+    0% {
+      text-shadow:
+        3px 0 0 rgba(183, 255, 0, 0.34),
+        -2px 0 6px rgba(183, 255, 0, 0.15);
+    }
+
+    55% {
+      text-shadow:
+        1px 0 0 rgba(183, 255, 0, 0.18),
+        0 0 5px rgba(183, 255, 0, 0.08);
+    }
+
+    100% {
+      text-shadow:
+        0 0 0 rgba(183, 255, 0, 0),
+        0 0 0 rgba(183, 255, 0, 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .jp-ghost-title.jp-run .jp-ghost-text::before {
+      animation: none;
+      opacity: 0;
+    }
+  }
+</style>
+
+
+
+
+
+<style>
+
+@keyframes jp-lime-cloud-cycle {
+
+  /* 中央から出現 */
+  0% {
+    opacity: 0;
+    transform:
+      translate(-50%, -50%)
+      scaleX(0.03)
+      scaleY(0.55);
+  }
+
+  8% {
+    opacity: 0.62;
+  }
+
+  20% {
+    opacity: 0.88;
+    transform:
+      translate(-50%, -50%)
+      scaleX(0.58)
+      scaleY(0.94);
+  }
+
+  30% {
+    opacity: 0.82;
+    transform:
+      translate(-50%, -50%)
+      scaleX(1)
+      scaleY(1);
+  }
+
+  /* 長く保持 */
+  80% {
+    opacity: 0.82;
+    transform:
+      translate(-50%, -50%)
+      scaleX(1)
+      scaleY(1);
+  }
+
+  /* 文字より少し遅れて左右から収縮 */
+  87% {
+    opacity: 0.84;
+    transform:
+      translate(-50%, -50%)
+      scaleX(0.68)
+      scaleY(0.97);
+  }
+
+  93% {
+    opacity: 0.86;
+    transform:
+      translate(-50%, -50%)
+      scaleX(0.34)
+      scaleY(0.92);
+  }
+
+  97% {
+    opacity: 0.72;
+    transform:
+      translate(-50%, -50%)
+      scaleX(0.12)
+      scaleY(0.88);
+  }
+
+  /* 点にはせず、細い雲の残像として消す */
+  100% {
+    opacity: 0;
+    transform:
+      translate(-50%, -50%)
+      scaleX(0.025)
+      scaleY(0.86);
+  }
+}
+
+
+</style>
+
+
+
+<style>
+  .grid-dot.vibe::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    width: 9px;
+    height: 9px;
+
+    border: 1px solid rgba(245, 245, 242, 0.82);
+    border-radius: 50%;
+    background: #070807;
+
+    box-shadow:
+      0 0 5px rgba(245, 245, 242, 0.20);
+
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  /* MEDIA = 中央の小点 */
+  .grid-dot.media::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    width: 3px;
+    height: 3px;
+
+    border-radius: 50%;
+    background: #f5f5f2;
+
+    box-shadow:
+      0 0 5px rgba(245, 245, 242, 0.68);
+
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+</style>
+
+
+
+
+
+
+
+
+
+
+
+<style>
+  .grid-dot.vibe:not(.bright):not(.orange):not(.both) {
+    background: transparent;
+    box-shadow: none;
+  }
+
+  /* MEDIAだけの日は元のライム点を消して白点だけにする */
+  .grid-dot.media:not(.vibe):not(.bright):not(.orange):not(.both) {
+    background: transparent;
+    box-shadow: none;
+  }
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+@keyframes jp-character-blink {
+  0% {
+    opacity: 1;
+  }
+
+  42% {
+    opacity: 0.16;
+  }
+
+  72% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+</style>
+
+<style>
+/* =========================================================
+   JP FINAL TIMELINE OVERRIDE
+   CSS animation conflicts disabled.
+   Timeline is controlled by JS.
+   ========================================================= */
+
+/* 古い疑似要素のライム雲は完全停止 */
+.jp-ghost-title .jp-ghost-text::before,
+.jp-ghost-title.jp-run .jp-ghost-text::before {
+  content: none !important;
+  display: none !important;
+  animation: none !important;
+}
+
+/* 古い文字animationを停止 */
+.jp-ghost-title .jp-ghost-text > span,
+.jp-ghost-title.jp-run .jp-ghost-text > span {
+  animation: none !important;
+}
+
+/* 古い下線animationを停止 */
+.jp-ghost-title .jp-ghost-line,
+.jp-ghost-title.jp-run .jp-ghost-line {
+  animation: none !important;
+}
+
+/* 実ライム雲 */
+.jp-lime-cloud {
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+  z-index: -1;
+
+  width: 110%;
+  height: 120%;
+
+  opacity: 0;
+
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      ellipse at center,
+      rgba(183, 255, 0, 0.78) 0%,
+      rgba(183, 255, 0, 0.52) 18%,
+      rgba(183, 255, 0, 0.30) 38%,
+      rgba(183, 255, 0, 0.14) 62%,
+      transparent 82%
+    );
+
+  filter: blur(9px);
+
+  transform:
+    translate(-50%, -50%)
+    scaleX(0.03)
+    scaleY(0.72);
+
+  transform-origin: center center;
+}
+
+/* 初期状態 */
+.jp-ghost-text > span {
+  opacity: 0;
+}
+
+.jp-ghost-line {
+  opacity: 0;
+
+  transform:
+    translateX(-50%)
+    scaleX(0);
+
+  transform-origin: center center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jp-lime-cloud {
+    display: none;
+  }
+}
+</style>
+<script is:inline>
+(() => {
+  let jpTimelineToken = 0;
+
+  const runJapaneseFinalTimeline = () => {
+    const title = document.querySelector('.jp-ghost-title');
+    if (!title) return;
+
+    const chars = [...title.querySelectorAll('.jp-ghost-text > span')];
+    const line = title.querySelector('.jp-ghost-line');
+    const cloud = title.querySelector('.jp-lime-cloud');
+
+    if (!chars.length || !line || !cloud) return;
+
+    const token = ++jpTimelineToken;
+
+    /* 古いWAAPIを全キャンセル */
+    title.querySelectorAll('*').forEach((el) => {
+      el.getAnimations().forEach((animation) => animation.cancel());
+    });
+
+    /* -----------------------------------------------------
+       RESET
+       ----------------------------------------------------- */
+
+    chars.forEach((char) => {
+      char.style.opacity = '0';
+      char.style.filter = 'blur(4px)';
+      char.style.transform = 'scaleX(0.18) translateY(5px)';
+    });
+
+    line.style.opacity = '0';
+    line.style.transform = 'translateX(-50%) scaleX(0)';
+
+    cloud.style.opacity = '0';
+    cloud.style.transform =
+      'translate(-50%, -50%) scaleX(0.03) scaleY(0.72)';
+
+    /* -----------------------------------------------------
+       0.00s
+       CLOUD + ORANGE LINE OPEN TOGETHER
+       ----------------------------------------------------- */
+
+    cloud.animate(
+      [
+        {
+          opacity: 0,
+          transform:
+            'translate(-50%, -50%) scaleX(0.03) scaleY(0.72)'
+        },
+        {
+          opacity: 0.88,
+          offset: 0.42,
+          transform:
+            'translate(-50%, -50%) scaleX(0.62) scaleY(0.96)'
+        },
+        {
+          opacity: 0.82,
+          transform:
+            'translate(-50%, -50%) scaleX(1) scaleY(1)'
+        }
+      ],
+      {
+        duration: 1650,
+        easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+        fill: 'forwards'
+      }
+    );
+
+    line.animate(
+      [
+        {
+          opacity: 0,
+          transform: 'translateX(-50%) scaleX(0)'
+        },
+        {
+          opacity: 1,
+          offset: 0.12
+        },
+        {
+          opacity: 1,
+          transform: 'translateX(-50%) scaleX(1)'
+        }
+      ],
+      {
+        duration: 1250,
+        delay: 120,
+        easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+        fill: 'forwards'
+      }
+    );
+
+    /* -----------------------------------------------------
+       0.30s～
+       CHARACTERS FLOW INTO THE OPENING LIGHT
+       ----------------------------------------------------- */
+
+    const charStart = 300;
+    const stagger = 180;
+    const charDuration = 1400;
+
+    chars.forEach((char, i) => {
+      char.animate(
+        [
+          {
+            opacity: 0,
+            filter: 'blur(4px)',
+            transform: 'scaleX(0.18) translateY(5px)'
+          },
+          {
+            opacity: 0.56,
+            offset: 0.36,
+            filter: 'blur(1.5px)',
+            transform: 'scaleX(0.52) translateY(2px)'
+          },
+          {
+            opacity: 1,
+            filter: 'blur(0)',
+            transform: 'scaleX(1) translateY(0)'
+          }
+        ],
+        {
+          duration: charDuration,
+          delay: charStart + (i * stagger),
+          easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+          fill: 'forwards'
+        }
+      );
+    });
+
+    /*
+      最後の文字が完成する時刻
+      300 + (10 * 180) + 1400 = 約3.5秒
+    */
+
+    const allCharsReady =
+      charStart +
+      ((chars.length - 1) * stagger) +
+      charDuration;
+
+    /* 全文完成後、一呼吸。
+       ここを長くしたければこの値だけ変更 */
+    const hold = 1450;
+
+    const blinkStart = allCharsReady + hold;
+
+    /* -----------------------------------------------------
+       BLINK ONCE
+       TEXT + ORANGE LINE
+       ----------------------------------------------------- */
+
+    setTimeout(() => {
+      if (token !== jpTimelineToken) return;
+
+      chars.forEach((char) => {
+        char.animate(
+          [
+            { opacity: 1 },
+            { opacity: 0.20, offset: 0.34 },
+            { opacity: 1, offset: 0.68 },
+            { opacity: 1 }
+          ],
+          {
+            duration: 300,
+            easing: 'linear',
+            fill: 'forwards'
+          }
+        );
+      });
+
+      line.animate(
+        [
+          { opacity: 1 },
+          { opacity: 0.18, offset: 0.34 },
+          { opacity: 1, offset: 0.68 },
+          { opacity: 1 }
+        ],
+        {
+          duration: 300,
+          easing: 'linear',
+          fill: 'forwards'
+        }
+      );
+
+    }, blinkStart);
+
+    /* -----------------------------------------------------
+       TEXT + ORANGE LINE VANISH
+       ----------------------------------------------------- */
+
+    const vanishStart = blinkStart + 340;
+
+    setTimeout(() => {
+      if (token !== jpTimelineToken) return;
+
+      chars.forEach((char) => {
+        char.animate(
+          [
+            {
+              opacity: 1,
+              filter: 'blur(0)',
+              transform: 'translateY(0)'
+            },
+            {
+              opacity: 0,
+              filter: 'blur(6px)',
+              transform: 'translateY(-3px)'
+            }
+          ],
+          {
+            duration: 850,
+            easing: 'cubic-bezier(0.4, 0, 1, 1)',
+            fill: 'forwards'
+          }
+        );
+      });
+
+      /* 両端から中央へ */
+      line.animate(
+        [
+          {
+            opacity: 1,
+            transform: 'translateX(-50%) scaleX(1)'
+          },
+          {
+            opacity: 1,
+            offset: 0.72,
+            transform: 'translateX(-50%) scaleX(0.16)'
+          },
+          {
+            opacity: 0,
+            transform: 'translateX(-50%) scaleX(0)'
+          }
+        ],
+        {
+          duration: 900,
+          easing: 'cubic-bezier(0.45, 0, 0.35, 1)',
+          fill: 'forwards'
+        }
+      );
+
+    }, vanishStart);
+
+    /* -----------------------------------------------------
+       CLOUD RESIDUAL ACTION
+       文字が消え切る少し前から開始
+       ----------------------------------------------------- */
+
+    const cloudCloseStart = vanishStart + 620;
+
+    setTimeout(() => {
+      if (token !== jpTimelineToken) return;
+
+      cloud.animate(
+        [
+          {
+            opacity: 0.82,
+            transform:
+              'translate(-50%, -50%) scaleX(1) scaleY(1)'
+          },
+          {
+            opacity: 0.84,
+            offset: 0.34,
+            transform:
+              'translate(-50%, -50%) scaleX(0.68) scaleY(0.98)'
+          },
+          {
+            opacity: 0.76,
+            offset: 0.67,
+            transform:
+              'translate(-50%, -50%) scaleX(0.34) scaleY(0.94)'
+          },
+          {
+            opacity: 0.48,
+            offset: 0.88,
+            transform:
+              'translate(-50%, -50%) scaleX(0.12) scaleY(0.90)'
+          },
+
+          /* 点にはしない。細い雲の残像のまま消える */
+          {
+            opacity: 0,
+            transform:
+              'translate(-50%, -50%) scaleX(0.035) scaleY(0.88)'
+          }
+        ],
+        {
+          duration: 1750,
+          easing: 'cubic-bezier(0.45, 0, 0.35, 1)',
+          fill: 'forwards'
+        }
+      );
+
+    }, cloudCloseStart);
+  };
+
+  /*
+    Full reload と Astro client navigation の両方で
+    必ず同じタイムラインを起動する。
+  */
+
+  const scheduleJapaneseTimeline = () => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(runJapaneseFinalTimeline);
+    });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener(
+      'DOMContentLoaded',
+      scheduleJapaneseTimeline,
+      { once: true }
+    );
+  } else {
+    scheduleJapaneseTimeline();
+  }
+
+  document.addEventListener(
+    'astro:page-load',
+    scheduleJapaneseTimeline
+  );
+})();
+</script>
+
+
+
+<style>
+/* =========================================================
+   MATRIX HOVER INFO
+   ========================================================= */
+
+.matrix-hover-info {
+  position: absolute;
+  left: 27px;
+  bottom: 16px;
+  z-index: 7;
+
+  display: grid;
+  gap: 3px;
+
+  opacity: 0;
+
+  font-family: 'Maple Mono', monospace;
+  pointer-events: none;
+
+  transform: translateY(4px);
+
+  transition:
+    opacity 220ms ease,
+    transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.matrix-hover-info.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.matrix-hover-date {
+  color: rgba(245,245,242,.44);
+  font-size: .50rem;
+  letter-spacing: .08em;
+}
+
+.matrix-hover-kind {
+  color: #f5f5f2;
+  font-size: .58rem;
+  font-weight: 600;
+  letter-spacing: .10em;
+}
+</style>
+
+
+<style>
+/* =========================================================
+   MATRIX DATE AXIS
+   ========================================================= */
+
+.matrix-date-axis {
+  position: absolute;
+  top: 103px;
+  left: calc(38px - clamp(4px, 0.5vw, 6.5px));
+  right: calc(38px - clamp(4px, 0.5vw, 6.5px));
+  z-index: 4;
+
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+
+  color: rgba(245, 245, 242, 0.42);
+
+  font-family: 'Maple Mono', monospace;
+  font-size: 0.52rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.02em;
+
+  pointer-events: none;
+  user-select: none;
+}
+
+.matrix-date-axis span {
+  justify-self: center;
+}
+
+.matrix-date-axis .month-start {
+  color: rgba(245, 245, 242, 0.72);
+  font-weight: 600;
+}
+
+@media (max-width: 520px) {
+  .matrix-date-axis {
+    top: 80px;
+    left: 28px;
+    right: 28px;
+
+    font-size: 0.36rem;
+  }
+}
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+/* =========================================================
+   MATRIX UNIFIED INTERACTION — FINAL
+   ========================================================= */
+.dot-links { display: none !important; }
+
+.grid-dot {
+  position: relative;
+  display: block;
+  cursor: default;
+  text-decoration: none;
+}
+
+.grid-dot.has-content { cursor: pointer; }
+
+/* PORTFOLIO = orange ring */
+.grid-dot.orange:not(.both) {
+  width: 10px;
+  height: 10px;
+  border: 1px solid #ff4d00;
+  background: #050505;
+  box-shadow:
+    0 0 8px rgba(255, 77, 0, 0.52),
+    0 0 18px rgba(255, 77, 0, 0.18);
+}
+
+.grid-dot-copy {
+  position: absolute;
+  top: 50%;
+  left: 19px;
+  z-index: 30;
+  display: grid;
+  gap: 4px;
+  width: max-content;
+  opacity: 0;
+  visibility: hidden;
+  color: #f5f5f2;
+  font-family: 'Maple Mono', monospace;
+  pointer-events: auto;
+  padding-left: 14px;
+  transform: translate(-7px, -50%);
+  transition:
+    opacity 180ms ease,
+    transform 260ms cubic-bezier(.16,1,.3,1),
+    visibility 0s linear 180ms;
+}
+
+.grid-dot.copy-left .grid-dot-copy {
+  right: 19px;
+  left: auto;
+  justify-items: end;
+  text-align: right;
+  padding-right: 14px;
+  padding-left: 0;
+  transform: translate(7px, -50%);
+}
+
+.grid-dot-copy strong {
+  font-size: .66rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  white-space: nowrap;
+}
+
+.grid-dot-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  white-space: nowrap;
+  pointer-events: auto;
+}
+
+.grid-dot.copy-left .grid-dot-actions {
+  justify-content: flex-end;
+}
+
+:global(.grid-dot-actions a) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 20px;
+  padding: 3px 8px 4px;
+  border: 1px solid rgba(245,245,242,.10);
+  border-radius: 4px;
+  background: rgba(150,154,148,.14);
+  color: rgba(245,245,242,.74);
+  font-size: .64rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: .06em;
+  text-decoration: none !important;
+  box-shadow: none;
+}
+
+:global(.grid-dot-actions a:hover),
+:global(.grid-dot-actions a:focus-visible) {
+  background: rgba(150,154,148,.20);
+  border-color: rgba(245,245,242,.18);
+  color: #f5f5f2;
+  text-decoration: none !important;
+}
+
+:global(.grid-dot-actions a::before),
+:global(.grid-dot-actions a::after) {
+  content: none !important;
+  display: none !important;
+}
+
+.grid-dot.has-content:hover .grid-dot-copy,
+.grid-dot.has-content:focus-within .grid-dot-copy,
+.grid-dot.is-popup-open .grid-dot-copy {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(0, -50%);
+  transition-delay: 0s;
+}
+
+.grid-dot.has-content:hover { z-index: 25; }
+.grid-dot.has-content:hover.bright { transform: scale(1.18); }
+.grid-dot.has-content:hover.orange { transform: scale(1.18); }
+.grid-dot.has-content:hover.vibe::before { transform: translate(-50%, -50%) scale(1.18); }
+.grid-dot.has-content:hover.media::after { transform: translate(-50%, -50%) scale(1.45); }
+
+/* left-bottom info: one step larger */
+.matrix-hover-info { left: 27px; bottom: 16px; gap: 4px; }
+.matrix-hover-date { font-size: .70rem; font-weight: 600; letter-spacing: .08em; transform: translateY(6px); }
+.matrix-hover-kind { font-size: .80rem; font-weight: 700; letter-spacing: .10em; }
+
+@media (max-width: 520px) {
+  .grid-dot-copy strong { font-size: .58rem; }
+  :global(.grid-dot-actions a) { font-size: .60rem; }
+  .matrix-hover-date { font-size: .64rem; }
+  .matrix-hover-kind { font-size: .74rem; }
+}
+</style>
+
+<script is:inline>
+(() => {
+  const initUnifiedMatrix = () => {
+    const root = document.querySelector('.dot-stage');
+    if (!root) return;
+
+    /* Safe on reload / Astro navigation: rebuild once per current DOM. */
+    if (root.dataset.unifiedMatrixReady === '1') return;
+    root.dataset.unifiedMatrixReady = '1';
+
+    const info = root.querySelector('.matrix-hover-info');
+    const dateEl = root.querySelector('.matrix-hover-date');
+    const kindEl = root.querySelector('.matrix-hover-kind');
+
+    const dots = [...root.querySelectorAll('.grid-dot')];
+
+    dots.forEach((dot, index) => {
+      const entries = [];
+
+      if (Number(dot.dataset.blog) > 0 && dot.dataset.blogHref) {
+        entries.push(['BLOG', dot.dataset.blogHref]);
+      }
+      if (Number(dot.dataset.portfolio) > 0 && dot.dataset.portfolioHref) {
+        entries.push(['PORTFOLIO', dot.dataset.portfolioHref]);
+      }
+      if (Number(dot.dataset.vibe) > 0 && dot.dataset.vibeHref) {
+        entries.push(['PULSE', dot.dataset.vibeHref]);
+      }
+      if (Number(dot.dataset.media) > 0 && dot.dataset.mediaHref) {
+        entries.push(['MEDIA', dot.dataset.mediaHref]);
+      }
+
+      if (!entries.length) return;
+
+      dot.classList.add('has-content');
+
+      /* Last 4 columns open labels to the left so text never gets cut off. */
+      const column = Math.floor(index / 7);
+      if (column >= 7) dot.classList.add('copy-left');
+
+      const labels = entries.map(([label]) => label);
+      const copy = dot.querySelector('.grid-dot-copy strong');
+      const actions = dot.querySelector('.grid-dot-actions');
+
+      if (copy) copy.textContent = labels.join(' / ');
+
+      if (actions) {
+        actions.replaceChildren();
+
+        entries.forEach(([label, href]) => {
+          const link = document.createElement('a');
+          link.href = href;
+          link.textContent = entries.length === 1 ? 'ENTER ↗' : `${label} ↗`;
+          link.setAttribute('aria-label', `Open ${label}`);
+
+          link.style.cssText = `
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            min-height:20px;
+            padding:3px 8px 4px;
+            border:1px solid rgba(245,245,242,.10);
+            border-radius:4px;
+            background:rgba(150,154,148,.14);
+            color:rgba(245,245,242,.74);
+            font-size:.66rem;
+            font-weight:600;
+            line-height:1;
+            letter-spacing:.06em;
+            text-decoration:none;
+            background-image:none;
+            box-shadow:none;
+          `;
+
+          actions.append(link);
+        });
+      }
+
+      let hideTimer = 0;
+
+      const cancelHide = () => {
+        if (hideTimer) {
+          window.clearTimeout(hideTimer);
+          hideTimer = 0;
+        }
+      };
+
+      const showInfo = () => {
+        cancelHide();
+        if (dateEl) dateEl.textContent = (dot.dataset.date || '').replaceAll('-', '.');
+        if (kindEl) kindEl.textContent = labels.join(' / ');
+        info?.classList.add('is-visible');
+        dot.classList.add('is-popup-open');
+      };
+
+      const hideInfo = () => {
+        cancelHide();
+        hideTimer = window.setTimeout(() => {
+          info?.classList.remove('is-visible');
+          dot.classList.remove('is-popup-open');
+          hideTimer = 0;
+        }, 520);
+      };
+
+      const popup = dot.querySelector('.grid-dot-copy');
+
+      dot.addEventListener('mouseenter', showInfo);
+      dot.addEventListener('focusin', showInfo);
+      dot.addEventListener('mouseleave', hideInfo);
+
+      popup?.addEventListener('mouseenter', showInfo);
+      popup?.addEventListener('mouseleave', hideInfo);
+
+      dot.addEventListener('focusout', (event) => {
+        if (!dot.contains(event.relatedTarget)) hideInfo();
+      });
+
+      /* One category: clicking the dot itself opens it.
+         Multiple categories: choose the visible BLOG/PULSE/MEDIA/etc link. */
+      if (entries.length === 1) {
+        dot.tabIndex = 0;
+        dot.setAttribute('role', 'link');
+
+        dot.addEventListener('click', (event) => {
+          if (event.target.closest?.('.grid-dot-actions a')) return;
+          window.location.href = entries[0][1];
+        });
+
+        dot.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            window.location.href = entries[0][1];
+          }
+        });
+      }
+    });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initUnifiedMatrix, { once: true });
+  } else {
+    initUnifiedMatrix();
+  }
+
+  document.addEventListener('astro:page-load', initUnifiedMatrix);
+})();
+</script>
+
+
+
+<style>
+/* =========================================================
+   MATRIX MEDIA — DEEP PURPLE
+   ========================================================= */
+
+.grid-dot.media::after {
+  background: #b46cff !important;
+
+  box-shadow:
+    0 0 6px rgba(139, 77, 232, 0.72),
+    0 0 14px rgba(139, 77, 232, 0.34),
+    0 0 24px rgba(139, 77, 232, 0.12) !important;
+}
+</style>
+
+
+<style>
+/* =========================================================
+   MATRIX MEDIA — SOLO RING / OVERLAP DOT
+   MEDIA only    = purple ring
+   MEDIA overlap = purple center dot
+   ========================================================= */
+
+/* MEDIA単独 */
+.grid-dot.media:not(.vibe):not(.bright):not(.orange):not(.both)::after {
+  width: 9px !important;
+  height: 9px !important;
+
+  background: #070807 !important;
+
+  border: 1px solid #b46cff !important;
+  border-radius: 50% !important;
+
+  box-shadow:
+    0 0 5px rgba(180, 108, 255, 0.92),
+    0 0 10px rgba(180, 108, 255, 0.62),
+    0 0 18px rgba(180, 108, 255, 0.28),
+    inset 0 0 5px rgba(180, 108, 255, 0.18) !important;
+}
+
+/* MEDIAが他カテゴリと重なった場合 */
+.grid-dot.media:is(.vibe, .bright, .orange, .both)::after {
+  width: 3px !important;
+  height: 3px !important;
+
+  border: 0 !important;
+
+  background: #b46cff !important;
+
+  box-shadow:
+    0 0 6px rgba(139, 77, 232, 0.72),
+    0 0 14px rgba(139, 77, 232, 0.34),
+    0 0 24px rgba(139, 77, 232, 0.12) !important;
+}
+</style>
+<style>
+/* =========================================================
+   MATRIX OVERLAP PRIORITY FINAL
+   BLOG > PORTFOLIO > PULSE > MEDIA
+
+   single  = category ring
+   overlap = highest priority ring + second category dot
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   BLOG + PORTFOLIO
+   BLOG = lime ring
+   PORTFOLIO = orange center dot
+   古い .both の白表示を無効化
+   --------------------------------------------------------- */
+
+.grid-dot.bright.orange {
+  width: 10px !important;
+  height: 10px !important;
+
+  border: 1px solid #b7ff00 !important;
+  border-radius: 50% !important;
+
+  background: #050505 !important;
+
+  box-shadow:
+    0 0 8px rgba(183, 255, 0, 0.52),
+    0 0 18px rgba(183, 255, 0, 0.18) !important;
+}
+
+.grid-dot.bright.orange::after {
+  content: "" !important;
+
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+
+  width: 3px !important;
+  height: 3px !important;
+
+  border: 0 !important;
+  border-radius: 50% !important;
+
+  background: #ff4d00 !important;
+
+  box-shadow:
+    0 0 6px rgba(255, 77, 0, 0.72),
+    0 0 12px rgba(255, 77, 0, 0.30) !important;
+
+  transform: translate(-50%, -50%) !important;
+}
+
+
+/* ---------------------------------------------------------
+   BLOG + PULSE
+   BLOG = lime ring
+   PULSE = white center dot
+   --------------------------------------------------------- */
+
+.grid-dot.bright.vibe:not(.orange)::before {
+  width: 3px !important;
+  height: 3px !important;
+
+  border: 0 !important;
+
+  background: #f5f5f2 !important;
+
+  box-shadow:
+    0 0 6px rgba(245, 245, 242, 0.72),
+    0 0 12px rgba(245, 245, 242, 0.26) !important;
+}
+
+
+/* ---------------------------------------------------------
+   PORTFOLIO + PULSE
+   PORTFOLIO = orange ring
+   PULSE = white center dot
+   --------------------------------------------------------- */
+
+.grid-dot.orange.vibe:not(.bright)::before {
+  width: 3px !important;
+  height: 3px !important;
+
+  border: 0 !important;
+
+  background: #f5f5f2 !important;
+
+  box-shadow:
+    0 0 6px rgba(245, 245, 242, 0.72),
+    0 0 12px rgba(245, 245, 242, 0.26) !important;
+}
+
+
+/* ---------------------------------------------------------
+   BLOG + MEDIA
+   BLOG ring stays as-is
+   MEDIA already becomes purple center dot
+   --------------------------------------------------------- */
+
+.grid-dot.bright.media:not(.orange):not(.vibe)::after {
+  width: 3px !important;
+  height: 3px !important;
+
+  border: 0 !important;
+
+  background: #b46cff !important;
+
+  box-shadow:
+    0 0 6px rgba(139, 77, 232, 0.72),
+    0 0 12px rgba(139, 77, 232, 0.30) !important;
+
+  transform: translate(-50%, -50%) !important;
+}
+
+
+/* ---------------------------------------------------------
+   PORTFOLIO + MEDIA
+   PORTFOLIO ring stays as-is
+   MEDIA = purple center dot
+   --------------------------------------------------------- */
+
+.grid-dot.orange.media:not(.bright):not(.vibe)::after {
+  width: 3px !important;
+  height: 3px !important;
+
+  border: 0 !important;
+
+  background: #b46cff !important;
+
+  box-shadow:
+    0 0 6px rgba(139, 77, 232, 0.72),
+    0 0 12px rgba(139, 77, 232, 0.30) !important;
+
+  transform: translate(-50%, -50%) !important;
+}
+
+
+/* ---------------------------------------------------------
+   PULSE + MEDIA
+   PULSE = white ring
+   MEDIA = purple center dot
+   --------------------------------------------------------- */
+
+.grid-dot.vibe.media:not(.bright):not(.orange) {
+  width: 10px !important;
+  height: 10px !important;
+
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.grid-dot.vibe.media:not(.bright):not(.orange)::before {
+  width: 9px !important;
+  height: 9px !important;
+
+  border: 1px solid #f5f5f2 !important;
+  border-radius: 50% !important;
+
+  background: #050505 !important;
+
+  box-shadow:
+    0 0 8px rgba(245, 245, 242, 0.52),
+    0 0 18px rgba(245, 245, 242, 0.16) !important;
+}
+
+.grid-dot.vibe.media:not(.bright):not(.orange)::after {
+  width: 3px !important;
+  height: 3px !important;
+
+  border: 0 !important;
+
+  background: #b46cff !important;
+
+  box-shadow:
+    0 0 6px rgba(139, 77, 232, 0.72),
+    0 0 12px rgba(139, 77, 232, 0.30) !important;
+
+  transform: translate(-50%, -50%) !important;
+}
+</style>
+<style>
+/* =========================================================
+   MATRIX TRIPLE OVERLAP — CONCENTRIC SYSTEM
+
+   Priority:
+   BLOG > PORTFOLIO > PULSE > MEDIA
+
+   Triple rule:
+   1st = outer ring
+   2nd = inner fill
+   3rd = center dot
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   BLOG + PORTFOLIO + PULSE
+   BLOG      = lime outer ring
+   PORTFOLIO = orange fill
+   PULSE     = white center dot
+   --------------------------------------------------------- */
+
+.grid-dot.bright.orange.vibe:not(.media) {
+  width: 10px !important;
+  height: 10px !important;
+
+  border: 1px solid #b7ff00 !important;
+  border-radius: 50% !important;
+
+  background: #ff4d00 !important;
+
+  box-shadow:
+    0 0 8px rgba(183, 255, 0, 0.52),
+    0 0 18px rgba(183, 255, 0, 0.18) !important;
+}
+
+.grid-dot.bright.orange.vibe:not(.media)::before {
+  content: none !important;
+  display: none !important;
+}
+
+.grid-dot.bright.orange.vibe:not(.media)::after {
+  content: "" !important;
+
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  right: auto !important;
+
+  width: 3px !important;
+  height: 3px !important;
+
+  border: 0 !important;
+  border-radius: 50% !important;
+
+  background: #f5f5f2 !important;
+
+  box-shadow:
+    0 0 5px rgba(245, 245, 242, 0.72) !important;
+
+  transform: translate(-50%, -50%) !important;
+}
+
+
+/* ---------------------------------------------------------
+   BLOG + PORTFOLIO + MEDIA
+   BLOG      = lime outer ring
+   PORTFOLIO = orange fill
+   MEDIA     = purple center dot
+   --------------------------------------------------------- */
+
+.grid-dot.bright.orange.media:not(.vibe) {
+  width: 10px !important;
+  height: 10px !important;
+
+  border: 1px solid #b7ff00 !important;
+  border-radius: 50% !important;
+
+  background: #ff4d00 !important;
+
+  box-shadow:
+    0 0 8px rgba(183, 255, 0, 0.52),
+    0 0 18px rgba(183, 255, 0, 0.18) !important;
+}
+
+.grid-dot.bright.orange.media:not(.vibe)::before {
+  content: none !important;
+  display: none !important;
+}
+
+.grid-dot.bright.orange.media:not(.vibe)::after {
+  content: "" !important;
+
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  right: auto !important;
+
+  width: 3px !important;
+  height: 3px !important;
+
+  border: 0 !important;
+  border-radius: 50% !important;
+
+  background: #b46cff !important;
+
+  box-shadow:
+    0 0 5px rgba(139, 77, 232, 0.82) !important;
+
+  transform: translate(-50%, -50%) !important;
+}
+
+
+/* ---------------------------------------------------------
+   BLOG + PULSE + MEDIA
+   BLOG  = lime outer ring
+   PULSE = white fill
+   MEDIA = purple center dot
+   --------------------------------------------------------- */
+
+.grid-dot.bright.vibe.media:not(.orange) {
+  width: 10px !important;
+  height: 10px !important;
+
+  border: 1px solid #b7ff00 !important;
+  border-radius: 50% !important;
+
+  background: #f5f5f2 !important;
+
+  box-shadow:
+    0 0 8px rgba(183, 255, 0, 0.58),
+    0 0 18px rgba(183, 255, 0, 0.20) !important;
+}
+
+.grid-dot.bright.vibe.media:not(.orange)::before {
+  content: none !important;
+  display: none !important;
+}
+
+.grid-dot.bright.vibe.media:not(.orange)::after {
+  content: "" !important;
+
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  right: auto !important;
+
+  width: 3px !important;
+  height: 3px !important;
+
+  border: 0 !important;
+  border-radius: 50% !important;
+
+  background: #b46cff !important;
+
+  box-shadow:
+    0 0 5px rgba(139, 77, 232, 0.82) !important;
+
+  transform: translate(-50%, -50%) !important;
+}
+
+
+/* ---------------------------------------------------------
+   PORTFOLIO + PULSE + MEDIA
+   PORTFOLIO = orange outer ring
+   PULSE     = white fill
+   MEDIA     = purple center dot
+   --------------------------------------------------------- */
+
+.grid-dot.orange.vibe.media:not(.bright) {
+  width: 10px !important;
+  height: 10px !important;
+
+  border: 1px solid #ff4d00 !important;
+  border-radius: 50% !important;
+
+  background: #f5f5f2 !important;
+
+  box-shadow:
+    0 0 8px rgba(255, 77, 0, 0.52),
+    0 0 18px rgba(255, 77, 0, 0.18) !important;
+}
+
+.grid-dot.orange.vibe.media:not(.bright)::before {
+  content: none !important;
+  display: none !important;
+}
+
+.grid-dot.orange.vibe.media:not(.bright)::after {
+  content: "" !important;
+
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  right: auto !important;
+
+  width: 3px !important;
+  height: 3px !important;
+
+  border: 0 !important;
+  border-radius: 50% !important;
+
+  background: #b46cff !important;
+
+  box-shadow:
+    0 0 5px rgba(139, 77, 232, 0.82) !important;
+
+  transform: translate(-50%, -50%) !important;
+}
+</style>
+
+<style>
+/* =========================================================
+   MATRIX POPUP SIZE NORMALIZE
+   Keep popup text/buttons same size for every signal.
+   ========================================================= */
+
+/* BLOG / PORTFOLIO は親要素を拡大しない */
+.grid-dot.has-content:hover.bright,
+.grid-dot.has-content:hover.orange {
+  transform: none !important;
+}
+
+/* hover時はリングの発光だけ少し強くする */
+.grid-dot.has-content:hover.bright {
+  box-shadow:
+    0 0 10px rgba(183, 255, 0, 0.68),
+    0 0 22px rgba(183, 255, 0, 0.24) !important;
+}
+
+.grid-dot.has-content:hover.orange:not(.bright) {
+  box-shadow:
+    0 0 10px rgba(255, 77, 0, 0.68),
+    0 0 22px rgba(255, 77, 0, 0.24) !important;
+}
+</style>
+
+

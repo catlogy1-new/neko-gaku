@@ -15,6 +15,36 @@ const { title, description, image } = Astro.props;
 const { site, fonts } = await getSiteConfig();
 ---
 
+<script is:inline>
+  document.documentElement.setAttribute('data-font-loading', '');
+
+  (() => {
+    const reveal = () => {
+      document.documentElement.removeAttribute('data-font-loading');
+    };
+
+    if (!document.fonts) {
+      reveal();
+      return;
+    }
+
+    Promise.race([
+      document.fonts.ready,
+      new Promise((resolve) => window.setTimeout(resolve, 2500)),
+    ]).then(reveal, reveal);
+
+    window.addEventListener('pageshow', () => {
+      if (document.fonts.status === 'loaded') reveal();
+    }, { once: true });
+  })();
+</script>
+
+<style is:global>
+  html[data-font-loading] body {
+    visibility: hidden;
+  }
+</style>
+
 <ThemeBaseHead
   title={title}
   description={description}

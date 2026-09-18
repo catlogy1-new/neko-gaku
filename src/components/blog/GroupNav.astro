@@ -9,7 +9,7 @@ import {
 } from '../../utils/content-groups';
 import { getUiText } from '../../utils/ui-text';
 import Icon from '../Icon.astro';
-import '@navfolio/theme-default/styles/blog-group-nav.css';
+import '../../styles/blog-group-nav-base.css';
 
 interface Props {
   activeView?: 'posts' | 'series' | 'tags' | 'archives';
@@ -41,56 +41,56 @@ function getCategoryName(name: string, slug: string) {
         class:list={['topic-chip', activeView === 'posts' && !activeCategory && 'is-active']}
         href={withBase('/blog/')}
       >
+        <span class="topic-dot" aria-hidden="true"></span>
         <span>{ui.groups.allArticles}</span>
         <b>{posts.length}</b>
       </a>
-      {
-        categories.map((category) => (
-          <a
-            class:list={[
-              'topic-chip',
-              activeView === 'posts' && activeCategory === category.slug && 'is-active',
-            ]}
-            href={withBase(`/blog/categories/${category.slug}/`)}
-          >
-            <span>{getCategoryName(category.name, category.slug)}</span>
-            <b>{category.count}</b>
-          </a>
-        ))
-      }
-    </div>
-    {
-      categories.length > 0 && (
-        <button
-          class="topic-toggle"
-          type="button"
-          hidden
-          data-topic-toggle
-          data-expand-label={ui.groups.expand}
-          data-collapse-label={ui.groups.collapse}
-          aria-expanded="false"
+
+      {categories.map((category) => (
+        <a
+          class:list={[
+            'topic-chip',
+            activeView === 'posts' && activeCategory === category.slug && 'is-active',
+          ]}
+          href={withBase(`/blog/categories/${category.slug}/`)}
         >
-          <span data-topic-toggle-label>{ui.groups.expand}</span>
-          <Icon name="chevron-down" size={15} class="topic-toggle-icon" />
-        </button>
-      )
-    }
+          <span class="topic-dot" aria-hidden="true"></span>
+          <span>{getCategoryName(category.name, category.slug)}</span>
+          <b>{category.count}</b>
+        </a>
+      ))}
+    </div>
+
+    {categories.length > 0 && (
+      <button
+        class="topic-toggle"
+        type="button"
+        hidden
+        data-topic-toggle
+        data-expand-label={ui.groups.expand}
+        data-collapse-label={ui.groups.collapse}
+        aria-expanded="false"
+      >
+        <span data-topic-toggle-label>{ui.groups.expand}</span>
+        <Icon name="chevron-down" size={13} class="topic-toggle-icon" />
+      </button>
+    )}
   </div>
 
   <div class="group-links" aria-label="Blog views">
     <a class:list={[activeView === 'series' && 'is-active']} href={withBase('/blog/series/')}>
-      <Icon name="layers" size={15} />
-      {ui.groups.series}
+      <Icon name="layers" size={14} />
+      <span>{ui.groups.series}</span>
     </a>
-    <span aria-hidden="true">·</span>
+    <span class="group-separator" aria-hidden="true">·</span>
     <a class:list={[activeView === 'tags' && 'is-active']} href={withBase('/blog/tags/')}>
-      <Icon name="tags" size={15} />
-      {ui.groups.tags}
+      <Icon name="tags" size={14} />
+      <span>{ui.groups.tags}</span>
     </a>
-    <span aria-hidden="true">·</span>
+    <span class="group-separator" aria-hidden="true">·</span>
     <a class:list={[activeView === 'archives' && 'is-active']} href={withBase('/blog/archives/')}>
-      <Icon name="calendar" size={15} />
-      {ui.groups.years}
+      <Icon name="calendar" size={14} />
+      <span>{ui.groups.years}</span>
     </a>
   </div>
 
@@ -101,6 +101,374 @@ function getCategoryName(name: string, slug: string) {
 
 <script>
   import { mountGroupNav } from '../../utils/group-nav';
-
   mountGroupNav();
 </script>
+
+<style>
+  .group-nav {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 26px;
+    width: 100%;
+    padding: 10px 0 14px;
+    border-bottom: 0;
+  }
+
+    .topic-panel {
+    min-width: 0;
+  }
+
+  .topic-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .topic-chip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 30px;
+    padding: 0 10px;
+    overflow: hidden;
+    border: 1px solid rgba(183, 255, 0, 0.2);
+    border-radius: 4px;
+    background: rgba(183, 255, 0, 0.018);
+    color: #8e948b;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    text-decoration: none !important;
+    transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
+  }
+
+  .topic-chip::after {
+    position: absolute;
+    right: 7px;
+    bottom: 0;
+    left: 7px;
+    height: 1px;
+    background: #6b2d0b;
+    content: '';
+    transform: scaleX(0);
+    transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .topic-chip:hover,
+  .topic-chip:focus-visible {
+    border-color: rgba(183, 255, 0, 0.42);
+    background: rgba(183, 255, 0, 0.035);
+    color: #d5d8d2;
+    outline: none;
+  }
+
+  .topic-chip.is-active {
+    border-color: rgba(183, 255, 0, 0.45);
+    background: rgba(183, 255, 0, 0.045);
+    color: #e3e5e0;
+  }
+
+  .topic-chip.is-active::after { transform: scaleX(1); }
+
+  /* active signal:
+     remove theme's extra left dot
+     keep LARGE LIME + small WHITE only */
+  .topic-chip.is-active::before {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    content: none !important;
+    background: none !important;
+    box-shadow: none !important;
+  }
+
+  .topic-chip b {
+    color: #b7ff00;
+    font-family: 'Maple Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 600;
+  }
+
+  .topic-dot {
+    width: 5px;
+    height: 5px;
+    flex: 0 0 auto;
+    border-radius: 50%;
+    background: rgba(183, 255, 0, 0.52);
+  }
+
+  .topic-chip.is-active .topic-dot {
+    position: relative;
+
+    width: 10px;
+    height: 10px;
+    flex: 0 0 10px;
+
+    margin-right: 8px;
+
+    border-radius: 50%;
+
+    background: #b7ff00 !important;
+
+    box-shadow:
+      0 0 4px #eaff82,
+      0 0 9px #b7ff00,
+      0 0 16px rgba(183, 255, 0, 0.92),
+      0 0 25px rgba(183, 255, 0, 0.45) !important;
+  }
+
+  .topic-chip.is-active .topic-dot::after {
+    position: absolute;
+
+    top: 50%;
+    left: 16px;
+
+    width: 5px;
+    height: 5px;
+
+    border-radius: 50%;
+
+    background: #f2f3ef;
+
+    box-shadow:
+      0 0 2px rgba(255, 255, 255, 0.38);
+
+    content: "";
+
+    transform: translateY(-50%);
+  }
+
+  .topic-toggle {
+    margin-top: 7px;
+    padding: 3px 0;
+    border: 0;
+    background: transparent;
+    color: #7e847b;
+    font-family: 'Maple Mono', monospace;
+    font-size: 0.68rem;
+  }
+
+  .group-links {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 0 0 auto;
+  }
+
+  .group-links a {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 1px 8px;
+    color: #a2a79f;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.76rem;
+    font-weight: 520;
+    text-decoration: none !important;
+    transition: color 220ms ease;
+  }
+
+  .group-links a span {
+    position: relative;
+    display: inline-block;
+  }
+
+
+  /* ========================================================
+     GROUP LINK MOTION
+
+     hover:
+     極細ラインが文字中央から左右へ展開
+
+     active:
+     ラインではなく文字下中央の小さな丸
+     ======================================================== */
+
+  .group-links a span::after {
+    position: absolute;
+
+    bottom: -7px;
+    left: 50%;
+
+    width: 100%;
+    height: 1px;
+
+    content: '';
+
+    opacity: 0;
+
+    transform:
+      translateX(-50%)
+      scaleX(0);
+
+    transform-origin: center;
+
+    transition:
+      transform 300ms cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 120ms ease;
+
+    pointer-events: none;
+  }
+
+
+  /* hover / keyboard focus:
+     文字だけ白 */
+
+  .group-links a:hover,
+  .group-links a:focus-visible {
+    color: #ffffff;
+    outline: none;
+  }
+
+
+  /* hover時だけラインを展開 */
+
+  .group-links a:hover span::after,
+  .group-links a:focus-visible span::after {
+    opacity: 1;
+
+    transform:
+      translateX(-50%)
+      scaleX(1);
+  }
+
+
+  /* --------------------------------------------------------
+     SERIES
+     -------------------------------------------------------- */
+
+  .group-links a:nth-of-type(1) span::after {
+    background: #b46cff;
+  }
+
+
+  /* --------------------------------------------------------
+     TAGS
+     -------------------------------------------------------- */
+
+  .group-links a:nth-of-type(2) span::after {
+    background: #ff5a7a;
+  }
+
+
+  /* --------------------------------------------------------
+     YEARS
+     -------------------------------------------------------- */
+
+  .group-links a:nth-of-type(3) span::after {
+    background: #35c8ff;
+  }
+
+
+  /* ========================================================
+     ACTIVE
+
+     選択ページではラインを使わず
+     文字下中央に4pxの丸を表示
+     ======================================================== */
+
+  .group-links a.is-active {
+    color: #ffffff;
+    outline: none;
+  }
+
+
+  .group-links a.is-active span::after {
+    bottom: -8px;
+    left: 50%;
+
+    width: 4px;
+    height: 4px;
+
+    border-radius: 50%;
+
+    opacity: 1;
+
+    transform:
+      translateX(-50%)
+      scaleX(1);
+
+    transition: none;
+  }
+
+
+  /* active状態をhoverしても丸のまま */
+
+  .group-links a.is-active:hover span::after,
+  .group-links a.is-active:focus-visible span::after {
+    width: 4px;
+    height: 4px;
+
+    transform:
+      translateX(-50%)
+      scaleX(1);
+  }
+
+  .group-links a :global(svg) {
+    transition:
+      color 220ms ease,
+      filter 220ms ease,
+      transform 220ms ease;
+  }
+
+  /* SERIES — violet */
+  .group-links a:nth-of-type(1) :global(svg) {
+    color: #b46cff;
+  }
+
+  /* TAGS — hot orange / magenta */
+  .group-links a:nth-of-type(2) :global(svg) {
+    color: #ff5a7a;
+  }
+
+  /* YEARS — cyan */
+  .group-links a:nth-of-type(3) :global(svg) {
+    color: #35c8ff;
+  }
+
+  .group-links a:hover :global(svg),
+  .group-links a:focus-visible :global(svg),
+  .group-links a.is-active :global(svg) {
+    filter: brightness(1.22);
+    transform: translateY(-1px);
+  }
+  .group-separator { color: #3f443e; font-size: 0.72rem; }
+  .group-counts { display: none; }
+
+  @media (max-width: 860px) {
+    .group-nav {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .group-links { flex-wrap: wrap; }
+  }
+
+  @media (max-width: 520px) {
+    .topic-chip { min-height: 29px; padding-inline: 9px; font-size: 0.69rem; }
+    .group-links { gap: 9px; }
+    .group-links a { font-size: 0.72rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .topic-chip,
+    .topic-chip::after,
+    .group-links a,
+    .group-links a span::after { transition: none; }
+  }
+</style>
+
+
+
+
+
+
+
+
+
+

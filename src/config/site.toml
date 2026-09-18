@@ -1,5 +1,5 @@
 [config.site]
-title = "navfolio"
+title = "Pour en finir avec le jugement de Dieu"
 description = "A personal navigation portfolio starter built with Astro."
 pageTitle = "navfolio | Digital Publication Space"
 pageDescription = "A calm AI-native personal publication space for notes, links, and writing."
@@ -51,7 +51,7 @@ title = "Writing notes"
 kicker = "Notebook archive"
 subtitle = "Notes from the margins."
 note = "Field notes, drafts, and technical margins arranged for slow browsing."
-postsPerPage = 6
+postsPerPage = 5
 # date-fns 使用的日期格式模板。
 dateFormat = "yyyy-MM-dd"
 # 元信息分隔符。可以使用 "|"、"/" 等符号，也可以使用特殊值 "icon"。
@@ -78,12 +78,11 @@ subtitle = "Small tools and site systems."
 note = "A compact shelf for implementation choices, releases, and publishing experiments."
 
 [config.pages.vibe]
-title = "vibe"
-kicker = ""
-subtitle = "Life and coding fragments."
-note = "Not formal enough for blog posts, but still part of the story."
+title = "VIBE"
+kicker = "PULSE / FRAGMENTS"
+subtitle = "Le \u201ccrime parfait\u201d n'existe pas, mais la r\u00e9alit\u00e9 parfaite, oui :"
+note = "l'abolition du r\u00e9el par son double."
 showTrail = true
-
 [config.pages.media]
 title = "书影音"
 subtitle = "读过、看过、听过的作品，以及一点当时的感受。"

@@ -1,4 +1,4 @@
----
+﻿---
 import { getCollection } from 'astro:content';
 import BaseHead from '../../../components/BaseHead.astro';
 import Footer from '../../../components/Footer.astro';
@@ -6,6 +6,7 @@ import BlogArchiveHeader from '../../../components/blog/BlogArchiveHeader.astro'
 import BlogTopNav from '../../../components/blog/BlogTopNav.astro';
 import GroupNav from '../../../components/blog/GroupNav.astro';
 import SeriesCard from '../../../components/blog/SeriesCard.astro';
+import '../../../styles/blog-series-card-local.css';
 import { getSiteConfig } from '../../../data/site';
 import { getAllSeries } from '../../../utils/content-groups';
 import { getUiText } from '../../../utils/ui-text';
@@ -65,10 +66,10 @@ const ui = getUiText(siteConfig);
     <BlogTopNav />
     <main data-pagefind-body>
       <BlogArchiveHeader
-        kicker={pageMeta.kicker}
-        title={pageMeta.title}
-        subtitle={pageMeta.subtitle}
-        note={pageMeta.note}
+        kicker="TRANSMISSION / ARCHIVE"
+        title="FRAGMENTS"
+        subtitle={`The pulsation and gleaming of an unsightly residual reality,
+thoroughly corroded by signs.`}
       />
       <GroupNav activeView="series" />
 
@@ -87,3 +88,19 @@ const ui = getUiText(siteConfig);
     <Footer />
   </body>
 </html>
+
+
+<style>
+/* SERIES HEADER SUBTITLE FIX */
+.archive-subtitle {
+  margin: 12px 0 0 !important;
+  color: #858b83 !important;
+  font-family: 'Inter Variable', 'Helvetica Neue', Arial, sans-serif !important;
+  font-size: 0.82rem !important;
+  font-weight: 400 !important;
+  line-height: 1.5 !important;
+  letter-spacing: -0.01em !important;
+  text-transform: none !important;
+}
+</style>
+

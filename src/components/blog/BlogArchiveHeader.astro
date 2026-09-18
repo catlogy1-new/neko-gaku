@@ -1,6 +1,4 @@
 ---
-import ThemeBlogArchiveHeader from '@navfolio/theme-default/components/BlogArchiveHeader.astro';
-
 interface Props {
   kicker?: string;
   title?: string;
@@ -8,7 +6,263 @@ interface Props {
   note?: string;
 }
 
-const { kicker, title, subtitle, note } = Astro.props;
+const {
+  kicker = 'TRANSMISSION / ARCHIVE',
+  title = 'FRAGMENTS',
+  subtitle,
+  note,
+} = Astro.props;
+
+const defaultSubtitle = 'The pulsation and gleaming of an unsightly residual reality, thoroughly corroded by signs.';
+const resolvedSubtitle = subtitle ?? note ?? defaultSubtitle;
 ---
 
-<ThemeBlogArchiveHeader kicker={kicker} title={title} subtitle={subtitle} note={note} />
+<header class="archive-hero">
+  <div class="archive-header-main">
+    <p class="archive-kicker">{kicker}</p>
+    <h1 class="archive-title">{title}</h1>
+    <p class="archive-subtitle">{resolvedSubtitle}</p>
+  </div>
+
+  <div class="archive-copy">
+  <div class="rimbaud-cyber-plate">
+    <span class="rimbaud-screw top-left" aria-hidden="true"></span>
+    <span class="rimbaud-screw top-right" aria-hidden="true"></span>
+    <span class="rimbaud-screw bottom-left" aria-hidden="true"></span>
+    <span class="rimbaud-screw bottom-right" aria-hidden="true"></span>
+
+    <div class="rimbaud-row-main">
+      <span class="rimbaud-led" aria-hidden="true"></span>
+      <span class="rimbaud-dot-text">JE EST UN AUTRE.</span>
+    </div>
+
+    <div class="rimbaud-neon-line" aria-hidden="true"></div>
+
+    <div class="rimbaud-engraved">Arthur Rimbaud, 1871</div>
+  </div>
+</div>
+</header>
+
+<style>
+  .archive-hero {
+    position: relative;
+    display: grid;
+    grid-template-columns: max-content minmax(220px, 1fr);
+    column-gap: clamp(42px, 5vw, 76px);
+    align-items: end;
+    width: 100%;
+    margin: 0 0 10px;
+    padding: 0 0 22px;
+    border-bottom: 0;
+  }
+
+  .archive-hero::after {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    width: 100%;
+    height: 1.5px;
+
+    content: "";
+    pointer-events: none;
+
+    background: linear-gradient(
+      90deg,
+      rgba(255, 82, 0, 0.02) 0%,
+      rgba(255, 82, 0, 0.05) 18%,
+      rgba(255, 82, 0, 0.14) 42%,
+      rgba(255, 82, 0, 0.38) 68%,
+      rgba(255, 82, 0, 0.72) 86%,
+      rgba(255, 82, 0, 0.96) 100%
+    );
+  }
+
+  .archive-header-main {
+    min-width: 0;
+  }
+
+  .archive-kicker {
+    margin: 0 0 11px;
+    color: #b7ff00;
+    font-family: 'Maple Mono', monospace;
+    font-size: 0.66rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .archive-title {
+    margin: 0;
+    color: #e7e8e4;
+    font-family: 'Host Grotesk Variable', 'Inter Variable', 'Helvetica Neue', Arial, sans-serif;
+    font-size: clamp(2.85rem, 4.35vw, 4.7rem);
+    font-weight: 800;
+    line-height: 0.9;
+    letter-spacing: -0.065em;
+    text-transform: uppercase;
+  }
+
+  .archive-subtitle {
+    margin: 12px 0 0;
+    color: #858b83;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: -0.01em;
+  }
+
+  .archive-copy {
+    display: grid;
+    gap: 6px;
+    align-self: start;
+    justify-self: start;
+    max-width: 360px;
+    padding: 40px 0 0;
+  }
+@media (max-width: 900px) {
+    .archive-hero {
+      grid-template-columns: 1fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .archive-copy {
+      max-width: 600px;
+      padding: 0;
+    }
+
+    .archive-title {
+      font-size: clamp(2.8rem, 8vw, 4.6rem);
+    }
+  }
+
+  @media (max-width: 520px) {
+    .archive-hero {
+      padding-bottom: 20px;
+    }
+
+    .archive-kicker {
+      margin-bottom: 10px;
+      font-size: 0.6rem;
+    }
+
+    .archive-title {
+      font-size: clamp(2.45rem, 12vw, 3.7rem);
+    }
+
+    .archive-subtitle {
+      margin-top: 10px;
+      font-size: 0.78rem;
+    }
+  }
+</style>
+
+
+
+<style>
+/* RIMBAUD POSITION FINAL */
+
+.archive-hero {
+  position: relative !important;
+  display: block !important;
+}
+
+.archive-header-main {
+  position: relative !important;
+}
+
+.archive-copy {
+  position: absolute !important;
+  
+  
+
+  display: grid !important;
+  gap: 5px !important;
+
+  width: max-content !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+
+  text-align: left !important;
+}
+@media (max-width: 900px) {
+  .archive-copy {
+    position: static !important;
+    margin-top: 18px !important;
+  }
+}
+</style>
+
+
+
+<style>
+/* FRAGMENTS SUBTITLE — FINAL */
+.archive-subtitle {
+  width: 60ch !important;
+  max-width: 60ch !important;
+  white-space: pre-line !important;
+}
+</style>
+
+<script is:inline>
+  (() => {
+    const TEXT = 'JE EST UN AUTRE.';
+    const START_DELAY = 180;
+    const CHAR_TIME = 185;
+
+    function clearRimbaudTimers(plate) {
+      if (!plate.__rimbaudTimers) return;
+
+      plate.__rimbaudTimers.forEach((timer) => {
+        clearTimeout(timer);
+      });
+
+      plate.__rimbaudTimers = [];
+    }
+
+    function runRimbaudAnimation() {
+      document
+        .querySelectorAll('.rimbaud-cyber-plate')
+        .forEach((plate) => {
+          const text = plate.querySelector('.rimbaud-dot-text');
+
+          if (!text) return;
+
+          clearRimbaudTimers(plate);
+
+          plate.classList.remove('rimbaud-running');
+          text.textContent = '';
+
+          void plate.offsetWidth;
+
+          requestAnimationFrame(() => {
+            plate.classList.add('rimbaud-running');
+
+            plate.__rimbaudTimers = [];
+
+            for (let i = 0; i < TEXT.length; i += 1) {
+              const timer = window.setTimeout(() => {
+                text.textContent = TEXT.slice(0, i + 1);
+              }, START_DELAY + (i * CHAR_TIME));
+
+              plate.__rimbaudTimers.push(timer);
+            }
+          });
+        });
+    }
+
+    if (!window.__rimbaudPageLoadInstalled) {
+      window.__rimbaudPageLoadInstalled = true;
+
+      document.addEventListener(
+        'astro:page-load',
+        runRimbaudAnimation
+      );
+    }
+  })();
+</script>

@@ -1,17 +1,18 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { ChevronsRight } from 'lucide-astro';
+
+import { ArrowRight } from 'lucide-astro';
+
 import FormattedDate from '../FormattedDate.astro';
 import Icon from '../Icon.astro';
-import MetadataItem from '../MetadataItem.astro';
 import SmartImage from '../SmartImage.astro';
 import { getSiteConfig } from '../../data/site';
 import { slugifyGroupName } from '../../utils/content-groups';
 import { isStickyEntry } from '../../utils/content-dates';
 import { getUiText } from '../../utils/ui-text';
-import '@navfolio/theme-default/styles/blog-post-list.css';
 
 type BlogPost = CollectionEntry<'blog'>;
+
 type CoverImageStyle = 'card' | 'mask';
 
 interface Props {
@@ -21,119 +22,157 @@ interface Props {
   listTag?: 'ul' | 'ol';
 }
 
-const { posts, postOffset = 0, coverImageStyle = 'card', listTag = 'ul' } = Astro.props;
+const {
+  posts,
+  postOffset = 0,
+  coverImageStyle = 'card',
+  listTag = 'ul',
+} = Astro.props;
+
 const ListTag = listTag;
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
 const ui = getUiText(await getSiteConfig());
 
 function withBase(href: string) {
-  if (href === '/') {
-    return `${basePath}/` || '/';
-  }
-
+  if (href === '/') return `${basePath}/` || '/';
   return `${basePath}${href.startsWith('/') ? href : `/${href}`}`;
 }
 ---
 
-<ListTag class="post-stack">
+<ListTag class="nexus-journal-list">
   {
-    posts.map((post, index) => (
-      <li class="post-item">
-        <article
-          class:list={[
-            'post-link',
-            `cover-style-${coverImageStyle}`,
-            { 'without-thumb': !post.data.heroImage },
-          ]}
-          data-archive-post-href={withBase(`/blog/${post.id}/`)}
-        >
-          <div class="post-copy">
-            <div>
-              <h2 class="title">
-                <span class="post-index" aria-hidden="true">
-                  <span class="post-index-number">
-                    {String(postOffset + index + 1).padStart(2, '0')}
-                  </span>
-                  <ChevronsRight class="post-index-icon" size={20} strokeWidth={1.9} />
+    posts.map((post, index) => {
+      const postHref = withBase(`/blog/${post.id}/`);
+
+      return (
+        <li class="nexus-journal-item">
+          <article
+            class:list={[
+              'nexus-journal-row',
+              `cover-style-${coverImageStyle}`,
+              { 'without-thumb': !post.data.heroImage },
+            ]}
+            data-archive-post-href={postHref}
+          >
+            <a
+              class="nexus-journal-media"
+              href={postHref}
+              aria-label={post.data.title}
+              tabindex="-1"
+            >
+              {post.data.heroImage ? (
+                <SmartImage
+                  width={760}
+                  height={480}
+                  src={post.data.heroImage}
+                  alt=""
+                />
+              ) : (
+                <span class="nexus-journal-placeholder" aria-hidden="true">
+                  <span>{String(postOffset + index + 1).padStart(2, '0')}</span>
+                  <i></i>
                 </span>
-                <a class="title-link" href={withBase(`/blog/${post.id}/`)}>
-                  {post.data.title}
-                </a>
-                {isStickyEntry(post) && (
-                  <span class="post-pin">
-                    <Icon name="pin" size={18} />
-                    {ui.article.pinned}
-                  </span>
-                )}
-              </h2>
-              <div class="date">
-                <MetadataItem kind="date" separated={false}>
+              )}
+            </a>
+
+            <div class="nexus-journal-copy">
+              <div class="nexus-journal-meta">
+                <time datetime={post.data.date.toISOString()}>
                   <FormattedDate date={post.data.date} />
-                </MetadataItem>
+                </time>
+
                 {post.data.categories.length > 0 && (
-                  <MetadataItem kind="categories" class="post-groups">
-                    <span class="meta-label">{ui.groups.categories}</span>
+                  <span class="nexus-journal-groups">
                     {post.data.categories.map((category) => (
                       <a
-                        class="post-group"
                         href={withBase(`/blog/categories/${slugifyGroupName(category)}/`)}
+                        data-no-card-click
                       >
                         {category}
                       </a>
                     ))}
-                  </MetadataItem>
+                  </span>
                 )}
+
                 {post.data.series.length > 0 && (
-                  <MetadataItem kind="series" class="post-groups">
-                    <span class="meta-label">{ui.groups.series}</span>
+                  <span class="nexus-journal-groups nexus-journal-series">
                     {post.data.series.map((series) => (
                       <a
-                        class="post-group"
                         href={withBase(`/blog/series/${slugifyGroupName(series)}/`)}
+                        data-no-card-click
                       >
                         {series}
                       </a>
                     ))}
-                  </MetadataItem>
+                  </span>
                 )}
+
                 {post.data.tags && post.data.tags.length > 0 && (
-                  <MetadataItem kind="tags" class="post-tags">
+                  <span class="nexus-journal-tags">
                     {post.data.tags.map((tag) => (
-                      <a class="post-tag" href={withBase(`/tags/${slugifyGroupName(tag)}/`)}>
+                      <a href={withBase(`/tags/${slugifyGroupName(tag)}/`)} data-no-card-click>
                         #{tag}
                       </a>
                     ))}
-                  </MetadataItem>
+                  </span>
                 )}
               </div>
+
+              <h2 class="nexus-journal-title">
+                <a class="title-link" href={postHref}>
+                  {post.data.title}
+                </a>
+
+                {isStickyEntry(post) && (
+                  <span class="nexus-journal-pin">
+                    <Icon name="pin" size={14} />
+                    {ui.article.pinned}
+                  </span>
+                )}
+              </h2>
+
+              <p class="nexus-journal-excerpt">{post.data.description}</p>
+
+              <span class="nexus-journal-read" aria-hidden="true">
+                READ ENTRY
+                <ArrowRight size={17} strokeWidth={1.7} />
+              </span>
             </div>
-            <p class="post-excerpt">{post.data.description}</p>
-          </div>
-          {post.data.heroImage && (
-            <a class="thumb-wrap" href={withBase(`/blog/${post.id}/`)} aria-label={post.data.title}>
-              <SmartImage width={520} height={360} src={post.data.heroImage} alt="" />
-            </a>
-          )}
-        </article>
-      </li>
-    ))
+
+            <span class="nexus-journal-arrow" aria-hidden="true">
+              <ArrowRight size={25} strokeWidth={1.55} />
+            </span>
+          </article>
+        </li>
+      );
+    })
   }
 </ListTag>
 
 <script is:inline>
   (() => {
     if (window.__navfolioArchivePostClick) return;
-
     window.__navfolioArchivePostClick = true;
 
     document.addEventListener('click', (event) => {
-      if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) {
+      if (
+        event.button !== 0 ||
+        event.ctrlKey ||
+        event.metaKey ||
+        event.shiftKey ||
+        event.altKey
+      ) {
         return;
       }
 
       const target = event.target;
       if (!(target instanceof Element)) return;
-      if (target.closest('a, button, input, select, textarea, summary, [data-no-card-click]')) {
+
+      if (
+        target.closest(
+          'a, button, input, select, textarea, summary, [data-no-card-click]',
+        )
+      ) {
         return;
       }
 
@@ -154,3 +193,633 @@ function withBase(href: string) {
     });
   })();
 </script>
+
+<style>
+  .nexus-journal-list {
+    display: grid;
+    gap: 18px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    list-style: none;
+  }
+
+  .nexus-journal-item {
+    position: relative;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* =========================================
+     KINETIC-STYLE HORIZONTAL CARD
+     ========================================= */
+
+  .nexus-journal-row {
+    position: relative;
+
+    display: grid;
+    grid-template-columns: minmax(280px, 34%) minmax(0, 1fr);
+    gap: clamp(28px, 3.4vw, 54px);
+    align-items: stretch;
+
+    min-height: 230px;
+
+    padding: 20px;
+
+    overflow: hidden;
+
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 16px;
+
+    background: #111211;
+
+    color: #e7e8e4;
+    cursor: pointer;
+
+    isolation: isolate;
+
+    transition:
+      border-color 420ms cubic-bezier(0.16, 1, 0.3, 1),
+      background-color 420ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .nexus-journal-row::before {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+
+    content: "";
+
+    background:
+      radial-gradient(
+        circle at 15% 50%,
+        rgba(183, 255, 0, 0.035),
+        transparent 34%
+      ),
+      rgba(255, 255, 255, 0.008);
+
+    opacity: 0;
+
+    transition: opacity 420ms ease;
+  }
+
+  .nexus-journal-row:hover,
+  .nexus-journal-row:focus-within {
+    border-color: rgba(200, 111, 24, 0.82);
+    background: #151515;
+    transform: translateY(-2px);
+  }
+
+  .nexus-journal-row:hover::before,
+  .nexus-journal-row:focus-within::before {
+    opacity: 1;
+  }
+
+  /* =========================================
+     IMAGE
+     ========================================= */
+
+  .nexus-journal-media {
+    position: relative;
+
+    display: block;
+
+    width: 100%;
+    height: 100%;
+    min-height: 188px;
+
+    overflow: hidden;
+
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 11px;
+
+    background: #080908;
+
+    color: inherit;
+  }
+
+  .nexus-journal-media::after {
+    position: absolute;
+    inset: 0;
+
+    content: "";
+
+    border: 1px solid transparent;
+    border-radius: inherit;
+
+    background:
+      linear-gradient(
+        135deg,
+        transparent 55%,
+        rgba(183, 255, 0, 0.035)
+      );
+
+    pointer-events: none;
+
+    transition:
+      border-color 420ms ease,
+      background-color 420ms ease;
+  }
+
+  .nexus-journal-media :global(img) {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    filter:
+      saturate(0.74)
+      contrast(1.07)
+      brightness(0.84);
+
+    transform: scale(1.001);
+
+    transition:
+      filter 700ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .nexus-journal-row:hover .nexus-journal-media :global(img),
+  .nexus-journal-row:focus-within .nexus-journal-media :global(img) {
+    filter:
+      saturate(0.95)
+      contrast(1.04)
+      brightness(0.94);
+
+    transform: scale(1.035);
+  }
+
+  .nexus-journal-row:hover .nexus-journal-media::after,
+  .nexus-journal-row:focus-within .nexus-journal-media::after {
+    border-color: rgba(200, 111, 24, 0.34);
+  }
+
+  /* =========================================
+     NO IMAGE PLACEHOLDER
+     ========================================= */
+
+  .nexus-journal-placeholder {
+    position: absolute;
+    inset: 0;
+
+    display: grid;
+    place-items: center;
+
+    background:
+      radial-gradient(
+        circle at 50% 50%,
+        rgba(183, 255, 0, 0.08),
+        transparent 2px
+      ),
+      linear-gradient(
+        rgba(183, 255, 0, 0.025) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        90deg,
+        rgba(183, 255, 0, 0.025) 1px,
+        transparent 1px
+      );
+
+    background-size:
+      auto,
+      22px 22px,
+      22px 22px;
+  }
+
+  .nexus-journal-placeholder span {
+    color: rgba(183, 255, 0, 0.46);
+
+    font-family: "Maple Mono", monospace;
+    font-size: 0.68rem;
+
+    letter-spacing: 0.18em;
+  }
+
+  .nexus-journal-placeholder i {
+    position: absolute;
+
+    width: 5px;
+    height: 5px;
+
+    border-radius: 50%;
+
+    background: #b7ff00;
+
+    box-shadow:
+      0 0 12px rgba(183, 255, 0, 0.7);
+  }
+
+  /* =========================================
+     COPY
+     ========================================= */
+
+  .nexus-journal-copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    min-width: 0;
+
+    padding: 12px 34px 12px 0;
+
+    transform: translateX(0);
+
+    transition:
+      transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .nexus-journal-row:hover .nexus-journal-copy,
+  .nexus-journal-row:focus-within .nexus-journal-copy {
+    transform: translateX(5px);
+  }
+
+  /* =========================================
+     META
+     ========================================= */
+
+  .nexus-journal-meta {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 6px 12px;
+    align-items: center;
+
+    margin-bottom: 12px;
+
+    color: #858a83;
+
+    font-family: "Maple Mono", monospace;
+    font-size: 0.66rem;
+    font-weight: 500;
+
+    line-height: 1.45;
+    letter-spacing: 0.035em;
+
+    text-transform: uppercase;
+  }
+
+  .nexus-journal-meta time {
+    color: #969c94;
+  }
+
+  .nexus-journal-groups,
+  .nexus-journal-tags {
+    display: inline-flex;
+    flex-wrap: wrap;
+
+    gap: 5px 10px;
+    align-items: center;
+  }
+
+  .nexus-journal-groups::before,
+  .nexus-journal-tags::before {
+    color: rgba(255, 255, 255, 0.20);
+    content: "/";
+  }
+
+  .nexus-journal-groups a,
+  .nexus-journal-tags a {
+    color: #b7ff00;
+
+    text-decoration: none;
+
+    transition: color 220ms ease;
+  }
+
+  .nexus-journal-groups a:hover,
+  .nexus-journal-tags a:hover {
+    color: #dfffa0;
+  }
+
+  /* =========================================
+     TITLE
+     ========================================= */
+
+  .nexus-journal-title {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 8px 12px;
+    align-items: center;
+
+    margin: 0 0 11px;
+
+    font-family:
+      "Host Grotesk Variable",
+      "Inter Variable",
+      "Helvetica Neue",
+      Arial,
+      sans-serif;
+
+    font-size: clamp(1.45rem, 2.15vw, 2.08rem);
+    font-weight: 700;
+
+    line-height: 1.08;
+    letter-spacing: -0.045em;
+  }
+
+  .nexus-journal-title .title-link {
+    color: #e7e8e4 !important;
+
+    font: inherit !important;
+
+    text-decoration: none !important;
+
+    transition:
+      color 360ms ease !important;
+  }
+
+  .nexus-journal-row:hover
+    .nexus-journal-title
+    .title-link,
+  .nexus-journal-row:focus-within
+    .nexus-journal-title
+    .title-link {
+    color: #ff5a00 !important;
+  text-shadow: none !important;
+  }
+
+  .nexus-journal-pin {
+    display: inline-flex;
+
+    gap: 5px;
+    align-items: center;
+
+    color: #b7ff00;
+
+    font-family: "Maple Mono", monospace;
+    font-size: 0.62rem;
+    font-weight: 600;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+  }
+
+  /* =========================================
+     EXCERPT
+     ========================================= */
+
+  .nexus-journal-excerpt {
+    display: -webkit-box;
+
+    max-width: 680px;
+
+    margin: 0 0 18px;
+
+    overflow: hidden;
+
+    color: #92978f;
+
+    font-family:
+      "Inter Variable",
+      "Helvetica Neue",
+      Arial,
+      sans-serif;
+
+    font-size: 0.9rem;
+    font-weight: 400;
+
+    line-height: 1.6;
+    letter-spacing: -0.008em;
+
+    text-overflow: ellipsis;
+
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+
+    transition: color 360ms ease;
+  }
+
+  .nexus-journal-row:hover .nexus-journal-excerpt,
+  .nexus-journal-row:focus-within .nexus-journal-excerpt {
+    color: #b1b5ae;
+  }
+
+  /* =========================================
+     READ ENTRY
+     ========================================= */
+
+  .nexus-journal-read {
+    position: relative;
+
+    display: inline-flex;
+
+    gap: 9px;
+    align-items: center;
+
+    width: max-content;
+
+    padding-bottom: 5px;
+
+    color: #b7ff00;
+
+    font-family: "Maple Mono", monospace;
+    font-size: 0.64rem;
+    font-weight: 700;
+
+    line-height: 1;
+    letter-spacing: 0.13em;
+  }
+
+  .nexus-journal-read::after {
+    position: absolute;
+
+    left: 0;
+    bottom: 0;
+
+    width: 100%;
+    height: 1px;
+
+    content: "";
+
+    background: #b7ff00;
+
+    transform: scaleX(0);
+    transform-origin: left;
+
+    box-shadow:
+      0 0 7px rgba(183, 255, 0, 0.55);
+
+    transition:
+      transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .nexus-journal-read :global(svg) {
+    transition:
+      transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .nexus-journal-row:hover .nexus-journal-read::after,
+  .nexus-journal-row:focus-within .nexus-journal-read::after {
+    transform: scaleX(1);
+  }
+
+  .nexus-journal-row:hover .nexus-journal-read :global(svg),
+  .nexus-journal-row:focus-within .nexus-journal-read :global(svg) {
+    transform: translateX(5px);
+  }
+
+  /* old right-side arrow: deliberately removed */
+  .nexus-journal-arrow {
+    display: none;
+  }
+
+  /* =========================================
+     TABLET
+     ========================================= */
+
+  @media (max-width: 900px) {
+    .nexus-journal-row {
+      grid-template-columns: minmax(220px, 38%) minmax(0, 1fr);
+
+      gap: 26px;
+
+      min-height: 205px;
+
+      padding: 16px;
+    }
+
+    .nexus-journal-media {
+      min-height: 170px;
+    }
+
+    .nexus-journal-copy {
+      padding-right: 8px;
+    }
+  }
+
+  /* =========================================
+     MOBILE
+     ========================================= */
+
+  @media (max-width: 680px) {
+    .nexus-journal-list {
+      gap: 16px;
+    }
+
+    .nexus-journal-row {
+      grid-template-columns: 1fr;
+
+      gap: 0;
+
+      min-height: 0;
+
+      padding: 12px;
+
+      border-radius: 13px;
+    }
+
+    .nexus-journal-media {
+      min-height: 0;
+
+      aspect-ratio: 16 / 9;
+
+      border-radius: 9px;
+    }
+
+    .nexus-journal-copy {
+      padding: 20px 6px 8px;
+
+      transform: none;
+    }
+
+    .nexus-journal-row:hover .nexus-journal-copy,
+    .nexus-journal-row:focus-within .nexus-journal-copy {
+      transform: none;
+    }
+
+    .nexus-journal-title {
+      font-size: clamp(1.38rem, 7vw, 1.8rem);
+    }
+
+    .nexus-journal-excerpt {
+      font-size: 0.86rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nexus-journal-row,
+    .nexus-journal-row::before,
+    .nexus-journal-copy,
+    .nexus-journal-media::after,
+    .nexus-journal-media :global(img),
+    .nexus-journal-read::after,
+    .nexus-journal-read :global(svg) {
+      transition: none;
+    }
+  }
+</style>
+
+<style is:global>
+/* KINETIC CARD REFINEMENT FINAL */
+
+/* 写真枠を少し明るいグレーへ / 3:2 */
+.nexus-journal-media {
+  aspect-ratio: 3 / 2 !important;
+  height: auto !important;
+  min-height: 0 !important;
+
+  border-color: rgba(210, 214, 208, 0.42) !important;
+}
+
+/* hoverしても写真そのものは変化させない */
+.nexus-journal-row:hover .nexus-journal-media,
+.nexus-journal-row:focus-within .nexus-journal-media {
+  border-color: rgba(210, 214, 208, 0.42) !important;
+}
+
+.nexus-journal-row:hover .nexus-journal-media::after,
+.nexus-journal-row:focus-within .nexus-journal-media::after {
+  border-color: transparent !important;
+}
+
+.nexus-journal-row:hover .nexus-journal-media img,
+.nexus-journal-row:focus-within .nexus-journal-media img {
+  filter:
+    saturate(0.74)
+    contrast(1.07)
+    brightness(0.84) !important;
+
+  transform: scale(1.001) !important;
+}
+
+/* BOX HOVER — KINETIC COLOR / ARCHIVE BEHAVIOR */
+.nexus-journal-row:hover,
+.nexus-journal-row:focus-within {
+  border-top-color: rgba(122, 61, 32, 0.58) !important;
+  border-right-color: rgba(122, 61, 32, 0.58) !important;
+  border-bottom-color: rgba(122, 61, 32, 0.58) !important;
+  border-left-color: #b7ff00 !important;
+
+  box-shadow:
+    inset 1px 0 0 rgba(183, 255, 0, 0.10) !important;
+
+  background: #151515 !important;
+}
+
+/* Kinetic Studio系の落ち着いたオレンジ */
+.nexus-journal-row:hover .nexus-journal-title .title-link,
+.nexus-journal-row:focus-within .nexus-journal-title .title-link {
+  color: #ff6a3d !important;
+  text-shadow: none !important;
+}
+/* READ ENTRY はライムのまま */
+.nexus-journal-row:hover .nexus-journal-read,
+.nexus-journal-row:focus-within .nexus-journal-read {
+  color: #b7ff00 !important;
+}
+
+@media (max-width: 680px) {
+  .nexus-journal-media {
+    aspect-ratio: 3 / 2 !important;
+  }
+}
+</style>
+
+
+

@@ -1,4 +1,4 @@
----
+﻿---
 import type { CollectionEntry } from 'astro:content';
 import BlogArchiveHeader from './BlogArchiveHeader.astro';
 import BlogPostList from './BlogPostList.astro';
@@ -117,3 +117,21 @@ function getPageHref(pageNumber: number) {
     </nav>
   )
 }
+
+
+<style is:global>
+/* BLOG PAGINATION LIME HOVER */
+
+.archive-pagination .pagination-link:not(.disabled):hover,
+.archive-pagination .pagination-number:hover,
+.archive-pagination .pagination-link:not(.disabled):focus-visible,
+.archive-pagination .pagination-number:focus-visible {
+  border-color: #b7ff00 !important;
+  outline: none !important;
+
+  box-shadow:
+    0 0 7px rgba(183, 255, 0, 0.34),
+    0 0 15px rgba(183, 255, 0, 0.10) !important;
+}
+</style>
+

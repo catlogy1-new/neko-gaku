@@ -214,10 +214,10 @@ const defaultPagesConfig = {
     note: 'A compact shelf for implementation choices, releases, and publishing experiments.',
   },
   vibe: {
-    title: 'vibe',
-    kicker: '',
-    subtitle: 'Life and coding fragments.',
-    note: 'Not formal enough for blog posts, but still part of the story.',
+    title: 'VIBE',
+    kicker: 'PULSE / FRAGMENTS',
+    subtitle: "Le \u201ccrime parfait\u201d n'existe pas, mais la r\u00e9alit\u00e9 parfaite, oui :",
+    note: "l'abolition du r\u00e9el par son double.",
     showTrail: true,
   },
   media: {

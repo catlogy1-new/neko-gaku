@@ -16,6 +16,7 @@ import { getSeriesContext, slugifyGroupName } from '../utils/content-groups';
 import { buildTocTree, countTocItems } from '../utils/toc-tree';
 import { getUiText } from '../utils/ui-text';
 import '@navfolio/theme-default/styles/blog-article.css';
+import '../styles/blog-article-nexus.css';
 
 const siteConfig = await getSiteConfig();
 const { comments: rawComments } = siteConfig;
@@ -116,7 +117,7 @@ const sidebarConfig = {
 };
 const shouldRenderSidebar = sidebarConfig.enable ?? true;
 const shouldRenderToc = sidebarConfig.toc ?? true;
-const hasToc = shouldRenderToc && tocItemCount > 0;
+const hasToc = shouldRenderToc && tocItemCount >= 2;
 
 const allBlogPosts = await getCollection('blog', ({ data }) => !data.draft);
 const currentBlogPost = isBlogPost ? (post as CollectionEntry<'blog'>) : undefined;
@@ -136,7 +137,7 @@ const seriesLinks = rawSeries.map((name) => {
 const relatedPosts = sortByDateDesc(allBlogPosts.filter(({ id }) => id !== post.id)).slice(0, 3);
 const hasRelatedPosts =
   shouldRenderSidebar && (sidebarConfig.relatedPosts ?? true) && relatedPosts.length > 0;
-const hasSidebar = shouldRenderSidebar && hasToc;
+const hasSidebar = false;
 ---
 
 <!doctype html>
@@ -238,3 +239,104 @@ const hasSidebar = shouldRenderSidebar && hasToc;
     <MermaidRenderer />
   </body>
 </html>
+
+
+
+<style is:global>
+/* =========================================================
+   NEXUS BLOG — SINGLE COLUMN TOC TEST
+   Hero size unchanged
+   ========================================================= */
+
+.blog-detail-page .blog-layout {
+    display: block !important;
+    width: 100% !important;
+    max-width: 1180px !important;
+    margin-inline: auto !important;
+}
+
+.blog-detail-page .article-column {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-inline: auto !important;
+}
+
+.blog-detail-page .article-card {
+    width: 100% !important;
+}
+
+/* Right TOC is disabled */
+.blog-detail-page .right-sidebar {
+    display: none !important;
+}
+
+/* Existing TOC below ArticleHeader becomes desktop TOC */
+.blog-detail-page .mobile-article-toc {
+    display: block !important;
+    width: 100% !important;
+    max-width: var(--article-content-max, 720px) !important;
+    margin: 0 auto 42px !important;
+}
+
+/* Main reading column centered */
+.blog-detail-page .article-content {
+    width: 100% !important;
+    max-width: var(--article-content-max, 720px) !important;
+    margin-inline: auto !important;
+}
+
+@media (max-width: 760px) {
+    .blog-detail-page .blog-layout {
+        max-width: 100% !important;
+    }
+
+    .blog-detail-page .mobile-article-toc {
+        margin-bottom: 30px !important;
+    }
+}
+</style>
+<style is:global>
+/* =========================================================
+   NEXUS — ARTICLE WIDTH ALIGNMENT
+   BODY / HERO / TOC = SAME CENTER WIDTH
+   ========================================================= */
+
+/* HERO IMAGE */
+.blog-detail-page .article-header .hero-image,
+.blog-detail-page .article-header .article-hero,
+.blog-detail-page .article-header figure {
+    width: 100% !important;
+    max-width: 720px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+/* actual hero image */
+.blog-detail-page .article-header .hero-image img,
+.blog-detail-page .article-header .article-hero img,
+.blog-detail-page .article-header figure img {
+    width: 100% !important;
+    max-width: 720px !important;
+    height: auto !important;
+    display: block !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+/* TOC */
+.blog-detail-page .mobile-article-toc {
+    width: 100% !important;
+    max-width: 720px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    margin-bottom: 42px !important;
+}
+
+/* BODY — KEEP CURRENT GOOD WIDTH */
+.blog-detail-page .article-content {
+    width: 100% !important;
+    max-width: 720px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+</style>

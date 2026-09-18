@@ -15,7 +15,9 @@ import {
   Terminal,
   WandSparkles,
 } from 'lucide-astro';
+
 import FormattedDate from '../../components/FormattedDate.astro';
+import Footer from '../../components/Footer.astro';
 import BlogArticle from '../../layouts/BlogArticle.astro';
 import { getSiteConfig } from '../../data/site';
 import navfolioConfig from '../../../navfolio.config';
@@ -25,29 +27,48 @@ import { getI18n } from '../../utils/ui-text';
 
 const siteConfig = await getSiteConfig();
 const { pages } = siteConfig;
+
 const pageMeta = pages.projects;
+
 const projectEntries = await getCollection('projects');
-const projectIndex = projectEntries.find((entry) => entry.id === 'index');
+
+const projectIndex = projectEntries.find(
+  (entry) => entry.id === 'index',
+);
+
 const projects = sortBlogPostsForArchive(
-  projectEntries.filter((entry) => entry.id !== 'index' && !entry.data.draft),
+  projectEntries.filter(
+    (entry) => entry.id !== 'index' && !entry.data.draft,
+  ),
 );
 
 if (!projectIndex) {
-  throw new Error('Missing src/content/projects/index.mdx content entry.');
+  throw new Error(
+    'Missing src/content/projects/index.mdx content entry.',
+  );
 }
 
 const { Content, headings } = await render(projectIndex);
+
 const projectIndexPage = {
   ...projectIndex,
+
   data: {
     ...projectIndex.data,
-    title: pageMeta.title,
-    description: pageMeta.subtitle,
+
+    title: 'REMAINS',
+    description: `Residues of images and signs, left behind by
+something we once agreed to call reality.`,
   },
 };
 
 const relatedProjects = projects;
-const projectsRoute = getPageModuleRoute(navfolioConfig, 'projects');
+
+const projectsRoute = getPageModuleRoute(
+  navfolioConfig,
+  'projects',
+);
+
 const i18n = getI18n(siteConfig);
 
 const projectIcons = {
@@ -81,262 +102,2746 @@ function withBase(href: string) {
   headings={headings}
   sidebar={{ enable: false, ...projectIndex.data.sidebar }}
   headerVariant="archive"
-  headerKicker={pageMeta.kicker}
-  headerNote={pageMeta.note}
+  headerKicker="PORTFOLIO / PROJECTS"
+  headerNote=""
   contentFont="ui"
 >
   <Content />
 
-  {
-    relatedProjects.length > 0 ? (
-      <section class="project-grid" aria-label={i18n.t('projects.listLabel')}>
-        {relatedProjects.map((project) => {
-          const ProjectIcon = projectIcons[project.data.icon] ?? Github;
-          const projectHref = withBase(`${projectsRoute}/${project.id}/`);
+  <!-- =====================================================
+       PORTFOLIO
+       ===================================================== -->
 
-          return (
-            <article
-              class="project-card"
-              style={
-                project.data.iconColor
-                  ? `--project-icon-color: ${project.data.iconColor}`
-                  : undefined
-              }
-            >
-              <div class="project-card-heading">
-                <ProjectIcon class="project-icon" size={22} strokeWidth={1.55} aria-hidden="true" />
-                <h2>
-                  <a href={projectHref}>{project.data.title}</a>
-                </h2>
-              </div>
-              <p>{project.data.description}</p>
-              <footer class="project-card-footer">
-                <span class="project-meta">
-                  <FormattedDate date={project.data.date} />
+  <section
+    class="portfolio-section"
+    aria-labelledby="portfolio-title"
+  >
+    <header class="portfolio-section-header">
+
+      <div>
+        <p class="portfolio-section-kicker">
+          SELECTED WORK / VISUAL ARCHIVE
+        </p>
+
+        <h2 id="portfolio-title">
+          PHOTOGRAPHIC REMAINS
+        </h2>
+      </div>
+
+      <span class="portfolio-index">
+        001 — 004
+      </span>
+
+    </header>
+
+
+    <div class="portfolio-grid">
+
+      <article class="visual-card visual-card-main">
+
+        <a class="visual-link visual-lightbox-trigger" href="https://picsum.photos/id/1011/1600/1050?grayscale" data-full="https://picsum.photos/id/1011/1600/1050?grayscale" data-title="KAMAGASAKI / UNTITLED" aria-label="Open Sample work 001">
+
+          <figure class="visual-image">
+            <img
+              src="https://picsum.photos/id/1011/1600/1050?grayscale"
+              alt="Temporary portfolio sample"
+              loading="eager"
+            />
+
+            <span class="visual-overlay">
+              VIEW / 001
+            </span>
+          </figure>
+
+          <footer class="visual-meta">
+            <div>
+              <span class="visual-type">
+                01 / PHOTOGRAPHY
+              </span>
+
+              <h3>KAMAGASAKI / UNTITLED</h3>
+            </div>
+
+            <span class="visual-year">
+              2026
+            </span>
+          </footer>
+
+        </a>
+
+      </article>
+
+
+      <article class="visual-card visual-card-tall">
+
+        <a class="visual-link visual-lightbox-trigger" href="https://picsum.photos/id/1015/900/1500?grayscale" data-full="https://picsum.photos/id/1015/900/1500?grayscale" data-title="TRACE / 02" aria-label="Open Sample work 002">
+
+          <figure class="visual-image">
+            <img
+              src="https://picsum.photos/id/1015/900/1500?grayscale"
+              alt="Temporary portfolio sample"
+              loading="lazy"
+            />
+
+            <span class="visual-overlay">
+              VIEW / 002
+            </span>
+          </figure>
+
+          <footer class="visual-meta">
+            <div>
+              <span class="visual-type">
+                02 / DOCUMENT
+              </span>
+
+              <h3>TRACE / 02</h3>
+            </div>
+
+            <span class="visual-year">
+              2026
+            </span>
+          </footer>
+
+        </a>
+
+      </article>
+
+
+      <article class="visual-card visual-card-small">
+
+        <a class="visual-link visual-lightbox-trigger" href="https://picsum.photos/id/1021/1000/850?grayscale" data-full="https://picsum.photos/id/1021/1000/850?grayscale" data-title="RESIDUAL LIGHT" aria-label="Open Sample work 003">
+
+          <figure class="visual-image">
+            <img
+              src="https://picsum.photos/id/1021/1000/850?grayscale"
+              alt="Temporary portfolio sample"
+              loading="lazy"
+            />
+
+            <span class="visual-overlay">
+              VIEW / 003
+            </span>
+          </figure>
+
+          <footer class="visual-meta">
+            <div>
+              <span class="visual-type">
+                03 / PHOTOGRAPHY
+              </span>
+
+              <h3>RESIDUAL LIGHT</h3>
+            </div>
+
+            <span class="visual-year">
+              2025
+            </span>
+          </footer>
+
+        </a>
+
+      </article>
+
+
+      <article class="visual-card visual-card-fragment">
+
+        <a class="visual-link visual-lightbox-trigger" href="https://picsum.photos/id/1031/900/900?grayscale" data-full="https://picsum.photos/id/1031/900/900?grayscale" data-title="NO SIGNAL" aria-label="Open Sample work 004">
+
+          <figure class="visual-image">
+            <img
+              src="https://picsum.photos/id/1031/900/900?grayscale"
+              alt="Temporary portfolio sample"
+              loading="lazy"
+            />
+
+            <span class="visual-overlay">
+              VIEW / 004
+            </span>
+          </figure>
+
+          <footer class="visual-meta">
+            <div>
+              <span class="visual-type">
+                04 / FRAGMENT
+              </span>
+
+              <h3>NO SIGNAL</h3>
+            </div>
+
+            <span class="visual-year">
+              2025
+            </span>
+          </footer>
+
+        </a>
+
+      </article>
+
+    </div>
+
+
+    <article class="text-remain">
+
+      <div class="text-remain-index">
+        <span>05 / TEXT</span>
+        <span>2026</span>
+      </div>
+
+      <div class="text-remain-body">
+
+        <p class="text-remain-kicker">
+          RESIDUAL NOTE / 005
+        </p>
+
+        <h3>
+          THE IMAGE AFTER REALITY
+        </h3>
+
+        <p class="text-remain-copy">
+          A photograph does not preserve reality.
+          It preserves only what remains after perception,
+          language and signs have already passed through it.
+        </p>
+
+        <p class="text-remain-copy">
+          What appears before us may once have been called
+          a flower, a street, a body, or a light.
+          By the time it becomes an image, however,
+          the certainty of that name has already begun to decay.
+        </p>
+
+        <span class="text-remain-status">
+          TEXT / FRAGMENT / UNRESOLVED
+        </span>
+
+      </div>
+
+    </article>
+  </section>
+  <!-- TEXT PORTFOLIO SAMPLE START -->
+
+  <section class="text-work">
+
+    <div class="text-work-rail">
+
+      <span class="text-work-number">
+        05 / TEXT
+      </span>
+
+      <span class="text-work-year">
+        2026
+      </span>
+
+    </div>
+
+
+    <div class="text-work-content">
+
+      <p class="text-work-kicker">
+        RESIDUAL NOTE / PERCEPTION
+      </p>
+
+      <h2>
+        THE FLOWER THAT REFUSES ITS NAME
+      </h2>
+
+      <div class="text-work-excerpt">
+
+        <p>
+          What appears before us as a flower may indeed be a flower.
+          But at precisely the same intensity with which we predict
+          its identity, something within it continues to insist that
+          it is not a flower.
+        </p>
+
+        <p>
+          Reality may be nothing more than the temporary stability
+          produced by that contradiction — a momentary residue left
+          behind by perception, language and signs.
+        </p>
+
+      </div>
+
+
+      <footer class="text-work-footer">
+
+        <span>
+          TEXT / FRAGMENT
+        </span>
+
+        <a href="/blog/transmission-test-05/">
+          READ TEXT
+          <span aria-hidden="true">→</span>
+        </a>
+
+      </footer>
+
+    </div>
+
+  </section>
+
+  <!-- TEXT PORTFOLIO SAMPLE END -->
+
+
+
+  <!-- TEXT PORTFOLIO SAMPLE START -->
+
+  <section class="text-work">
+
+    <div class="text-work-rail">
+
+      <span class="text-work-number">
+        05 / TEXT
+      </span>
+
+      <span class="text-work-year">
+        2026
+      </span>
+
+    </div>
+
+
+    <div class="text-work-content">
+
+      <p class="text-work-kicker">
+        RESIDUAL NOTE / PERCEPTION
+      </p>
+
+      <h2>
+        THE FLOWER THAT REFUSES ITS NAME
+      </h2>
+
+      <div class="text-work-excerpt">
+
+        <p>
+          What appears before us as a flower may indeed be a flower.
+          But at precisely the same intensity with which we predict
+          its identity, something within it continues to insist that
+          it is not a flower.
+        </p>
+
+        <p>
+          Reality may be nothing more than the temporary stability
+          produced by that contradiction — a momentary residue left
+          behind by perception, language and signs.
+        </p>
+
+      </div>
+
+
+      <footer class="text-work-footer">
+
+        <span>
+          TEXT / FRAGMENT
+        </span>
+
+        <a href="/blog/transmission-test-05/">
+          READ TEXT
+          <span aria-hidden="true">→</span>
+        </a>
+
+      </footer>
+
+    </div>
+
+  </section>
+
+  <!-- TEXT PORTFOLIO SAMPLE END -->
+
+
+
+  <!-- TEXT PORTFOLIO SAMPLE START -->
+
+  <section class="text-work">
+
+    <div class="text-work-rail">
+
+      <span class="text-work-number">
+        05 / TEXT
+      </span>
+
+      <span class="text-work-year">
+        2026
+      </span>
+
+    </div>
+
+
+    <div class="text-work-content">
+
+      <p class="text-work-kicker">
+        RESIDUAL NOTE / PERCEPTION
+      </p>
+
+      <h2>
+        THE FLOWER THAT REFUSES ITS NAME
+      </h2>
+
+      <div class="text-work-excerpt">
+
+        <p>
+          What appears before us as a flower may indeed be a flower.
+          But at precisely the same intensity with which we predict
+          its identity, something within it continues to insist that
+          it is not a flower.
+        </p>
+
+        <p>
+          Reality may be nothing more than the temporary stability
+          produced by that contradiction — a momentary residue left
+          behind by perception, language and signs.
+        </p>
+
+      </div>
+
+
+      <footer class="text-work-footer">
+
+        <span>
+          TEXT / FRAGMENT
+        </span>
+
+        <a href="/blog/transmission-test-05/">
+          READ TEXT
+          <span aria-hidden="true">→</span>
+        </a>
+
+      </footer>
+
+    </div>
+
+  </section>
+
+  <!-- TEXT PORTFOLIO SAMPLE END -->
+
+
+
+  <!-- TEXT PORTFOLIO SAMPLE START -->
+
+  <section class="text-work">
+
+    <div class="text-work-rail">
+
+      <span class="text-work-number">
+        05 / TEXT
+      </span>
+
+      <span class="text-work-year">
+        2026
+      </span>
+
+    </div>
+
+
+    <div class="text-work-content">
+
+      <p class="text-work-kicker">
+        RESIDUAL NOTE / PERCEPTION
+      </p>
+
+      <h2>
+        THE FLOWER THAT REFUSES ITS NAME
+      </h2>
+
+      <div class="text-work-excerpt">
+
+        <p>
+          What appears before us as a flower may indeed be a flower.
+          But at precisely the same intensity with which we predict
+          its identity, something within it continues to insist that
+          it is not a flower.
+        </p>
+
+        <p>
+          Reality may be nothing more than the temporary stability
+          produced by that contradiction — a momentary residue left
+          behind by perception, language and signs.
+        </p>
+
+      </div>
+
+
+      <footer class="text-work-footer">
+
+        <span>
+          TEXT / FRAGMENT
+        </span>
+
+        <a href="/blog/transmission-test-05/">
+          READ TEXT
+          <span aria-hidden="true">→</span>
+        </a>
+
+      </footer>
+
+    </div>
+
+  </section>
+
+  <!-- TEXT PORTFOLIO SAMPLE END -->
+
+ 
+  <!-- TEXT PORTFOLIO SAMPLE START -->
+
+  <section class="text-work">
+
+    <div class="text-work-rail">
+
+      <span class="text-work-number">
+        05 / TEXT
+      </span>
+
+      <span class="text-work-year">
+        2026
+      </span>
+
+    </div>
+
+
+    <div class="text-work-content">
+
+      <p class="text-work-kicker">
+        RESIDUAL NOTE / PERCEPTION
+      </p>
+
+      <h2>
+        THE FLOWER THAT REFUSES ITS NAME
+      </h2>
+
+      <div class="text-work-excerpt">
+
+        <p>
+          What appears before us as a flower may indeed be a flower.
+          But at precisely the same intensity with which we predict
+          its identity, something within it continues to insist that
+          it is not a flower.
+        </p>
+
+        <p>
+          Reality may be nothing more than the temporary stability
+          produced by that contradiction — a momentary residue left
+          behind by perception, language and signs.
+        </p>
+
+      </div>
+
+
+      <footer class="text-work-footer">
+
+        <span>
+          TEXT / FRAGMENT
+        </span>
+
+        <a href="/blog/transmission-test-05/">
+          READ TEXT
+          <span aria-hidden="true">→</span>
+        </a>
+
+      </footer>
+
+    </div>
+
+  </section>
+
+  <!-- TEXT PORTFOLIO SAMPLE END -->
+
+ 
+  <!-- TEXT PORTFOLIO SAMPLE START -->
+
+  <section class="text-work">
+
+    <div class="text-work-rail">
+
+      <span class="text-work-number">
+        05 / TEXT
+      </span>
+
+      <span class="text-work-year">
+        2026
+      </span>
+
+    </div>
+
+
+    <div class="text-work-content">
+
+      <p class="text-work-kicker">
+        RESIDUAL NOTE / PERCEPTION
+      </p>
+
+      <h2>
+        THE FLOWER THAT REFUSES ITS NAME
+      </h2>
+
+      <div class="text-work-excerpt">
+
+        <p>
+          What appears before us as a flower may indeed be a flower.
+          But at precisely the same intensity with which we predict
+          its identity, something within it continues to insist that
+          it is not a flower.
+        </p>
+
+        <p>
+          Reality may be nothing more than the temporary stability
+          produced by that contradiction — a momentary residue left
+          behind by perception, language and signs.
+        </p>
+
+      </div>
+
+
+      <footer class="text-work-footer">
+
+        <span>
+          TEXT / FRAGMENT
+        </span>
+
+        <a href="/blog/transmission-test-05/">
+          READ TEXT
+          <span aria-hidden="true">→</span>
+        </a>
+
+      </footer>
+
+    </div>
+
+  </section>
+
+  <!-- TEXT PORTFOLIO SAMPLE END -->
+
+<!-- =====================================================
+       PROJECT INDEX
+       ===================================================== -->
+
+  <section
+    class="project-index-section"
+    aria-labelledby="project-index-title"
+  >
+
+    <header class="project-index-header">
+
+      <div>
+
+        <div class="project-index-kicker">
+          <span aria-hidden="true"></span>
+          SYSTEM / INDEX
+        </div>
+
+        <h2 id="project-index-title">
+          PROJECT INDEX
+        </h2>
+
+        <p>
+          Research / Systems / Experiments
+        </p>
+
+      </div>
+
+      <span class="project-index-count">
+        {String(relatedProjects.length).padStart(2, '0')} RECORDS
+      </span>
+
+    </header>
+
+
+    {
+      relatedProjects.length > 0 ? (
+
+        <div
+          class="project-grid"
+          aria-label={i18n.t('projects.listLabel')}
+        >
+
+          {relatedProjects.map((project, index) => {
+
+            const ProjectIcon =
+              projectIcons[project.data.icon] ?? Github;
+
+            const projectHref = withBase(
+              `${projectsRoute}/${project.id}/`,
+            );
+
+            return (
+
+              <article
+                class="project-card"
+                style={
+                  project.data.iconColor
+                    ? `--project-icon-color: ${project.data.iconColor}`
+                    : undefined
+                }
+              >
+
+                <span class="project-sequence">
+                  {String(index + 1).padStart(2, '0')}
                 </span>
-                {project.data.authors.length > 0 && (
-                  <span class="project-authors" aria-label={i18n.t('projects.authorsLabel')}>
-                    {project.data.authors.map((author) =>
-                      author.url ? (
-                        <a href={author.url}>{author.name}</a>
-                      ) : (
-                        <span>{author.name}</span>
-                      ),
-                    )}
-                  </span>
-                )}
-                {project.data.links.length > 0 && (
-                  <span class="project-links" aria-label={i18n.t('projects.linksLabel')}>
-                    {project.data.links.map((link) => (
-                      <a href={link.href} target="_blank" rel="noopener noreferrer">
-                        {link.kind === 'github' ? (
-                          <Github size={13} strokeWidth={1.8} aria-hidden="true" />
-                        ) : (
-                          <ExternalLink size={13} strokeWidth={1.8} aria-hidden="true" />
-                        )}
-                        {link.label}
+
+                <div class="project-card-body">
+
+                  <div class="project-card-heading">
+
+                    <ProjectIcon
+                      class="project-icon"
+                      size={18}
+                      strokeWidth={1.55}
+                      aria-hidden="true"
+                    />
+
+                    <h3>
+                      <a href={projectHref}>
+                        {project.data.title}
                       </a>
-                    ))}
+                    </h3>
+
+                  </div>
+
+                  <p>
+                    {project.data.description}
+                  </p>
+
+                </div>
+
+
+                <footer class="project-card-footer">
+
+                  <span class="project-meta">
+                    <FormattedDate date={project.data.date} />
                   </span>
-                )}
-                {project.data.tags.length > 0 && (
-                  <span class="project-tags" aria-label={i18n.t('projects.tagsLabel')}>
-                    {project.data.tags.slice(0, 3).map((tag) => (
-                      <small>{tag}</small>
-                    ))}
-                  </span>
-                )}
-              </footer>
-            </article>
-          );
-        })}
-      </section>
-    ) : (
-      <section class="project-empty" aria-label={i18n.t('projects.emptyLabel')}>
-        <span aria-hidden="true">01</span>
-        <h2>{i18n.t('projects.emptyTitle')}</h2>
-        <p>{i18n.t('projects.emptyNote')}</p>
-      </section>
-    )
-  }
+
+
+                  {project.data.authors.length > 0 && (
+
+                    <span
+                      class="project-authors"
+                      aria-label={i18n.t('projects.authorsLabel')}
+                    >
+
+                      {project.data.authors.map((author) =>
+                        author.url ? (
+
+                          <a href={author.url}>
+                            {author.name}
+                          </a>
+
+                        ) : (
+
+                          <span>
+                            {author.name}
+                          </span>
+
+                        ),
+                      )}
+
+                    </span>
+
+                  )}
+
+
+                  {project.data.links.length > 0 && (
+
+                    <span
+                      class="project-links"
+                      aria-label={i18n.t('projects.linksLabel')}
+                    >
+
+                      {project.data.links.map((link) => (
+
+                        <a
+                          href={link.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+
+                          {link.kind === 'github' ? (
+
+                            <Github
+                              size={13}
+                              strokeWidth={1.8}
+                              aria-hidden="true"
+                            />
+
+                          ) : (
+
+                            <ExternalLink
+                              size={13}
+                              strokeWidth={1.8}
+                              aria-hidden="true"
+                            />
+
+                          )}
+
+                          {link.label}
+
+                        </a>
+
+                      ))}
+
+                    </span>
+
+                  )}
+
+
+                  {project.data.tags.length > 0 && (
+
+                    <span
+                      class="project-tags"
+                      aria-label={i18n.t('projects.tagsLabel')}
+                    >
+
+                      {project.data.tags
+                        .slice(0, 3)
+                        .map((tag) => (
+
+                          <small>
+                            {tag}
+                          </small>
+
+                        ))}
+
+                    </span>
+
+                  )}
+
+                </footer>
+
+              </article>
+
+            );
+
+          })}
+
+        </div>
+
+      ) : (
+
+        <div
+          class="project-empty"
+          aria-label={i18n.t('projects.emptyLabel')}
+        >
+
+          <span class="empty-index" aria-hidden="true">
+            00
+          </span>
+
+          <div>
+
+            <h3>
+              {i18n.t('projects.emptyTitle')}
+            </h3>
+
+            <p>
+              {i18n.t('projects.emptyNote')}
+            </p>
+
+          </div>
+
+          <span class="empty-status">
+            ● STANDBY
+          </span>
+
+        </div>
+
+      )
+    }
+
+  </section>
+
 </BlogArticle>
 
-<style>
-  .project-meta,
-  .project-authors,
-  .project-links,
-  .project-empty span,
-  .project-tags small {
-    font-family: var(--font-ui-label);
+
+<!-- ========================================================
+     REMAINS IMAGE LIGHTBOX
+     ======================================================== -->
+
+<div
+  class="remains-lightbox"
+  id="remains-lightbox"
+  aria-hidden="true"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Image viewer"
+>
+  <button
+    class="remains-lightbox-close"
+    type="button"
+    aria-label="Close image"
+  >
+    ×
+  </button>
+
+  <div class="remains-lightbox-stage">
+
+    <img
+      class="remains-lightbox-image"
+      src=""
+      alt=""
+    />
+
+    <div class="remains-lightbox-info">
+
+      <span class="remains-lightbox-label">
+        REMAINS / IMAGE
+      </span>
+
+      <span class="remains-lightbox-title"></span>
+
+    </div>
+
+  </div>
+</div>
+
+
+<script is:inline data-astro-rerun>
+  (() => {
+
+    /*
+     * REMAINS LIGHTBOX
+     *
+     * Event delegation is used deliberately.
+     * This keeps the lightbox working both after
+     * a hard browser reload and after Astro
+     * ClientRouter navigation.
+     */
+
+    if (window.__remainsLightboxController) {
+      return;
+    }
+
+    window.__remainsLightboxController = true;
+
+
+    function getLightbox() {
+      return document.getElementById('remains-lightbox');
+    }
+
+
+    function openLightbox(trigger) {
+
+      const lightbox = getLightbox();
+
+      if (!lightbox) {
+        return;
+      }
+
+
+      const image =
+        lightbox.querySelector('.remains-lightbox-image');
+
+      const title =
+        lightbox.querySelector('.remains-lightbox-title');
+
+
+      const full =
+        trigger.dataset.full ||
+        trigger.getAttribute('href');
+
+
+      const workTitle =
+        trigger.dataset.title || '';
+
+
+      if (!full || !image) {
+        return;
+      }
+
+
+      image.src = full;
+      image.alt = workTitle;
+
+
+      if (title) {
+        title.textContent = workTitle;
+      }
+
+
+      lightbox.classList.add('is-open');
+
+      lightbox.setAttribute(
+        'aria-hidden',
+        'false'
+      );
+
+
+      document.body.classList.add(
+        'remains-lightbox-open'
+      );
+    }
+
+
+    function closeLightbox() {
+
+      const lightbox = getLightbox();
+
+      if (!lightbox) {
+        return;
+      }
+
+
+      const image =
+        lightbox.querySelector('.remains-lightbox-image');
+
+
+      lightbox.classList.remove('is-open');
+
+      lightbox.setAttribute(
+        'aria-hidden',
+        'true'
+      );
+
+
+      document.body.classList.remove(
+        'remains-lightbox-open'
+      );
+
+
+      if (image) {
+        image.removeAttribute('src');
+      }
+    }
+
+
+    document.addEventListener(
+      'click',
+      (event) => {
+
+        const target = event.target;
+
+        if (!(target instanceof Element)) {
+          return;
+        }
+
+
+        /*
+         * PHOTO CLICK
+         */
+
+        const trigger =
+          target.closest('.visual-lightbox-trigger');
+
+
+        if (trigger) {
+
+          event.preventDefault();
+
+          openLightbox(trigger);
+
+          return;
+        }
+
+
+        /*
+         * CLOSE BUTTON
+         */
+
+        if (
+          target.closest('.remains-lightbox-close')
+        ) {
+
+          event.preventDefault();
+
+          closeLightbox();
+
+          return;
+        }
+
+
+        /*
+         * CLICK BLACK BACKDROP
+         */
+
+        const lightbox = getLightbox();
+
+        if (
+          lightbox &&
+          target === lightbox
+        ) {
+
+          closeLightbox();
+
+        }
+
+      }
+    );
+
+
+    document.addEventListener(
+      'keydown',
+      (event) => {
+
+        if (event.key === 'Escape') {
+          closeLightbox();
+        }
+
+      }
+    );
+
+  })();
+</script>
+
+<Footer />
+
+
+<style is:global>
+
+/* =========================================================
+   PORTFOLIO + PROJECTS
+   ========================================================= */
+
+.portfolio-section,
+.project-index-section {
+  font-family:
+    "Host Grotesk Variable",
+    "Inter Variable",
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+}
+
+
+/* =========================================================
+   REMAINS — PAGE HEADER
+   Match FRAGMENTS typography
+   ========================================================= */
+
+body:has(.portfolio-section) .article-header-archive {
+  display: block !important;
+  margin-bottom: 40px !important;
+}
+
+body:has(.portfolio-section) .article-header-archive .archive-heading {
+  width: 100% !important;
+}
+
+body:has(.portfolio-section) .article-header-archive .archive-title {
+  margin: 0 !important;
+
+  color: #e7e8e4 !important;
+
+  font-family:
+    "Host Grotesk Variable",
+    "Inter Variable",
+    "Helvetica Neue",
+    Arial,
+    sans-serif !important;
+
+  font-size:
+    clamp(2.85rem, 4.35vw, 4.7rem) !important;
+
+  font-weight: 800 !important;
+
+  line-height: 0.9 !important;
+
+  letter-spacing: -0.065em !important;
+
+  text-transform: uppercase !important;
+}
+
+body:has(.portfolio-section) .article-header-archive .archive-kicker {
+  margin: 0 0 11px !important;
+
+  color: #b7ff00 !important;
+
+  font-family:
+    "Maple Mono",
+    monospace !important;
+
+  font-size: 0.66rem !important;
+
+  font-weight: 700 !important;
+
+  line-height: 1.2 !important;
+
+  letter-spacing: 0.16em !important;
+
+  text-transform: uppercase !important;
+}
+
+/* Portfolio index is not a blog post.
+   Remove date / word count / reading time. */
+
+body:has(.portfolio-section) .article-header-archive .meta-line,
+body:has(.portfolio-section) .article-header-archive .group-meta-line {
+  display: none !important;
+}
+
+/* Move subtitle underneath REMAINS */
+
+body:has(.portfolio-section) .article-header-archive .archive-copy {
+  display: block !important;
+
+  width: min(610px, 100%) !important;
+  max-width: 610px !important;
+
+  margin: 14px 0 0 !important;
+  padding: 0 0 15px !important;
+
+  text-align: left !important;
+
+  position: relative;
+}
+
+body:has(.portfolio-section) .article-header-archive .archive-subtitle {
+  width: 100% !important;
+
+  margin: 0 !important;
+
+  color: #858b83 !important;
+
+  font-family:
+    "Inter Variable",
+    "Helvetica Neue",
+    Arial,
+    sans-serif !important;
+
+  font-size: 0.82rem !important;
+
+  font-weight: 400 !important;
+
+  line-height: 1.52 !important;
+
+  letter-spacing: -0.01em !important;
+
+  text-align: left !important;
+}
+
+
+body:has(.portfolio-section) .article-header-archive .archive-copy::after {
+  position: absolute;
+
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  height: 1px;
+
+  content: "";
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255, 82, 0, 0.02) 0%,
+      rgba(255, 82, 0, 0.06) 18%,
+      rgba(255, 82, 0, 0.16) 42%,
+      rgba(255, 82, 0, 0.40) 70%,
+      rgba(255, 82, 0, 0.88) 100%
+    );
+}
+body:has(.portfolio-section) .article-header-archive .archive-note {
+  display: none !important;
+}
+
+
+/* =========================================================
+   PORTFOLIO
+   ========================================================= */
+
+.portfolio-section {
+  margin-top: 24px;
+
+  font-family:
+    "Host Grotesk Variable",
+    "Inter Variable",
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+}
+
+
+/* =========================================================
+   SECTION HEADER
+   ========================================================= */
+
+.portfolio-section-header {
+  display: flex;
+
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 30px;
+
+  margin-bottom: 22px;
+
+  padding: 0 0 14px;
+
+  border-bottom:
+    1px solid rgba(255,255,255,.09);
+}
+
+
+.portfolio-section-kicker {
+  margin: 0 0 7px;
+
+  color: #b7ff00;
+
+  font-family:
+    "Maple Mono",
+    monospace;
+
+  font-size: .60rem;
+  font-weight: 700;
+
+  letter-spacing: .15em;
+}
+
+
+.portfolio-section-header h2 {
+  margin: 0;
+
+  color: #d9dcd6;
+
+  font-family:
+    "Host Grotesk Variable",
+    "Inter Variable",
+    Arial,
+    sans-serif;
+
+  font-size:
+    clamp(1.30rem, 2vw, 1.75rem);
+
+  font-weight: 650;
+
+  line-height: 1;
+
+  letter-spacing: -.035em;
+}
+
+
+.portfolio-index {
+  padding-bottom: 2px;
+
+  color: #656b64;
+
+  font-family:
+    "Maple Mono",
+    monospace;
+
+  font-size: .58rem;
+
+  letter-spacing: .12em;
+}
+
+
+/* =========================================================
+   VISUAL GRID
+   ========================================================= */
+
+.portfolio-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(12, minmax(0, 1fr));
+
+  grid-auto-rows: 52px;
+
+  gap: 14px;
+
+  align-items: stretch;
+}
+
+
+.visual-card {
+  min-width: 0;
+}
+
+
+.visual-card-main {
+  grid-column: 1 / 9;
+  grid-row: span 8;
+}
+
+
+.visual-card-tall {
+  grid-column: 9 / 13;
+  grid-row: span 12;
+}
+
+
+.visual-card-small {
+  grid-column: 1 / 6;
+  grid-row: span 6;
+}
+
+
+.visual-card-fragment {
+  grid-column: 6 / 9;
+  grid-row: span 6;
+}
+
+
+.visual-link {
+  display: flex;
+
+  flex-direction: column;
+
+  height: 100%;
+
+  color: inherit;
+
+  text-decoration: none;
+}
+
+
+.visual-image {
+  position: relative;
+
+  flex: 1;
+
+  min-height: 0;
+
+  margin: 0;
+
+  overflow: hidden;
+
+  background: #080908;
+}
+
+
+.visual-image::after {
+  position: absolute;
+
+  inset: 0;
+
+  content: "";
+
+  border:
+    1px solid rgba(255,255,255,.12);
+
+  pointer-events: none;
+
+  transition:
+    border-color 260ms ease;
+}
+
+
+.visual-image img {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  filter:
+    grayscale(100%)
+    brightness(.78)
+    contrast(1.08);
+
+  transform:
+    scale(1.001);
+
+  transition:
+    filter 500ms ease,
+    transform 700ms cubic-bezier(.2,.7,.2,1);
+}
+
+
+.visual-link:hover .visual-image img {
+  filter:
+    grayscale(35%)
+    brightness(.88)
+    contrast(1.05);
+
+  transform:
+    scale(1.025);
+}
+
+
+.visual-link:hover .visual-image::after {
+  border-color:
+    rgba(255,82,0,.82);
+}
+
+
+.visual-overlay {
+  position: absolute;
+
+  z-index: 2;
+
+  right: 13px;
+  bottom: 12px;
+
+  padding: 4px 7px;
+
+  color: #dfe2dc;
+
+  font-family:
+    "Maple Mono",
+    monospace;
+
+  font-size: .54rem;
+  font-weight: 650;
+
+  letter-spacing: .11em;
+
+  background:
+    rgba(5,6,5,.74);
+
+  opacity: 0;
+
+  transform:
+    translateY(5px);
+
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease;
+}
+
+
+.visual-link:hover .visual-overlay {
+  opacity: 1;
+
+  transform:
+    translateY(0);
+}
+
+
+/* =========================================================
+   IMAGE CAPTIONS
+   ========================================================= */
+
+.visual-meta {
+  display: flex;
+
+  flex: none;
+
+  gap: 14px;
+
+  align-items: flex-start;
+  justify-content: space-between;
+
+  min-height: 52px;
+
+  padding: 9px 1px 0;
+}
+
+
+.visual-type {
+  display: block;
+
+  margin: 0 0 3px;
+
+  color: #b7ff00;
+
+  font-family:
+    "Maple Mono",
+    monospace;
+
+  font-size: .53rem;
+  font-weight: 700;
+
+  letter-spacing: .12em;
+}
+
+
+.visual-meta h3 {
+  margin: 0;
+
+  color: #d8dad5;
+
+  font-size: .78rem;
+  font-weight: 580;
+
+  line-height: 1.25;
+
+  letter-spacing: -.01em;
+}
+
+
+.visual-year {
+  color: #676c66;
+
+  font-family:
+    "Maple Mono",
+    monospace;
+
+  font-size: .55rem;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 760px) {
+
+  body:has(.portfolio-section) .article-header-archive {
+    margin-bottom: 32px !important;
   }
 
-  .project-card p,
-  .project-empty p {
-    margin: 0;
-    color: var(--paper-ink-soft);
-    line-height: 1.78;
+
+  body:has(.portfolio-section) .article-header-archive .archive-title {
+    font-size:
+      clamp(2.75rem, 14vw, 4.15rem) !important;
   }
 
-  .project-grid {
+
+  .portfolio-section-header {
+    align-items: flex-start;
+  }
+
+
+  .portfolio-index {
+    display: none;
+  }
+
+
+  .portfolio-grid {
+    display: block;
+  }
+
+
+  .visual-card {
+    margin-bottom: 30px;
+  }
+
+
+  .visual-image {
+    aspect-ratio: 4 / 3;
+  }
+
+
+  .visual-card-tall .visual-image {
+    aspect-ratio: 3 / 4;
+  }
+
+}
+
+
+
+/* =========================================================
+   TEXT REMAIN SAMPLE
+   ========================================================= */
+
+.text-remain {
+  display: grid;
+
+  grid-template-columns:
+    150px
+    minmax(0, 1fr);
+
+  gap: clamp(30px, 5vw, 78px);
+
+  margin-top: 54px;
+
+  padding:
+    26px 0 30px;
+
+  border-top:
+    1px solid rgba(255, 255, 255, 0.09);
+
+  border-bottom:
+    1px solid rgba(255, 255, 255, 0.09);
+}
+
+
+.text-remain-index {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 7px;
+
+  color: #686e67;
+
+  font-family:
+    "Maple Mono",
+    monospace;
+
+  font-size: 0.56rem;
+
+  font-weight: 650;
+
+  letter-spacing: 0.12em;
+}
+
+
+.text-remain-body {
+  max-width: 760px;
+}
+
+
+.text-remain-kicker {
+  margin: 0 0 8px;
+
+  color: #b7ff00;
+
+  font-family:
+    "Maple Mono",
+    monospace;
+
+  font-size: 0.58rem;
+
+  font-weight: 700;
+
+  letter-spacing: 0.14em;
+}
+
+
+.text-remain-body h3 {
+  margin: 0 0 21px;
+
+  color: #e1e3de;
+
+  font-family:
+    "Host Grotesk Variable",
+    "Inter Variable",
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+
+  font-size:
+    clamp(1.6rem, 2.7vw, 2.45rem);
+
+  font-weight: 700;
+
+  line-height: 0.98;
+
+  letter-spacing: -0.045em;
+}
+
+
+.text-remain-copy {
+  max-width: 66ch;
+
+  margin:
+    0 0 15px;
+
+  color: #959b94;
+
+  font-family:
+    "Inter Variable",
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+
+  font-size: 0.84rem;
+
+  line-height: 1.72;
+
+  letter-spacing: -0.006em;
+}
+
+
+.text-remain-status {
+  display: inline-block;
+
+  margin-top: 10px;
+
+  color: #6f756e;
+
+  font-family:
+    "Maple Mono",
+    monospace;
+
+  font-size: 0.52rem;
+
+  letter-spacing: 0.12em;
+}
+
+
+@media (max-width: 760px) {
+
+  .text-remain {
+    grid-template-columns: 1fr;
+
+    gap: 18px;
+
+    margin-top: 38px;
+  }
+
+
+  .text-remain-index {
+    flex-direction: row;
+
+    justify-content: space-between;
+  }
+
+}
+/* =========================================================
+   PROJECT INDEX
+   ========================================================= */
+
+.project-index-section {
+  margin-top: 86px;
+}
+
+
+.project-index-header {
+  display: flex;
+
+  gap: 30px;
+
+  align-items: flex-end;
+  justify-content: space-between;
+
+  padding:
+    0 0 18px;
+
+  border-bottom:
+    1px solid rgba(255, 255, 255, 0.10);
+}
+
+
+.project-index-kicker {
+  display: flex;
+
+  gap: 9px;
+
+  align-items: center;
+
+  margin-bottom: 9px;
+
+  color: #858b83;
+
+  font-family:
+    "Maple Mono",
+    monospace;
+
+  font-size: 0.61rem;
+
+  letter-spacing: 0.14em;
+}
+
+
+.project-index-kicker span {
+  width: 15px;
+  height: 1px;
+
+  background: #ff5200;
+}
+
+
+.project-index-count {
+  color: #747a73;
+
+  font-family:
+    "Maple Mono",
+    monospace;
+
+  font-size: 0.61rem;
+
+  letter-spacing: 0.09em;
+}
+
+
+/* =========================================================
+   PROJECT CARDS
+   ========================================================= */
+
+.project-grid {
+  display: grid;
+
+  grid-template-columns: 1fr;
+
+  gap: 7px;
+
+  margin-top: 14px;
+}
+
+
+.project-card {
+  display: grid;
+
+  grid-template-columns:
+    50px
+    minmax(0, 1fr)
+    minmax(220px, auto);
+
+  gap: 18px;
+
+  align-items: center;
+
+  min-height: 92px;
+
+  padding: 14px 18px;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.08);
+
+  border-radius: 5px;
+
+  background: #090a09;
+
+  transition:
+    border-color 200ms ease,
+    background 200ms ease,
+    transform 200ms ease;
+}
+
+
+.project-card:hover {
+  border-color:
+    rgba(255, 82, 0, 0.68);
+
+  background: #0c0d0c;
+
+  transform:
+    translateX(2px);
+}
+
+
+.project-sequence {
+  color: #60655f;
+
+  font-family:
+    "Maple Mono",
+    monospace;
+
+  font-size: 0.62rem;
+
+  letter-spacing: 0.08em;
+}
+
+
+.project-card-body {
+  min-width: 0;
+}
+
+
+.project-card-heading {
+  display: flex;
+
+  gap: 9px;
+
+  align-items: center;
+}
+
+
+.project-icon {
+  flex: none;
+
+  color:
+    var(--project-icon-color, #b7ff00);
+}
+
+
+.project-card h3 {
+  margin: 0;
+
+  font-size: 0.94rem;
+  font-weight: 600;
+
+  letter-spacing: -0.02em;
+}
+
+
+.project-card h3 a {
+  color: #e1e3de;
+
+  text-decoration: none;
+}
+
+
+.project-card h3 a:hover {
+  color: #ffffff;
+}
+
+
+.project-card-body > p {
+  margin: 5px 0 0;
+
+  overflow: hidden;
+
+  color: #747a73;
+
+  font-size: 0.70rem;
+
+  line-height: 1.5;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+.project-card-footer {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 6px 10px;
+
+  align-items: center;
+  justify-content: flex-end;
+
+  color: #737972;
+
+  font-family:
+    "Maple Mono",
+    monospace;
+
+  font-size: 0.58rem;
+}
+
+
+.project-card-footer a {
+  color: inherit;
+
+  text-decoration: none;
+}
+
+
+.project-card-footer a:hover {
+  color: #f5f5f2;
+}
+
+
+.project-tags {
+  display: flex;
+
+  gap: 5px;
+}
+
+
+.project-tags small {
+  padding: 2px 6px;
+
+  border:
+    1px solid rgba(183, 255, 0, 0.20);
+
+  border-radius: 3px;
+
+  color: #9aad72;
+
+  font-family:
+    "Maple Mono",
+    monospace;
+
+  font-size: 0.54rem;
+}
+
+
+/* =========================================================
+   EMPTY PROJECT STATE
+   ========================================================= */
+
+.project-empty {
+  display: grid;
+
+  grid-template-columns:
+    46px
+    minmax(0, 1fr)
+    auto;
+
+  gap: 18px;
+
+  align-items: center;
+
+  margin-top: 14px;
+
+  padding: 19px 20px;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.09);
+
+  border-radius: 5px;
+
+  background: #090a09;
+}
+
+
+.empty-index {
+  color: #555a54;
+
+  font-family:
+    "Maple Mono",
+    monospace;
+
+  font-size: 0.62rem;
+}
+
+
+.project-empty h3 {
+  margin: 0;
+
+  color: #d8dbd5;
+
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+
+.project-empty p {
+  margin: 4px 0 0;
+
+  color: #70766f;
+
+  font-size: 0.68rem;
+}
+
+
+.empty-status {
+  color: #b7ff00;
+
+  font-family:
+    "Maple Mono",
+    monospace;
+
+  font-size: 0.56rem;
+
+  letter-spacing: 0.10em;
+}
+
+
+/* =========================================================
+   MOTION
+   ========================================================= */
+
+@keyframes portfolio-pulse {
+
+  0%,
+  100% {
+    opacity: 0.38;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 760px) {
+
+  .portfolio-section {
+    margin-top: 38px;
+  }
+
+
+  .portfolio-section-header,
+  .project-index-header {
+    align-items: flex-start;
+  }
+
+
+  .portfolio-index,
+  .project-index-count {
+    display: none;
+  }
+
+
+  .portfolio-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: clamp(12px, 2vw, 22px);
-    margin-top: 34px;
+
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+
+    gap: 28px;
   }
+
+
+  .visual-card-main,
+  .visual-card-tall,
+  .visual-card-wide {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+
+  .visual-placeholder {
+    height: min(72vw, 420px);
+  }
+
+
+  .visual-card-tall .visual-placeholder {
+    height: min(105vw, 560px);
+  }
+
+
+  .project-index-section {
+    margin-top: 66px;
+  }
+
 
   .project-card {
-    display: grid;
-    gap: 14px;
-    min-height: 196px;
-    padding: 16px;
-    color: var(--paper-ink);
-    font-family: var(--font-ui-label);
-    border-radius: 8px;
-    transition:
-      transform 180ms ease,
-      background 180ms ease;
+    grid-template-columns:
+      34px
+      minmax(0, 1fr);
+
+    gap: 12px;
   }
 
-  .project-card:hover {
-    background: var(--paper-control-hover);
-    transform: translateY(-1px);
-  }
-
-  .project-card-heading {
-    display: flex;
-    gap: 11px;
-    align-items: center;
-  }
-  .project-icon {
-    flex: none;
-    color: var(--project-icon-color, var(--paper-accent));
-  }
-
-  .project-meta,
-  .project-empty span {
-    color: var(--paper-ink-faint);
-    font-size: 0.76rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-  }
-
-  .project-card h2,
-  .project-empty h2 {
-    margin: 0;
-    color: var(--paper-ink);
-    font-family: var(--font-ui-label);
-    font-size: 1.32rem;
-    line-height: 1.28;
-  }
-
-  .project-card h2 a {
-    color: inherit;
-    display: -webkit-box;
-    overflow: hidden;
-    text-decoration: none;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-  }
-  .project-card h2 a:hover {
-    color: var(--paper-accent);
-  }
-
-  .project-card p {
-    max-width: 58ch;
-    display: -webkit-box;
-    overflow: hidden;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-  }
-
-  .project-card-footer,
-  .project-tags,
-  .project-authors,
-  .project-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    align-items: center;
-  }
 
   .project-card-footer {
-    display: -webkit-box;
-    align-self: end;
-    overflow: hidden;
-    gap: 8px 12px;
-    line-height: 1.6;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
+    grid-column: 2;
+
+    justify-content: flex-start;
   }
 
-  .project-card-footer > * {
-    display: inline-flex;
-    vertical-align: middle;
-  }
-
-  .project-card-footer > * + * {
-    margin-left: 12px;
-  }
-
-  .project-authors,
-  .project-links {
-    color: var(--paper-ink-faint);
-    display: inline-flex;
-    font-size: 0.72rem;
-  }
-
-  .project-authors > * + *::before {
-    content: '·';
-    margin-right: 8px;
-    color: var(--paper-line-strong);
-  }
-  .project-authors a,
-  .project-links a {
-    color: inherit;
-    text-decoration: none;
-  }
-  .project-authors a:hover,
-  .project-links a:hover {
-    color: var(--paper-accent);
-  }
-  .project-links a {
-    display: inline-flex;
-    gap: 4px;
-    align-items: center;
-  }
-
-  .project-tags small {
-    max-width: 12ch;
-    overflow: hidden;
-    padding: 3px 8px;
-    border: 1px solid var(--paper-line);
-    border-radius: 999px;
-    color: var(--paper-ink-soft);
-    font-size: 0.74rem;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
 
   .project-empty {
-    display: grid;
-    gap: 10px;
-    max-width: 680px;
-    margin-top: 34px;
-    padding: 24px;
-    border: 1px solid var(--paper-line);
-    border-radius: 8px;
-    background: var(--paper-surface);
-    box-shadow: var(--paper-shadow);
+    grid-template-columns:
+      34px
+      minmax(0, 1fr);
   }
 
-  @media (max-width: 720px) {
-    .project-grid {
-      grid-template-columns: 1fr;
-    }
 
-    .project-card,
-    .project-empty {
-      padding: 20px;
-    }
+  .empty-status {
+    grid-column: 2;
   }
+
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+
+  .portfolio-signal {
+    animation: none;
+  }
+
+  .visual-placeholder,
+  .project-card {
+    transition: none;
+  }
+
+}
+
+
+/* TEXT PORTFOLIO SAMPLE START */
+
+.text-work {
+  display: grid;
+
+  grid-template-columns:
+    minmax(90px, 145px)
+    minmax(0, 760px);
+
+  gap: clamp(34px, 6vw, 88px);
+
+  margin-top: 72px;
+
+  padding:
+    31px 0 35px;
+
+  border-top:
+    1px solid rgba(255,255,255,.10);
+
+  border-bottom:
+    1px solid rgba(255,255,255,.10);
+}
+
+
+.text-work-rail {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 8px;
+
+  padding-top: 3px;
+
+  font-family:
+    "Maple Mono",
+    monospace;
+
+  font-size: .57rem;
+  font-weight: 650;
+
+  letter-spacing: .13em;
+}
+
+
+.text-work-number {
+  color: #b7ff00;
+}
+
+
+.text-work-year {
+  color: #5f655f;
+}
+
+
+.text-work-content {
+  min-width: 0;
+}
+
+
+.text-work-kicker {
+  margin: 0 0 11px;
+
+  color: #6e756e;
+
+  font-family:
+    "Maple Mono",
+    monospace;
+
+  font-size: .59rem;
+  font-weight: 650;
+
+  letter-spacing: .14em;
+}
+
+
+.text-work h2 {
+  max-width: 700px;
+
+  margin:
+    0 0 24px;
+
+  color: #e5e7e2;
+
+  font-family:
+    "Host Grotesk Variable",
+    "Inter Variable",
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+
+  font-size:
+    clamp(2rem, 3.8vw, 3.45rem);
+
+  font-weight: 750;
+
+  line-height: .96;
+
+  letter-spacing: -.055em;
+}
+
+
+.text-work-excerpt {
+  max-width: 630px;
+}
+
+
+.text-work-excerpt p {
+  margin:
+    0 0 15px;
+
+  color: #8f958e;
+
+  font-family:
+    "Inter Variable",
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+
+  font-size: .84rem;
+
+  line-height: 1.75;
+
+  letter-spacing: -.006em;
+}
+
+
+.text-work-footer {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  max-width: 630px;
+
+  margin-top: 29px;
+
+  padding-top: 12px;
+
+  border-top:
+    1px solid rgba(255,255,255,.055);
+
+  font-family:
+    "Maple Mono",
+    monospace;
+
+  font-size: .56rem;
+  font-weight: 650;
+
+  letter-spacing: .12em;
+}
+
+
+.text-work-footer > span {
+  color: #686e68;
+}
+
+
+.text-work-footer a {
+  display: inline-flex;
+
+  gap: 9px;
+
+  align-items: center;
+
+  color: #b7ff00;
+
+  text-decoration: none;
+
+  transition:
+    color 180ms ease,
+    transform 180ms ease;
+}
+
+
+.text-work-footer a:hover {
+  color: #ffffff;
+
+  transform:
+    translateX(3px);
+}
+
+
+/* PHOTO CAPTION SUPPORT */
+
+.visual-caption {
+  max-width: 46ch;
+
+  margin: 7px 0 0;
+
+  color: #777d76;
+
+  font-family:
+    "Inter Variable",
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+
+  font-size: .65rem;
+
+  line-height: 1.55;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 760px) {
+
+  .text-work {
+    grid-template-columns: 1fr;
+
+    gap: 19px;
+
+    margin-top: 50px;
+
+    padding:
+      25px 0 28px;
+  }
+
+
+  .text-work-rail {
+    flex-direction: row;
+
+    justify-content: space-between;
+  }
+
+
+  .text-work h2 {
+    font-size:
+      clamp(1.9rem, 9vw, 2.8rem);
+  }
+
+}
+
+/* TEXT PORTFOLIO SAMPLE END */
+
+
+/* =========================================================
+   REMAINS LIGHTBOX
+   ========================================================= */
+
+.remains-lightbox {
+  position: fixed;
+
+  z-index: 99999;
+
+  inset: 0;
+
+  display: none;
+
+  align-items: center;
+  justify-content: center;
+
+  padding:
+    clamp(20px, 4vw, 60px);
+
+  background:
+    rgba(0, 0, 0, 0.94);
+
+  backdrop-filter:
+    blur(5px);
+}
+
+
+.remains-lightbox.is-open {
+  display: flex;
+}
+
+
+.remains-lightbox-stage {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  width: 100%;
+  height: 100%;
+}
+
+
+.remains-lightbox-image {
+  display: block;
+
+  width: auto;
+  height: auto;
+
+  max-width: 100%;
+  max-height: calc(100vh - 130px);
+
+  object-fit: contain;
+
+  border: 0;
+  border-radius: 0 !important;
+
+  box-shadow:
+    0 0 50px rgba(0,0,0,.55);
+}
+
+
+.remains-lightbox-info {
+  display: flex;
+
+  gap: 18px;
+
+  align-items: center;
+  justify-content: space-between;
+
+  width: min(100%, 1100px);
+
+  margin-top: 14px;
+
+  padding-top: 9px;
+
+  border-top:
+    1px solid rgba(255,255,255,.09);
+}
+
+
+.remains-lightbox-label {
+  color: #b7ff00;
+
+  font-family:
+    "Maple Mono",
+    monospace;
+
+  font-size: .54rem;
+  font-weight: 700;
+
+  letter-spacing: .14em;
+}
+
+
+.remains-lightbox-title {
+  color: #b5bab3;
+
+  font-family:
+    "Maple Mono",
+    monospace;
+
+  font-size: .58rem;
+
+  letter-spacing: .08em;
+}
+
+
+.remains-lightbox-close {
+  position: absolute;
+
+  z-index: 3;
+
+  top: 22px;
+  right: 27px;
+
+  display: grid;
+
+  place-items: center;
+
+  width: 42px;
+  height: 42px;
+
+  padding: 0;
+
+  border:
+    1px solid rgba(255,255,255,.18);
+
+  border-radius: 50%;
+
+  color: #e7e8e4;
+
+  font-family:
+    "Host Grotesk Variable",
+    Arial,
+    sans-serif;
+
+  font-size: 1.55rem;
+  font-weight: 300;
+
+  line-height: 1;
+
+  background:
+    rgba(8,8,8,.72);
+
+  cursor: pointer;
+
+  transition:
+    color 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease;
+}
+
+
+.remains-lightbox-close:hover {
+  color: #b7ff00;
+
+  border-color:
+    rgba(183,255,0,.65);
+
+  transform:
+    rotate(4deg);
+}
+
+
+body.remains-lightbox-open {
+  overflow: hidden;
+}
+
+
+.visual-lightbox-trigger {
+  cursor: zoom-in;
+}
+
+
+@media (max-width: 760px) {
+
+  .remains-lightbox {
+    padding:
+      58px 12px 18px;
+  }
+
+
+  .remains-lightbox-image {
+    max-height:
+      calc(100vh - 125px);
+  }
+
+
+  .remains-lightbox-close {
+    top: 11px;
+    right: 12px;
+
+    width: 37px;
+    height: 37px;
+  }
+
+
+  .remains-lightbox-info {
+    gap: 8px;
+
+    margin-top: 9px;
+  }
+
+}
+
+
+/* REMAINS PHOTO RADIUS FINAL START */
+
+/*
+ * The frame, image and orange hover outline
+ * all use exactly the same corner radius.
+ */
+
+.visual-image {
+  border-radius: 8px !important;
+}
+
+.visual-image::after {
+  border-radius: inherit !important;
+}
+
+.visual-image img {
+  border-radius: inherit !important;
+}
+
+.visual-link:hover .visual-image::after {
+  border-radius: inherit !important;
+}
+
+/* REMAINS PHOTO RADIUS FINAL END */
+
+/* =========================================================
+   REMAINS HEADER — FINAL WIDTH / GRADIENT
+   ========================================================= */
+
+/*
+ * Keep the text compact, but allow the gradient rule
+ * to continue across the full header width.
+ */
+body:has(.portfolio-section) .article-header-archive .archive-copy {
+  width: 100% !important;
+  max-width: none !important;
+  padding-bottom: 17px !important;
+}
+
+/*
+ * Text itself is deliberately limited to two lines
+ * on desktop while the parent remains full width.
+ */
+body:has(.portfolio-section) .article-header-archive .archive-subtitle {
+  display: block !important;
+  width: 100% !important;
+  max-width: 560px !important;
+  text-wrap: balance;
+}
+
+/*
+ * Preserve the existing orange direction:
+ * almost invisible on the left,
+ * increasingly bright toward the right edge.
+ */
+body:has(.portfolio-section) .article-header-archive .archive-copy::after {
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+
+  background: linear-gradient(
+    90deg,
+    rgba(255, 82, 0, 0.02) 0%,
+    rgba(255, 82, 0, 0.05) 18%,
+    rgba(255, 82, 0, 0.14) 42%,
+    rgba(255, 82, 0, 0.38) 68%,
+    rgba(255, 82, 0, 0.72) 86%,
+    rgba(255, 82, 0, 0.96) 100%
+  ) !important;
+}
+
+@media (max-width: 760px) {
+  body:has(.portfolio-section) .article-header-archive .archive-subtitle {
+    max-width: 100% !important;
+    text-wrap: pretty;
+  }
+}
+
+
+body:has(.portfolio-section) .article-header-archive .archive-subtitle {
+  width: auto !important;
+  max-width: none !important;
+  white-space: pre-line !important;
+  text-wrap: nowrap !important;
+}
+/* REMAINS HEADER — FINAL WIDTH / GRADIENT END */
+
 </style>
+
+
+
+
+
+
+
+
+
+
+

@@ -1,4 +1,4 @@
----
+﻿---
 import { getCollection } from 'astro:content';
 import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
@@ -14,9 +14,14 @@ const { site, theme, pages } = siteConfig;
 const palette = theme.palette;
 const htmlLang = getHtmlLang(siteConfig);
 const pageMeta = pages.blog;
-const posts = sortBlogPostsForArchive(await getCollection('blog', ({ data }) => !data.draft));
+
+const posts = sortBlogPostsForArchive(
+  await getCollection('blog', ({ data }) => !data.draft),
+);
+
 const postsPerPage = pageMeta.postsPerPage;
 const totalPages = Math.max(1, Math.ceil(posts.length / postsPerPage));
+
 const page = {
   data: posts.slice(0, postsPerPage),
   currentPage: 1,
@@ -33,12 +38,48 @@ const page = {
 <!doctype html>
 <html lang={htmlLang} data-palette={palette}>
   <head>
-    <BaseHead title={`${pageMeta.title} | ${site.title}`} description={pageMeta.subtitle} />
+    <BaseHead
+      title={`FRAGMENTS | ${site.title}`}
+      description="Notes, records, images and unfinished thoughts."
+    />
+
     <style>
       main {
         width: min(100%, var(--layout-shell-width));
         max-width: none;
         padding: 118px var(--layout-page-gutter) var(--layout-page-bottom);
+      }
+
+      /* FRAGMENTS → GROUP NAV DIVIDER */
+      :global(.archive-hero) {
+        position: relative;
+        margin-bottom: 34px;
+        padding-bottom: 20px;
+      }
+
+      /*
+       * Keep the GroupNav baseline where it is,
+       * but lower the controls toward its bottom rule.
+       */
+
+      :global(.archive-hero)::after {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        content: "";
+        pointer-events: none;
+        background: linear-gradient(
+          90deg,
+          rgba(255, 82, 0, 0.02) 0%,
+          rgba(255, 82, 0, 0.05) 18%,
+          rgba(255, 82, 0, 0.14) 42%,
+          rgba(255, 82, 0, 0.38) 68%,
+          rgba(255, 82, 0, 0.72) 86%,
+          rgba(255, 82, 0, 0.96) 100%
+        );
       }
 
       @media (max-width: 720px) {
@@ -48,20 +89,31 @@ const page = {
       }
     </style>
   </head>
+
   <body>
     <BlogTopNav />
+
     <main data-pagefind-body>
       <BlogArchive
         page={page}
-        headerKicker={pageMeta.kicker}
-        headerTitle={pageMeta.title}
-        headerSubtitle={pageMeta.subtitle}
-        headerNote={pageMeta.note}
+        headerKicker="TRANSMISSION / ARCHIVE"
+        headerTitle="FRAGMENTS"
+        headerSubtitle={'The pulsation and gleaming of an unsightly residual reality,\n thoroughly corroded by signs.'}
         coverImageStyle={pageMeta.coverImageStyle}
       >
         <GroupNav slot="after-header" />
       </BlogArchive>
     </main>
+
     <Footer />
   </body>
 </html>
+
+
+
+
+
+
+
+
+

@@ -1,8 +1,425 @@
----
-import ThemeFooter from '@navfolio/theme-default/components/Footer.astro';
-import { getSiteConfig } from '../data/site';
+﻿<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="footer-signature">
+      <span class="signal-dot" aria-hidden="true"></span>
 
-const { profile, site } = await getSiteConfig();
----
+      <span class="footer-text">
+        <span class="copyright">@2026</span>
 
-<ThemeFooter site={site} profile={profile} />
+        <a class="domain" href="https://nekogaku.com/">
+          nekogaku.com
+        </a>
+
+        <span class="by">by</span>
+
+        <a class="author" href="/about">
+          猫学
+        </a>
+      </span>
+    </div>
+  </div>
+
+<style>
+/* NEKOGAKU FOOTER HOVER — WHITE SCALE + UNDERLINE */
+
+.footer-author,
+.footer-author:visited {
+  position: relative !important;
+  display: inline-block !important;
+  color: #ffffff !important;
+  text-decoration: none !important;
+
+  transform-origin: center center;
+
+  transition:
+    transform 220ms ease,
+    color 220ms ease !important;
+}
+
+.footer-author::after {
+  content: "" !important;
+
+  position: absolute !important;
+  left: 50% !important;
+  bottom: -4px !important;
+
+  width: 100% !important;
+  height: 1px !important;
+
+  background: #ffffff !important;
+
+  transform: translateX(-50%) scaleX(0) !important;
+  transform-origin: center !important;
+
+  transition: transform 220ms ease !important;
+}
+
+.footer-author:hover,
+.footer-author:focus-visible {
+  color: #ffffff !important;
+  transform: scale(1.08) !important;
+}
+
+.footer-author:hover::after,
+.footer-author:focus-visible::after {
+  transform: translateX(-50%) scaleX(1) !important;
+}
+</style>
+</footer>
+
+<style is:global>
+  .site-footer {
+    position: relative;
+
+    width: 100%;
+
+    background: #050505;
+    color: #777b74;
+
+    font-family:
+      Arial,
+      Helvetica,
+      "Yu Gothic",
+      "Yu Gothic Medium",
+      Meiryo,
+      sans-serif;
+
+    font-weight: 400;
+  }
+
+  .site-footer::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    height: 1px;
+
+    content: "";
+
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 92, 32, 0.05) 15%,
+      rgba(255, 92, 32, 0.42) 50%,
+      rgba(255, 92, 32, 0.05) 85%,
+      transparent 100%
+    );
+  }
+
+  .site-footer-inner {
+    width: min(calc(100% - 40px), 1450px);
+    min-height: 108px;
+
+    margin: 0 auto;
+    padding: 30px 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+  }
+
+  .footer-signature {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 11px;
+
+    margin: 0 auto;
+
+    font-weight: 400;
+  }
+
+  .footer-text {
+    display: inline-flex;
+    align-items: baseline;
+    justify-content: center;
+
+    gap: 8px;
+
+    font-size: 0.76rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+  }
+
+  .copyright,
+  .by,
+  .domain,
+  .author {
+    color: #777b74;
+    font-weight: 400;
+  }
+
+  /* nekogaku.com */
+  .domain {
+    position: relative;
+
+    display: inline-block;
+
+    padding-bottom: 4px;
+
+    text-decoration: none;
+
+    transition:
+      color 260ms ease,
+      text-shadow 260ms ease;
+  }
+
+  .domain::after {
+    position: absolute;
+
+    left: 50%;
+    bottom: 0;
+
+    width: 100%;
+    height: 1px;
+
+    content: "";
+
+    background: #b7ff00;
+
+    transform: translateX(-50%) scaleX(0);
+    transform-origin: center;
+
+    box-shadow:
+      0 0 7px rgba(183, 255, 0, 0.65),
+      0 0 14px rgba(183, 255, 0, 0.20);
+
+    transition:
+      transform 360ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .domain:hover,
+  .domain:focus-visible {
+    color: #b7ff00;
+
+    outline: none;
+
+    text-shadow:
+      0 0 8px rgba(183, 255, 0, 0.30);
+  }
+
+  .domain:hover::after,
+  .domain:focus-visible::after {
+    transform: translateX(-50%) scaleX(1);
+  }
+
+  /* 猫学 */
+  .author {
+    position: relative;
+
+    color: #d8dbd5;
+
+    display: inline-block;
+
+    padding-bottom: 4px;
+
+    font-family:
+      "Yu Gothic",
+      "Yu Gothic Medium",
+      Meiryo,
+      sans-serif;
+
+    text-decoration: none;
+
+    transition:
+      color 260ms ease,
+      text-shadow 260ms ease;
+  }
+
+  .author::after {
+    position: absolute;
+
+    left: 50%;
+    bottom: 0;
+
+    width: 100%;
+    height: 1px;
+
+    content: "";
+
+    background: #c86f18;
+
+    transform: translateX(-50%) scaleX(0);
+    transform-origin: center;
+
+    box-shadow:
+      0 0 7px rgba(200, 111, 24, 0.45),
+      0 0 14px rgba(200, 111, 24, 0.14);
+
+    transition:
+      transform 360ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .author:hover,
+  .author:focus-visible {
+    color: #c86f18;
+
+    outline: none;
+
+    text-shadow:
+      0 0 8px rgba(200, 111, 24, 0.24);
+  }
+
+  .author:hover::after,
+  .author:focus-visible::after {
+    transform: translateX(-50%) scaleX(1);
+  }
+
+  .signal-dot {
+    width: 6px;
+    height: 6px;
+
+    flex: 0 0 auto;
+
+    border-radius: 50%;
+
+    background: #b7ff00;
+
+    box-shadow:
+      0 0 8px rgba(183, 255, 0, 0.72),
+      0 0 18px rgba(183, 255, 0, 0.20);
+
+    animation: footer-signal-pulse 1.9s ease-in-out infinite;
+  }
+
+  @keyframes footer-signal-pulse {
+    0%,
+    100% {
+      opacity: 0.42;
+    }
+
+    50% {
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .site-footer-inner {
+      width: calc(100% - 28px);
+      min-height: 96px;
+
+      padding: 26px 0;
+    }
+
+    .footer-text {
+      flex-wrap: wrap;
+
+      gap: 5px 7px;
+
+      font-size: 0.68rem;
+      letter-spacing: 0.06em;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .signal-dot {
+      animation: none;
+    }
+
+    .domain::after,
+    .author::after {
+      transition: none;
+    }
+  }
+</style>
+
+
+<style is:global>
+/* =========================================================
+   FOOTER NEKOGAKU HOVER FINAL
+   White text / slight scale / white underline
+   ========================================================= */
+
+.site-footer .author,
+.site-footer .author:visited {
+  position: relative !important;
+
+  display: inline-block !important;
+
+  color: #f5f5f2 !important;
+
+  text-decoration: none !important;
+
+  transform: scale(1) !important;
+  transform-origin: center center !important;
+
+  text-shadow: none !important;
+
+  transition:
+    transform 220ms ease,
+    color 220ms ease !important;
+}
+
+
+/* white underline */
+
+.site-footer .author::after {
+  position: absolute !important;
+
+  left: 50% !important;
+  bottom: 0 !important;
+
+  width: 100% !important;
+  height: 1px !important;
+
+  content: "" !important;
+
+  background: #ffffff !important;
+
+  border: 0 !important;
+
+  box-shadow:
+    0 0 5px rgba(255, 255, 255, 0.22) !important;
+
+  transform:
+    translateX(-50%)
+    scaleX(0) !important;
+
+  transform-origin: center !important;
+
+  transition:
+    transform 280ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+
+/* hover */
+
+.site-footer .author:hover,
+.site-footer .author:focus-visible {
+  color: #ffffff !important;
+
+  outline: none !important;
+
+  transform: scale(1.065) !important;
+
+  text-shadow: none !important;
+}
+
+
+.site-footer .author:hover::after,
+.site-footer .author:focus-visible::after {
+  background: #ffffff !important;
+
+  transform:
+    translateX(-50%)
+    scaleX(1) !important;
+}
+
+
+/* no orange pseudo decoration */
+
+.site-footer .author::before,
+.site-footer .author:hover::before,
+.site-footer .author:focus-visible::before {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+</style>
+
+
+

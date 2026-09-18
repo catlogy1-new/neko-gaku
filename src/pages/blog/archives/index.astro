@@ -14,11 +14,16 @@ const siteConfig = await getSiteConfig();
 const { site, theme, pages } = siteConfig;
 const palette = theme.palette;
 const pageMeta = pages.blog;
-const posts = sortByDateDesc(await getCollection('blog', ({ data }) => !data.draft));
+
+const posts = sortByDateDesc(
+  await getCollection('blog', ({ data }) => !data.draft),
+);
+
 const ui = getUiText(siteConfig);
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
 const pageTitle = ui.groups.yearArchives;
 const pageNote = ui.groups.yearArchivesNote;
+
 const archiveYears = [
   ...posts.reduce((years, post) => {
     const year = post.data.date.getFullYear();
@@ -32,205 +37,2236 @@ const archiveYears = [
 ].sort(([yearA], [yearB]) => yearB - yearA);
 
 function formatMonthDay(date: Date) {
-  return `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(
-    2,
-    '0',
-  )}`;
+  return `${String(date.getMonth() + 1).padStart(2, '0')}/${String(
+    date.getDate(),
+  ).padStart(2, '0')}`;
 }
 ---
 
 <!doctype html>
+
 <html lang={ui.locale} data-palette={palette}>
   <head>
-    <BaseHead title={`${pageTitle} | ${site.title}`} description={pageNote} />
+    <BaseHead
+      title={`${pageTitle} | ${site.title}`}
+      description={pageNote}
+    />
+
     <style>
       main {
         width: min(100%, var(--layout-shell-width));
         max-width: none;
-        padding: 118px var(--layout-page-gutter) var(--layout-page-bottom);
+        padding:
+          118px
+          var(--layout-page-gutter)
+          var(--layout-page-bottom);
       }
+
+
+      /* =====================================================
+         YEAR STACK
+         ===================================================== */
 
       .year-stack {
         display: grid;
-        gap: 34px;
+        gap: 28px;
+
+        margin-top: 24px;
       }
 
+
+      /* =====================================================
+         YEAR GROUP
+         ===================================================== */
+
       .year-group {
-        display: grid;
-        gap: 0;
-        border-top: 1px solid var(--paper-line);
+        overflow: hidden;
+
+        border:
+          1px solid rgba(255, 255, 255, 0.08);
+
+        border-radius: 10px;
+
+        background:
+          linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.018),
+            rgba(255, 255, 255, 0.004)
+          ),
+          #070807;
+
+        box-shadow:
+          0 18px 50px rgba(0, 0, 0, 0.16);
       }
+
+
+      /* =====================================================
+         YEAR HEADER
+         ===================================================== */
 
       .year-heading {
         display: flex;
-        align-items: baseline;
+        gap: 26px;
+        align-items: center;
         justify-content: space-between;
-        gap: 18px;
-        padding: 22px 0 10px;
+
+        padding: 24px 26px 20px;
+
+        border-bottom:
+          1px solid rgba(255, 255, 255, 0.08);
+
+        background:
+          linear-gradient(
+            90deg,
+            rgba(183, 255, 0, 0.035),
+            rgba(255, 255, 255, 0.008) 46%,
+            transparent
+          );
       }
+
+
+      .year-heading-left {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+      }
+
+
+      .year-signal {
+        width: 8px;
+        height: 8px;
+
+        flex: 0 0 8px;
+
+        border-radius: 50%;
+
+        background: #b7ff00;
+
+        box-shadow:
+          0 0 7px #b7ff00,
+          0 0 17px rgba(183, 255, 0, 0.52);
+
+        animation:
+          year-signal 1.9s ease-in-out infinite;
+      }
+
 
       .year-heading h2 {
         margin: 0;
-        font-size: clamp(1.7rem, 3.8vw, 3.4rem);
-        line-height: 1;
+
+        color: #f3f4f0;
+
+        font-family:
+          "Host Grotesk Variable",
+          "Inter Variable",
+          "Helvetica Neue",
+          Arial,
+          sans-serif;
+
+        font-size:
+          clamp(2.1rem, 4vw, 3.8rem);
+
+        font-weight: 700;
+
+        line-height: 0.92;
+
+        letter-spacing: -0.06em;
       }
 
-      .year-heading span {
-        color: var(--paper-ink-faint);
-        font-family: var(--font-meta);
-        font-size: 0.82rem;
+
+      .year-count {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+
+        color: #8d938b;
+
+        font-family:
+          "Maple Mono",
+          monospace;
+
+        font-size: 0.68rem;
+        font-weight: 600;
+
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+
+      .year-count strong {
+        color: #b7ff00;
+
+        font-size: 0.78rem;
         font-weight: 700;
       }
+
+
+      /* =====================================================
+         ARCHIVE LIST
+         ===================================================== */
 
       .archive-list {
         display: grid;
-        gap: 0;
+        gap: 8px;
+
         margin: 0;
-        padding: 0;
+        padding: 14px;
+
         list-style: none;
       }
 
-      .archive-list li {
+
+      .archive-item {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
-        gap: 18px;
-        align-items: baseline;
-        border-top: 1px solid var(--paper-line);
+
+        grid-template-columns:
+          minmax(0, 1fr)
+          auto;
+
+        gap: 20px;
+        align-items: center;
+
+        min-height: 64px;
+
+        padding: 0 14px;
+
+        border:
+          1px solid rgba(255, 255, 255, 0.07);
+
+        border-radius: 7px;
+
+        background:
+          linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.012),
+            rgba(255, 255, 255, 0.003)
+          ),
+          #090a09;
+
+        transition:
+          border-color 200ms ease,
+          background-color 200ms ease,
+          box-shadow 200ms ease,
+          transform 200ms ease;
       }
+
+
+      .archive-item:hover,
+      .archive-item:focus-within {
+        border-color:
+          rgba(255, 90, 0, 0.72);
+
+        background:
+          linear-gradient(
+            90deg,
+            rgba(255, 90, 0, 0.035),
+            rgba(255, 255, 255, 0.01)
+          ),
+          #0b0c0b;
+
+        box-shadow:
+          inset 3px 0 0 #b7ff00,
+          0 0 12px rgba(255, 90, 0, 0.045);
+
+        transform:
+          translateY(-1px);
+      }
+
+
+      /* =====================================================
+         ARTICLE ROW
+         ===================================================== */
 
       .archive-row {
         display: grid;
-        grid-template-columns: 54px minmax(0, 1fr);
+
+        grid-template-columns:
+          62px
+          minmax(0, 1fr);
+
         gap: 18px;
-        align-items: baseline;
-        padding: 13px 0;
-        color: var(--paper-ink);
+        align-items: center;
+
+        min-width: 0;
+
+        padding: 14px 0;
+
+        color: inherit;
+
         text-decoration: none;
       }
 
+
       .archive-date {
-        color: var(--paper-ink-faint);
-        font-family: var(--font-meta);
-        font-size: 0.8rem;
-        font-weight: 700;
+        color: #7c827a;
+
+        font-family:
+          "Maple Mono",
+          monospace;
+
+        font-size: 0.72rem;
+        font-weight: 650;
+
+        letter-spacing: 0.035em;
+
+        transition:
+          color 180ms ease;
       }
+
 
       .archive-post-title {
         min-width: 0;
+
         overflow: hidden;
-        font-size: 1rem;
-        line-height: 1.5;
+
+        color: #d8dbd5;
+
+        font-family:
+          "Host Grotesk Variable",
+          "Inter Variable",
+          "Helvetica Neue",
+          Arial,
+          sans-serif;
+
+        font-size: 0.98rem;
+        font-weight: 600;
+
+        line-height: 1.3;
+
+        letter-spacing: -0.022em;
+
         text-overflow: ellipsis;
         white-space: nowrap;
+
+        transform-origin: left center;
+
+        transition:
+          color 180ms ease,
+          transform 180ms ease;
       }
 
-      .archive-row:hover .archive-post-title {
-        color: var(--paper-accent);
+
+      .archive-item:hover .archive-post-title,
+      .archive-item:focus-within .archive-post-title {
+        color: #ffffff;
+
+        transform:
+          scale(1.025);
       }
+
+
+      .archive-item:hover .archive-date,
+      .archive-item:focus-within .archive-date {
+        color: #b7bcb5;
+      }
+
+
+      /* =====================================================
+         TAGS
+         ===================================================== */
 
       .archive-tags {
         display: flex;
-        gap: 9px;
+        flex-wrap: wrap;
+
+        gap: 7px;
         align-items: center;
         justify-content: flex-end;
-        max-width: 340px;
-        padding: 13px 0;
-        font-family: var(--font-meta);
-        font-size: 0.76rem;
-        font-weight: 700;
+
+        max-width: 360px;
+
+        padding: 12px 0;
+
+        font-family:
+          "Maple Mono",
+          monospace;
+
+        font-size: 0.66rem;
+        font-weight: 650;
       }
+
 
       .archive-tags a {
-        overflow: hidden;
-        color: var(--paper-accent);
+        display: inline-flex;
+        align-items: center;
+
+        min-height: 25px;
+
+        padding: 4px 7px;
+
+        border:
+          1px solid rgba(183, 255, 0, 0.16);
+
+        border-radius: 4px;
+
+        background:
+          rgba(183, 255, 0, 0.018);
+
+        color: #9cbe52;
+
         text-decoration: none;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+
+        transition:
+          color 180ms ease,
+          border-color 180ms ease,
+          background-color 180ms ease;
       }
 
-      .archive-tags a:hover {
-        color: var(--paper-ink);
+
+      .archive-tags a:hover,
+      .archive-tags a:focus-visible {
+        border-color:
+          rgba(255, 90, 0, 0.48);
+
+        background:
+          rgba(255, 90, 0, 0.035);
+
+        color: #ffffff;
+
+        outline: none;
       }
+
+
+      /* =====================================================
+         EMPTY
+         ===================================================== */
 
       .empty-note {
         max-width: 620px;
+
         margin: 0;
-        color: var(--paper-ink-soft);
-        font-family: var(--font-serif-cn);
+
+        color: #848a82;
+
+        font-family:
+          "Inter Variable",
+          "Helvetica Neue",
+          Arial,
+          sans-serif;
+
         font-size: 1rem;
         line-height: 1.75;
       }
 
+
+      /* =====================================================
+         MOTION
+         ===================================================== */
+
+      @keyframes year-signal {
+        0%,
+        100% {
+          opacity: 0.35;
+          transform: scale(0.8);
+        }
+
+        50% {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+
+      /* =====================================================
+         MOBILE
+         ===================================================== */
+
       @media (max-width: 720px) {
+
         main {
           padding-top: 88px;
         }
 
-        .archive-row {
-          grid-template-columns: 48px minmax(0, 1fr);
-          gap: 10px 14px;
+
+        .year-stack {
+          margin-top: 18px;
         }
 
-        .archive-list li {
-          grid-template-columns: 1fr;
-          gap: 0;
+
+        .year-heading {
+          padding:
+            20px 18px 17px;
         }
+
+
+        .year-heading h2 {
+          font-size: 2.5rem;
+        }
+
+
+        .archive-list {
+          padding: 10px;
+        }
+
+
+        .archive-item {
+          grid-template-columns: 1fr;
+
+          gap: 0;
+
+          padding:
+            0 12px 10px;
+        }
+
+
+        .archive-row {
+          grid-template-columns:
+            52px
+            minmax(0, 1fr);
+
+          gap: 12px;
+
+          padding:
+            12px 0 6px;
+        }
+
 
         .archive-tags {
           justify-content: flex-start;
+
           max-width: 100%;
-          padding: 0 0 12px 62px;
+
+          padding:
+            0 0 2px 64px;
         }
       }
-    </style>
-  </head>
+
+
+      @media (prefers-reduced-motion: reduce) {
+
+        .year-signal {
+          animation: none;
+        }
+
+
+        .archive-item,
+        .archive-post-title {
+          transition: none;
+        }
+      }
+    
+      /* ARCHIVE DATE STACK */
+
+.archive-row .archive-date-stack {
+  display: grid !important;
+
+  grid-template-columns: 1fr !important;
+  grid-template-rows: auto auto !important;
+
+  align-items: start !important;
+  justify-items: start !important;
+
+  width: 78px !important;
+  min-width: 78px !important;
+
+  gap: 6px !important;
+
+  line-height: 1 !important;
+}
+
+.archive-row .archive-date-stack .archive-date-year {
+  display: block !important;
+
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+
+  width: 100% !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  color: rgba(239, 242, 241, .92) !important;
+
+  font-size: 13px !important;
+  font-weight: 700 !important;
+
+  line-height: 1 !important;
+  letter-spacing: .10em !important;
+
+  white-space: nowrap !important;
+}
+
+.archive-row .archive-date-stack .archive-date {
+  display: block !important;
+
+  grid-column: 1 !important;
+  grid-row: 2 !important;
+
+  width: 100% !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  color: rgba(105, 114, 114, .82) !important;
+
+  font-size: 12px !important;
+  font-weight: 500 !important;
+
+  line-height: 1 !important;
+  letter-spacing: .08em !important;
+
+  white-space: nowrap !important;
+}
+
+      /* =====================================================
+         ARCHIVE LEFT HUD — START
+         black field / cyber telemetry
+         ===================================================== */
+
+      .year-archive-stage {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 440px;
+        align-items: center;
+        gap: 54px;
+
+        width: 100%;
+        margin-top: 48px;
+        margin-bottom: 54px;
+      }
+
+      .archive-left-hud {
+        position: relative;
+
+        box-sizing: border-box;
+
+        width: 100%;
+        min-width: 0;
+        height: 172px;
+
+        padding:
+          36px 8px
+          22px 16px;
+
+        overflow: hidden;
+
+        background: transparent;
+      }
+
+      .archive-hud-readout {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+
+        width: fit-content;
+
+        font-family:
+          ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          Consolas,
+          monospace;
+
+        letter-spacing: .13em;
+      }
+
+      .archive-hud-year {
+        color: rgba(238, 242, 241, .96);
+
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .archive-hud-slash {
+        color: rgba(63, 91, 96, .72);
+
+        font-size: 12px;
+      }
+
+      .archive-hud-label {
+        color: rgba(112, 133, 137, .82);
+
+        font-size: 11px;
+        font-weight: 500;
+      }
+
+      .archive-hud-count {
+        color: #b7ff00;
+
+        font-size: 13px;
+        font-weight: 700;
+
+        text-shadow:
+          0 0 8px rgba(183, 255, 0, .24);
+      }
+
+      .archive-hud-line {
+        position: absolute;
+
+        top: 63px;
+        left: 16px;
+        right: 10px;
+
+        height: 1px;
+
+        background:
+          linear-gradient(
+            90deg,
+            rgba(57, 106, 117, .76) 0%,
+            rgba(38, 76, 84, .48) 42%,
+            rgba(31, 57, 62, .20) 80%,
+            transparent 100%
+          );
+      }
+
+      .archive-hud-spectrum {
+        position: absolute;
+
+        top: 83px;
+        left: 16px;
+        right: 10px;
+
+        display: grid;
+        grid-template-columns:
+          12% 10% 15% 13% 18% 1fr;
+        gap: 7px;
+
+        height: 11px;
+      }
+
+      .archive-hud-spectrum i {
+        position: relative;
+
+        display: block;
+
+        height: 7px;
+
+        border-top:
+          1px solid rgba(114, 158, 166, .14);
+
+        border-bottom:
+          1px solid rgba(6, 10, 11, .9);
+
+        background:
+          linear-gradient(
+            90deg,
+            rgba(95, 135, 126, .70),
+            rgba(46, 91, 97, .46)
+          );
+
+        box-shadow:
+          0 0 9px rgba(39, 89, 99, .06);
+      }
+
+      .archive-hud-spectrum i:nth-child(2) {
+        background:
+          linear-gradient(
+            90deg,
+            rgba(147, 210, 34, .78),
+            rgba(91, 143, 27, .54)
+          );
+      }
+
+      .archive-hud-spectrum i:nth-child(3) {
+        background:
+          linear-gradient(
+            90deg,
+            rgba(86, 137, 139, .67),
+            rgba(44, 83, 89, .43)
+          );
+      }
+
+      .archive-hud-spectrum i:nth-child(5),
+      .archive-hud-spectrum i:nth-child(6) {
+        opacity: .46;
+      }
+
+      .archive-hud-data {
+        position: absolute;
+
+        top: 106px;
+        left: 18px;
+        right: 90px;
+
+        display: grid;
+        grid-template-columns:
+          6px 15px 4px 28px
+          8px 39px 5px 1fr;
+        gap: 11px;
+        align-items: center;
+
+        height: 16px;
+      }
+
+      .archive-hud-data span {
+        display: block;
+
+        height: 2px;
+
+        background:
+          rgba(64, 112, 121, .30);
+
+        box-shadow:
+          0 0 5px rgba(60, 116, 126, .08);
+      }
+
+      .archive-hud-data span:nth-child(2),
+      .archive-hud-data span:nth-child(5) {
+        background:
+          rgba(183, 255, 0, .40);
+      }
+
+      .archive-hud-data span:nth-child(4),
+      .archive-hud-data span:nth-child(7) {
+        height: 5px;
+
+        border:
+          1px solid rgba(65, 108, 116, .32);
+
+        background:
+          transparent;
+      }
+
+      .archive-hud-diagonal {
+        position: absolute;
+
+        right: 48px;
+        bottom: 24px;
+
+        width: 168px;
+        height: 12px;
+
+        opacity: .50;
+
+        transform:
+          skewX(-18deg);
+
+        background:
+          repeating-linear-gradient(
+            115deg,
+            rgba(51, 107, 117, .70) 0 2px,
+            transparent 2px 7px
+          );
+
+        mask-image:
+          linear-gradient(
+            90deg,
+            transparent,
+            #000 18%,
+            #000 82%,
+            transparent
+          );
+      }
+
+      .archive-hud-status {
+        position: absolute;
+
+        right: 14px;
+        bottom: 4px;
+
+        color:
+          rgba(183, 255, 0, .72);
+
+        font-family:
+          ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          Consolas,
+          monospace;
+
+        font-size: 9px;
+        font-weight: 700;
+
+        letter-spacing: .22em;
+      }
+
+
+      /* arrow fill:
+         keep orange controls but merge them into blue-black wheel */
+
+      .year-wheel-arrow {
+        background:
+          linear-gradient(
+            180deg,
+            rgba(8, 28, 32, .94),
+            rgba(4, 20, 24, .90)
+          ) !important;
+      }
+
+      .year-wheel-arrow:hover,
+      .year-wheel-arrow:focus-visible {
+        background:
+          linear-gradient(
+            180deg,
+            rgba(34, 29, 21, .92),
+            rgba(17, 27, 28, .94)
+          ) !important;
+      }
+
+
+      @media (max-width: 900px) {
+        .year-archive-stage {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+
+        .archive-left-hud {
+          height: 132px;
+        }
+
+        .year-wheel-shell {
+          justify-self: end;
+        }
+      }
+
+      /* ARCHIVE LEFT HUD — END */
+
+      /* NEXUS ARCHIVE HUD POSITION FIX START */
+
+      /*
+       * LEFT HUD
+       * Year Wheel BOXの垂直中央にHUD全体を合わせる。
+       * 背景・枠は付けない。
+       */
+
+      .archive-left-hud {
+        position: relative !important;
+
+        height: 220px !important;
+
+        align-self: center !important;
+
+        background: transparent !important;
+        border: 0 !important;
+        box-shadow: none !important;
+
+        overflow: visible !important;
+      }
+
+
+      /*
+       * 2026 / ARTICLES 11
+       * 2枚目と同じく左上寄り。
+       */
+
+      .archive-hud-readout {
+        position: absolute !important;
+
+        top: 50% !important;
+        left: 0 !important;
+
+        display: flex !important;
+        align-items: baseline !important;
+
+        gap: 10px !important;
+
+        transform:
+          translateY(-67px) !important;
+
+        white-space: nowrap !important;
+      }
+
+      .archive-hud-year {
+        color: #edf1ef !important;
+
+        font-size: 14px !important;
+        font-weight: 700 !important;
+
+        letter-spacing: .08em !important;
+      }
+
+      .archive-hud-slash {
+        color:
+          rgba(76, 105, 111, .72) !important;
+
+        font-size: 12px !important;
+      }
+
+      .archive-hud-label {
+        color:
+          rgba(116, 141, 145, .70) !important;
+
+        font-size: 10px !important;
+        font-weight: 600 !important;
+
+        letter-spacing: .18em !important;
+      }
+
+      .archive-hud-count {
+        color: #b7ff00 !important;
+
+        font-size: 12px !important;
+        font-weight: 700 !important;
+
+        letter-spacing: .06em !important;
+
+        text-shadow:
+          0 0 5px rgba(183,255,0,.18) !important;
+      }
+
+
+      /*
+       * 小さいライム信号点。
+       * 参考画像と同じく文字列の左。
+       */
+
+      .archive-hud-readout::before {
+        display: block !important;
+
+        width: 5px !important;
+        height: 5px !important;
+
+        flex: 0 0 5px !important;
+
+        margin-right: 2px !important;
+
+        content: "" !important;
+
+        border-radius: 50% !important;
+
+        background:
+          #b7ff00 !important;
+
+        box-shadow:
+          0 0 4px rgba(183,255,0,.70),
+          0 0 10px rgba(183,255,0,.20) !important;
+      }
+
+
+      /*
+       * 文字直下の水平線。
+       */
+
+      .archive-hud-line {
+        position: absolute !important;
+
+        top: 50% !important;
+        left: 0 !important;
+
+        width: 100% !important;
+        height: 1px !important;
+
+        transform:
+          translateY(-42px) !important;
+
+        opacity: .82 !important;
+
+        background:
+          linear-gradient(
+            90deg,
+            rgba(67, 118, 127, .72) 0%,
+            rgba(51, 93, 102, .46) 57%,
+            rgba(36, 66, 73, .20) 82%,
+            transparent 100%
+          ) !important;
+
+        box-shadow: none !important;
+      }
+
+      .archive-hud-line::before,
+      .archive-hud-line::after {
+        display: none !important;
+        content: none !important;
+      }
+
+
+      /*
+       * 2枚目のセグメントバー。
+       *
+       * 緑 → ライム → 青灰 → 青灰 → 長い暗色
+       */
+
+      .archive-hud-spectrum {
+        position: absolute !important;
+
+        top: 50% !important;
+        left: 0 !important;
+
+        display: grid !important;
+
+        grid-template-columns:
+          66px
+          50px
+          82px
+          76px
+          minmax(160px, 1fr) !important;
+
+        gap: 10px !important;
+
+        width: 92% !important;
+        height: 8px !important;
+
+        transform:
+          translateY(-19px) !important;
+
+        align-items: stretch !important;
+      }
+
+      .archive-hud-spectrum i {
+        display: block !important;
+
+        width: auto !important;
+        height: 8px !important;
+
+        opacity: 1 !important;
+
+        border: 0 !important;
+
+        box-shadow: none !important;
+      }
+
+      .archive-hud-spectrum i:nth-child(1) {
+        background:
+          linear-gradient(
+            90deg,
+            rgba(118, 142, 80, .86),
+            rgba(81, 112, 68, .74)
+          ) !important;
+      }
+
+      .archive-hud-spectrum i:nth-child(2) {
+        background:
+          linear-gradient(
+            90deg,
+            rgba(169, 227, 13, .76),
+            rgba(110, 158, 6, .64)
+          ) !important;
+      }
+
+      .archive-hud-spectrum i:nth-child(3) {
+        background:
+          linear-gradient(
+            90deg,
+            rgba(82, 135, 138, .78),
+            rgba(59, 101, 107, .66)
+          ) !important;
+      }
+
+      .archive-hud-spectrum i:nth-child(4) {
+        background:
+          linear-gradient(
+            90deg,
+            rgba(63, 108, 115, .62),
+            rgba(43, 79, 85, .54)
+          ) !important;
+      }
+
+      .archive-hud-spectrum i:nth-child(5) {
+        width: auto !important;
+
+        background:
+          linear-gradient(
+            90deg,
+            rgba(45, 79, 85, .46),
+            rgba(34, 64, 70, .34)
+          ) !important;
+      }
+
+      .archive-hud-spectrum i:nth-child(6) {
+        display: none !important;
+      }
+
+
+      /*
+       * 今の画面にある細かいセル列は
+       * 2枚目にはないため非表示。
+       * HTMLは削除しない。
+       */
+
+      .archive-hud-data {
+        display: none !important;
+      }
+
+
+      /*
+       * 右下の斜線。
+       * 2枚目同様、バーより右へずらす。
+       */
+
+      .archive-hud-diagonal {
+        display: block !important;
+
+        position: absolute !important;
+
+        top: 50% !important;
+        right: 7% !important;
+        left: auto !important;
+        bottom: auto !important;
+
+        width: 220px !important;
+        height: 12px !important;
+
+        transform:
+          translateY(5px)
+          skewX(-18deg) !important;
+
+        opacity: .54 !important;
+
+        background:
+          repeating-linear-gradient(
+            110deg,
+            transparent 0,
+            transparent 5px,
+            rgba(53, 108, 118, .46) 5px,
+            rgba(53, 108, 118, .46) 7px
+          ) !important;
+
+        -webkit-mask-image:
+          linear-gradient(
+            90deg,
+            transparent,
+            #000 8%,
+            #000 86%,
+            transparent
+          ) !important;
+
+        mask-image:
+          linear-gradient(
+            90deg,
+            transparent,
+            #000 8%,
+            #000 86%,
+            transparent
+          ) !important;
+      }
+
+
+      /*
+       * LIVE FEED
+       * 参考画像と同じ右下。
+       */
+
+      .archive-hud-status {
+        position: absolute !important;
+
+        top: 50% !important;
+        right: 0 !important;
+        left: auto !important;
+        bottom: auto !important;
+
+        transform:
+          translateY(43px) !important;
+
+        color:
+          rgba(183,255,0,.76) !important;
+
+        font-size: 9px !important;
+        font-weight: 700 !important;
+
+        letter-spacing: .20em !important;
+
+        line-height: 1 !important;
+
+        text-shadow:
+          0 0 5px rgba(183,255,0,.12) !important;
+      }
+
+
+      /*
+       * 旧hover演出はこのHUDでは止める。
+       * 参考画像の静的な計測器感を優先。
+       */
+
+      .archive-left-hud:hover .archive-hud-diagonal,
+      .archive-left-hud:hover .archive-hud-line,
+      .archive-left-hud:hover .archive-hud-spectrum i {
+        animation: none !important;
+        filter: none !important;
+      }
+
+      /* NEXUS ARCHIVE HUD POSITION FIX END */
+</style>
+</head>
+
+
   <body>
+
     <BlogTopNav />
+
+
     <main data-pagefind-body>
+
       <BlogArchiveHeader
-        kicker={pageMeta.kicker}
-        title={pageMeta.title}
-        subtitle={pageMeta.subtitle}
-        note={pageMeta.note}
+        kicker="TRANSMISSION / ARCHIVE"
+        title="FRAGMENTS"
+        subtitle={`The pulsation and gleaming of an unsightly residual reality,
+thoroughly corroded by signs.`}
       />
+
+
       <GroupNav activeView="archives" />
+
 
       {
         archiveYears.length > 0 ? (
-          <section class="year-stack" aria-label={pageTitle}>
-            {archiveYears.map(([year, yearPosts]) => (
-              <section class="year-group" aria-labelledby={`archive-${year}`}>
-                <header class="year-heading">
-                  <h2 id={`archive-${year}`}>{year}</h2>
-                  <span>{ui.groups.articleCount(yearPosts.length)}</span>
-                </header>
-                <ol class="archive-list">
-                  {yearPosts.map((post) => (
-                    <li>
-                      <a class="archive-row" href={`${basePath}/blog/${post.id}/`}>
-                        <time class="archive-date" datetime={post.data.date.toISOString()}>
-                          {formatMonthDay(post.data.date)}
-                        </time>
-                        <span class="archive-post-title">{post.data.title}</span>
-                      </a>
-                      {post.data.tags.length > 0 && (
-                        <span class="archive-tags">
-                          {post.data.tags.slice(0, 3).map((tag) => (
-                            <a href={`${basePath}/tags/${slugifyGroupName(tag)}/`}>#{tag}</a>
-                          ))}
-                        </span>
-                      )}
-                    </li>
-                  ))}
-                </ol>
-              </section>
-            ))}
+
+          <section
+            class="year-stack"
+            aria-label={pageTitle}
+          >
+
+            <div class="year-archive-stage">
+
+  <aside class="archive-left-hud" aria-hidden="true">
+    <div class="archive-hud-readout">
+      <span class="archive-hud-year" data-hud-year>
+        {archiveYears[0]?.[0]}
+      </span>
+
+      <span class="archive-hud-slash">/</span>
+
+      <span class="archive-hud-label">ARTICLES</span>
+
+      <strong class="archive-hud-count" data-hud-count>
+        {String(archiveYears[0]?.[1]?.length ?? 0).padStart(2, '0')}
+      </strong>
+    </div>
+
+    <div class="archive-hud-line"></div>
+
+    <div class="archive-hud-spectrum" aria-hidden="true">
+      <i></i>
+      <i></i>
+      <i></i>
+      <i></i>
+      <i></i>
+      <i></i>
+    </div>
+
+    <div class="archive-hud-data" aria-hidden="true">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <div class="archive-hud-diagonal" aria-hidden="true"></div>
+
+    <span class="archive-hud-status">LIVE FEED</span>
+  </aside>
+
+  <section class="year-wheel-shell" aria-label="Select archive year">
+
+              <div class="year-wheel-label">
+                YEAR / ARCHIVE
+              </div>
+
+              <div class="year-wheel-layout">
+
+                <button
+                  class="year-wheel-arrow year-wheel-up"
+                  type="button"
+                  aria-label="Newer year"
+                  data-year-up
+                >
+                  ↑
+                </button>
+
+                <div
+                  class="year-wheel"
+                  data-year-wheel
+                  tabindex="0"
+                  aria-label="Archive year selector"
+                >
+                  <div class="year-wheel-window">
+
+                    <button
+                      type="button"
+                      class="year-wheel-ghost year-wheel-ghost-newer"
+                      data-year-ghost-newer
+                      aria-label="Newer archive year"
+                    ></button>
+
+                    <div class="year-wheel-track" data-year-track>
+
+                      {
+                        archiveYears.map(([year, yearPosts], index) => (
+
+                          <button
+                            type="button"
+                            class:list={[
+                              'year-wheel-option',
+                              index === 0 && 'is-active',
+                            ]}
+                            data-year-option={String(year)}
+                            data-year-index={String(index)}
+                            data-year-count={String(yearPosts.length).padStart(2, '0')}
+                            aria-pressed={index === 0 ? 'true' : 'false'}
+                          >
+                            {year}
+                          </button>
+
+                        ))
+                      }
+
+                    </div>
+
+                    <button
+                      type="button"
+                      class="year-wheel-ghost year-wheel-ghost-older"
+                      data-year-ghost-older
+                      aria-label="Older archive year"
+                    ></button>
+
+                  </div>
+                </div>
+
+                <button
+                  class="year-wheel-arrow year-wheel-down"
+                  type="button"
+                  aria-label="Older year"
+                  data-year-down
+                >
+                  ↓
+                </button>
+
+
+                <div class="year-wheel-meta" aria-live="polite">
+
+                  <span class="year-wheel-signal" aria-hidden="true"></span>
+
+                  <span data-active-year>
+                    {archiveYears[0]?.[0]}
+                  </span>
+
+                  <span class="year-wheel-meta-divider">
+                    /
+                  </span>
+
+                  <span>
+                    ARTICLES
+                  </span>
+
+                  <strong data-active-count>
+                    {String(archiveYears[0]?.[1]?.length ?? 0).padStart(2, '0')}
+                  </strong>
+
+                </div>
+
+              </div>
+
+            </section>
+
+            </div>
+
+            {
+              archiveYears.map(([year, yearPosts], yearIndex) => (
+
+                <section
+                  class="year-group"
+                  aria-labelledby={`archive-${year}`}
+                  data-year-panel={String(year)}
+                  hidden={yearIndex !== 0}
+                >
+
+                  <header class="year-heading">
+
+                    <div class="year-heading-left">
+
+                      <span
+                        class="year-signal"
+                        aria-hidden="true"
+                      ></span>
+
+                      <h2 id={`archive-${year}`}>
+                        {year}
+                      </h2>
+
+                    </div>
+
+
+                    <span class="year-count">
+                      Articles
+                      <strong>
+                        {String(yearPosts.length).padStart(2, '0')}
+                      </strong>
+                    </span>
+
+                  </header>
+
+
+                  <ol class="archive-list">
+
+                    {
+                      yearPosts.map((post) => (
+
+                        <li class="archive-item">
+
+                          <a
+                            class="archive-row"
+                            href={`${basePath}/blog/${post.id}/`}
+                          >
+
+                            <span class="archive-date-stack">
+  <small class="archive-date-year">
+    {year}
+  </small>
+
+  <time
+    class="archive-date"
+    datetime={post.data.date.toISOString()}
+  >
+    {formatMonthDay(post.data.date)}
+  </time>
+</span>
+
+
+                            <span class="archive-post-title">
+                              {post.data.title}
+                            </span>
+
+                          </a>
+
+
+                          {
+                            post.data.tags.length > 0 && (
+
+                              <span class="archive-tags">
+
+                                {
+                                  post.data.tags
+                                    .slice(0, 3)
+                                    .map((tag) => (
+
+                                      <a
+                                        href={`${basePath}/tags/${slugifyGroupName(tag)}/`}
+                                      >
+                                        #{tag}
+                                      </a>
+
+                                    ))
+                                }
+
+                              </span>
+
+                            )
+                          }
+
+                        </li>
+
+                      ))
+                    }
+
+                  </ol>
+
+                </section>
+
+              ))
+            }
+
           </section>
+
         ) : (
-          <p class="empty-note">{ui.groups.emptyArchives}</p>
+
+          <p class="empty-note">
+            {ui.groups.emptyArchives}
+          </p>
+
         )
       }
+
     </main>
+
+
     <Footer />
-  </body>
+
+  
+
+
+
+<script is:inline>
+(() => {
+
+  function initYearWheel() {
+
+    const wheel =
+      document.querySelector('[data-year-wheel]');
+
+    if (!wheel) return;
+
+
+    const windowEl =
+      wheel.querySelector('.year-wheel-window');
+
+    const options = [
+      ...wheel.querySelectorAll('[data-year-option]')
+    ];
+
+    if (!windowEl || options.length === 0) {
+      return;
+    }
+
+
+    /*
+      ghost buttonsはJS側で保証。
+      HTMLにすでに存在していても再利用する。
+    */
+
+    let ghostNewer =
+      wheel.querySelector('[data-year-ghost-newer]');
+
+    let ghostOlder =
+      wheel.querySelector('[data-year-ghost-older]');
+
+
+    if (!ghostNewer) {
+
+      ghostNewer =
+        document.createElement('button');
+
+      ghostNewer.type = 'button';
+
+      ghostNewer.className =
+        'year-wheel-ghost year-wheel-ghost-newer';
+
+      ghostNewer.dataset.yearGhostNewer = '';
+
+      ghostNewer.setAttribute(
+        'aria-label',
+        'Newer archive year'
+      );
+
+      windowEl.prepend(
+        ghostNewer
+      );
+    }
+
+
+    if (!ghostOlder) {
+
+      ghostOlder =
+        document.createElement('button');
+
+      ghostOlder.type = 'button';
+
+      ghostOlder.className =
+        'year-wheel-ghost year-wheel-ghost-older';
+
+      ghostOlder.dataset.yearGhostOlder = '';
+
+      ghostOlder.setAttribute(
+        'aria-label',
+        'Older archive year'
+      );
+
+      windowEl.append(
+        ghostOlder
+      );
+    }
+
+
+    const up =
+      document.querySelector('[data-year-up]');
+
+    const down =
+      document.querySelector('[data-year-down]');
+
+    const activeYear =
+      document.querySelector('[data-active-year]');
+
+    const activeCount =
+      document.querySelector('[data-active-count]');
+
+    const hudYear =
+      document.querySelector('[data-hud-year]');
+
+    const hudCount =
+      document.querySelector('[data-hud-count]');
+
+
+    let index = 0;
+
+
+    function showYear(nextIndex) {
+
+      nextIndex =
+        Math.max(
+          0,
+          Math.min(
+            options.length - 1,
+            nextIndex
+          )
+        );
+
+
+      index =
+        nextIndex;
+
+
+      const selected =
+        options[index];
+
+      if (!selected) return;
+
+
+      options.forEach(
+        (option, optionIndex) => {
+
+          const active =
+            optionIndex === index;
+
+          option.classList.toggle(
+            'is-active',
+            active
+          );
+
+          option.setAttribute(
+            'aria-pressed',
+            active ? 'true' : 'false'
+          );
+        }
+      );
+
+
+      const year =
+        selected.dataset.yearOption ?? '';
+
+      const count =
+        selected.dataset.yearCount ?? '00';
+
+      const numericYear =
+        Number(year);
+
+
+      if (activeYear) {
+        activeYear.textContent =
+          year;
+      }
+
+
+      if (activeCount) {
+        activeCount.textContent =
+          count;
+      }
+
+      if (hudYear) {
+        hudYear.textContent = year;
+      }
+
+      if (hudCount) {
+        hudCount.textContent = count;
+      }
+
+
+      /*
+        上下年。
+
+        記事データがない年も数字は表示。
+        実在する年だけクリック可能。
+      */
+
+      const newer =
+        options[index - 1];
+
+      const older =
+        options[index + 1];
+
+
+      ghostNewer.textContent =
+        newer?.dataset.yearOption ??
+        (
+          Number.isFinite(numericYear)
+            ? String(numericYear + 1)
+            : ''
+        );
+
+
+      ghostOlder.textContent =
+        older?.dataset.yearOption ??
+        (
+          Number.isFinite(numericYear)
+            ? String(numericYear - 1)
+            : ''
+        );
+
+
+      ghostNewer.disabled =
+        !newer;
+
+      ghostOlder.disabled =
+        !older;
+
+
+      document
+        .querySelectorAll('[data-year-panel]')
+        .forEach((panel) => {
+
+          const active =
+            panel.dataset.yearPanel === year;
+
+          panel.hidden =
+            !active;
+
+          panel.classList.remove(
+            'year-entering'
+          );
+
+          if (active) {
+
+            void panel.offsetWidth;
+
+            panel.classList.add(
+              'year-entering'
+            );
+          }
+        });
+    }
+
+
+    up?.addEventListener(
+      'click',
+      () => showYear(index - 1)
+    );
+
+
+    down?.addEventListener(
+      'click',
+      () => showYear(index + 1)
+    );
+
+
+    ghostNewer.addEventListener(
+      'click',
+      () => {
+
+        if (index > 0) {
+          showYear(index - 1);
+        }
+      }
+    );
+
+
+    ghostOlder.addEventListener(
+      'click',
+      () => {
+
+        if (index < options.length - 1) {
+          showYear(index + 1);
+        }
+      }
+    );
+
+
+    wheel.addEventListener(
+      'wheel',
+      (event) => {
+
+        event.preventDefault();
+
+        if (event.deltaY > 0) {
+          showYear(index + 1);
+        }
+
+        if (event.deltaY < 0) {
+          showYear(index - 1);
+        }
+      },
+      { passive: false }
+    );
+
+
+    wheel.addEventListener(
+      'keydown',
+      (event) => {
+
+        if (event.key === 'ArrowUp') {
+
+          event.preventDefault();
+
+          showYear(index - 1);
+        }
+
+        if (event.key === 'ArrowDown') {
+
+          event.preventDefault();
+
+          showYear(index + 1);
+        }
+      }
+    );
+
+
+    showYear(0);
+  }
+
+
+  initYearWheel();
+
+
+  document.addEventListener(
+    'astro:page-load',
+    initYearWheel
+  );
+
+})();
+</script>
+
+
+<script is:inline>
+/* YEAR WHEEL FRAME LOCK JS START */
+
+(() => {
+  function initArchiveHudFrameLock() {
+    const hud = document.querySelector('.archive-left-hud');
+    const shell = document.querySelector('.year-wheel-shell');
+
+    if (!hud || !shell) return;
+
+    if (hud.dataset.frameLockReady === 'true') return;
+
+    hud.dataset.frameLockReady = 'true';
+
+    hud.addEventListener(
+      'mouseenter',
+      () => {
+        shell.classList.add('is-hud-activated');
+      },
+      { once: true }
+    );
+  }
+
+  initArchiveHudFrameLock();
+
+  document.addEventListener(
+    'astro:page-load',
+    initArchiveHudFrameLock
+  );
+})();
+
+/* YEAR WHEEL FRAME LOCK JS END */
+</script>
+
+
+
+
+</body>
 </html>
+
+
+<script is:inline>
+/* ARCHIVE HUD DIRECT MOTION JS START */
+
+(() => {
+
+  function initArchiveHudMotion() {
+
+    const hud = document.querySelector('.archive-left-hud');
+
+    if (!hud) return;
+
+    if (hud.dataset.directMotionReady === 'true') return;
+
+    hud.dataset.directMotionReady = 'true';
+
+
+    const run = () => {
+
+      /*
+       * -----------------------------------------------
+       * 1. 上のセグメントバー
+       * 実際の <i> を左から順番に横へ動かす
+       * -----------------------------------------------
+       */
+
+      const bars =
+        hud.querySelectorAll('.archive-hud-spectrum i');
+
+      bars.forEach((bar, index) => {
+
+        bar.getAnimations().forEach(animation => {
+          animation.cancel();
+        });
+
+        bar.animate(
+          [
+            {
+              translate: '0 0',
+              opacity: 0.72
+            },
+            {
+              translate: '9px 0',
+              opacity: 1,
+              offset: 0.42
+            },
+            {
+              translate: '0 0',
+              opacity: 0.82
+            }
+          ],
+          {
+            duration: 620,
+            delay: index * 85,
+            easing: 'cubic-bezier(.18,.72,.28,1)',
+            iterations: 1
+          }
+        );
+
+      });
+
+
+      /*
+       * -----------------------------------------------
+       * 2. 中段データバー
+       * 小さいバーも順番に反応
+       * -----------------------------------------------
+       */
+
+      const dataBars =
+        hud.querySelectorAll('.archive-hud-data span');
+
+      dataBars.forEach((bar, index) => {
+
+        bar.getAnimations().forEach(animation => {
+          animation.cancel();
+        });
+
+        bar.animate(
+          [
+            {
+              translate: '0 0',
+              opacity: 0.45
+            },
+            {
+              translate: '5px 0',
+              opacity: 1,
+              offset: 0.45
+            },
+            {
+              translate: '0 0',
+              opacity: 0.55
+            }
+          ],
+          {
+            duration: 480,
+            delay: 260 + (index * 45),
+            easing: 'ease-out',
+            iterations: 1
+          }
+        );
+
+      });
+
+
+      /*
+       * -----------------------------------------------
+       * 3. 斜線グラフィック
+       * 実要素そのものを右へ流して戻す
+       * -----------------------------------------------
+       */
+
+      const diagonal =
+        hud.querySelector('.archive-hud-diagonal');
+
+      if (diagonal) {
+
+        diagonal.getAnimations().forEach(animation => {
+          animation.cancel();
+        });
+
+        diagonal.animate(
+          [
+            {
+              translate: '0 0',
+              opacity: 0.50
+            },
+            {
+              translate: '12px 0',
+              opacity: 0.95,
+              offset: 0.48
+            },
+            {
+              translate: '0 0',
+              opacity: 0.50
+            }
+          ],
+          {
+            duration: 900,
+            delay: 420,
+            easing: 'cubic-bezier(.18,.68,.25,1)',
+            iterations: 1
+          }
+        );
+
+      }
+
+
+      /*
+       * -----------------------------------------------
+       * 4. 水平ライン上をスキャナーが走る
+       * 擬似要素ではなく本物のDIVをその場で生成
+       * -----------------------------------------------
+       */
+
+      const line =
+        hud.querySelector('.archive-hud-line');
+
+      if (line) {
+
+        line
+          .querySelectorAll('.archive-hud-runtime-scanner')
+          .forEach(el => el.remove());
+
+        const scanner =
+          document.createElement('span');
+
+        scanner.className =
+          'archive-hud-runtime-scanner';
+
+        scanner.style.setProperty(
+          'position',
+          'absolute',
+          'important'
+        );
+
+        scanner.style.setProperty(
+          'top',
+          '-2px',
+          'important'
+        );
+
+        scanner.style.setProperty(
+          'left',
+          '-22%',
+          'important'
+        );
+
+        scanner.style.setProperty(
+          'width',
+          '20%',
+          'important'
+        );
+
+        scanner.style.setProperty(
+          'height',
+          '5px',
+          'important'
+        );
+
+        scanner.style.setProperty(
+          'pointer-events',
+          'none',
+          'important'
+        );
+
+        scanner.style.setProperty(
+          'background',
+          'linear-gradient(90deg, transparent 0%, rgba(110,235,220,.20) 20%, rgba(110,235,220,1) 50%, rgba(183,255,0,.35) 68%, transparent 100%)',
+          'important'
+        );
+
+        scanner.style.setProperty(
+          'box-shadow',
+          '0 0 8px rgba(110,235,220,.65), 0 0 18px rgba(110,235,220,.22)',
+          'important'
+        );
+
+        scanner.style.opacity = '0';
+
+        line.style.setProperty(
+          'overflow',
+          'hidden',
+          'important'
+        );
+
+        line.appendChild(scanner);
+
+        const animation =
+          scanner.animate(
+            [
+              {
+                translate: '0 0',
+                opacity: 0
+              },
+              {
+                opacity: 1,
+                offset: 0.12
+              },
+              {
+                translate: '610% 0',
+                opacity: 1,
+                offset: 0.82
+              },
+              {
+                translate: '650% 0',
+                opacity: 0
+              }
+            ],
+            {
+              duration: 1000,
+              delay: 140,
+              easing: 'cubic-bezier(.18,.72,.28,1)',
+              iterations: 1
+            }
+          );
+
+        animation.onfinish = () => {
+          scanner.remove();
+        };
+
+      }
+
+
+      /*
+       * -----------------------------------------------
+       * 5. LIVE FEED
+       * 親要素をパルスさせるので ::after も一緒に反応
+       * 色は既存ライムのまま
+       * -----------------------------------------------
+       */
+
+      const status =
+        hud.querySelector('.archive-hud-status');
+
+      if (status) {
+
+        status.getAnimations().forEach(animation => {
+          animation.cancel();
+        });
+
+        status.animate(
+          [
+            {
+              opacity: 1
+            },
+            {
+              opacity: 0.35,
+              offset: 0.30
+            },
+            {
+              opacity: 1,
+              offset: 0.55
+            },
+            {
+              opacity: 0.65,
+              offset: 0.72
+            },
+            {
+              opacity: 1
+            }
+          ],
+          {
+            duration: 620,
+            delay: 920,
+            easing: 'ease-out',
+            iterations: 1
+          }
+        );
+
+      }
+
+    };
+
+
+    hud.addEventListener(
+      'mouseenter',
+      run
+    );
+
+  }
+
+
+  initArchiveHudMotion();
+
+  document.addEventListener(
+    'astro:page-load',
+    initArchiveHudMotion
+  );
+
+})();
+
+/* ARCHIVE HUD DIRECT MOTION JS END */
+</script>
+

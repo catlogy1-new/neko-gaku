@@ -1,0 +1,870 @@
+
+
+/* =========================================================
+   2. ARTICLE BODY
+   ========================================================= */
+
+.blog-detail-page .article-content {
+  color: #c3c7c0 !important;
+}
+
+
+/* body text */
+
+.blog-detail-page .article-content p,
+.blog-detail-page .article-content li {
+  font-family:
+    "Inter Variable",
+    "Helvetica Neue",
+    Arial,
+    sans-serif !important;
+
+  font-size: 1rem !important;
+  font-weight: 400 !important;
+
+  line-height: 1.8 !important;
+  letter-spacing: -0.012em !important;
+}
+
+
+/* H2 = subtle section panel */
+
+.blog-detail-page .article-content h2 {
+  position: relative;
+
+  margin: 48px 0 18px !important;
+  padding: 17px 19px 16px !important;
+
+  border: 1px solid rgba(255, 255, 255, 0.085) !important;
+  border-left: 2px solid rgba(183, 255, 0, 0.72) !important;
+  border-radius: 7px !important;
+
+  background:
+    linear-gradient(
+      100deg,
+      rgba(183, 255, 0, 0.028),
+      rgba(255, 255, 255, 0.008) 48%,
+      transparent
+    ),
+    #070807 !important;
+
+  color: #e8e9e5 !important;
+
+  font-family:
+    "Host Grotesk Variable",
+    "Inter Variable",
+    "Helvetica Neue",
+    Arial,
+    sans-serif !important;
+
+  font-size: clamp(1.45rem, 2.25vw, 2rem) !important;
+  font-weight: 700 !important;
+
+  line-height: 1.04 !important;
+  letter-spacing: -0.04em !important;
+
+  box-shadow:
+    0 10px 28px rgba(0, 0, 0, 0.10) !important;
+}
+
+
+/* tiny section signal */
+
+.blog-detail-page .article-content h2::before {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #b7ff00;
+
+  font-family:
+    "Maple Mono",
+    monospace;
+
+  font-size: 0.58rem;
+  font-weight: 700;
+
+  line-height: 1;
+  letter-spacing: 0.15em;
+
+  content: "SECTION /";
+}
+
+
+/* H3 */
+
+.blog-detail-page .article-content h3 {
+  position: relative;
+
+  margin: 32px 0 12px !important;
+  padding-left: 14px !important;
+
+  color: #d9dcd6 !important;
+
+  font-family:
+    "Host Grotesk Variable",
+    "Inter Variable",
+    "Helvetica Neue",
+    Arial,
+    sans-serif !important;
+
+  font-size: clamp(1.05rem, 1.6vw, 1.28rem) !important;
+  font-weight: 650 !important;
+
+  line-height: 1.2 !important;
+  letter-spacing: -0.025em !important;
+}
+
+.blog-detail-page .article-content h3::before {
+  position: absolute;
+
+  top: 0.25em;
+  bottom: 0.18em;
+  left: 0;
+
+  width: 2px;
+
+  border-radius: 999px;
+
+  background: rgba(183, 255, 0, 0.62);
+
+  content: "";
+}
+
+
+/* =========================================================
+   3. SERIES PREV / NEXT
+   ========================================================= */
+
+.blog-detail-page .series-neighbor-nav {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+
+  gap: 10px !important;
+
+  margin: 56px 0 0 !important;
+  padding: 18px 0 !important;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.085) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+
+  background: transparent !important;
+}
+
+.blog-detail-page .series-neighbor-nav > a {
+  display: grid !important;
+  gap: 7px !important;
+
+  min-height: 86px !important;
+
+  padding: 15px 17px !important;
+
+  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  border-radius: 7px !important;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.016),
+      rgba(255, 255, 255, 0.004)
+    ),
+    #080908 !important;
+
+  color: inherit !important;
+
+  text-decoration: none !important;
+
+  transition:
+    border-color 200ms ease,
+    background-color 200ms ease,
+    transform 200ms ease !important;
+}
+
+.blog-detail-page .series-neighbor-nav > a:hover {
+  border-color: rgba(183, 255, 0, 0.46) !important;
+
+  background-color: #0b0c0b !important;
+
+  transform: translateY(-2px);
+}
+
+.blog-detail-page .series-neighbor-nav small {
+  color: #777d76 !important;
+
+  font-family:
+    "Maple Mono",
+    monospace !important;
+
+  font-size: 0.61rem !important;
+  font-weight: 600 !important;
+
+  letter-spacing: 0.09em !important;
+  text-transform: uppercase !important;
+}
+
+.blog-detail-page .series-neighbor-nav a > span {
+  color: #d7dad4 !important;
+
+  font-family:
+    "Host Grotesk Variable",
+    "Inter Variable",
+    "Helvetica Neue",
+    Arial,
+    sans-serif !important;
+
+  font-size: 1.05rem !important;
+  font-weight: 650 !important;
+
+  line-height: 1.2 !important;
+  letter-spacing: -0.025em !important;
+
+  transition: color 180ms ease !important;
+}
+
+.blog-detail-page .series-neighbor-nav a:hover > span {
+  color: #f5f5f2 !important;
+}
+
+.blog-detail-page .series-neighbor-nav .next {
+  text-align: right !important;
+}
+
+
+/* =========================================================
+   4. RELATED POSTS
+   ========================================================= */
+
+.blog-detail-page .related-posts {
+  margin-top: 28px !important;
+  padding: 0 !important;
+
+  border: 0 !important;
+  border-radius: 0 !important;
+
+  background: transparent !important;
+
+  box-shadow: none !important;
+}
+
+.blog-detail-page .related-posts > h2 {
+  margin: 0 0 12px !important;
+
+  color: #777d76 !important;
+
+  font-family:
+    "Inter Variable",
+    "Helvetica Neue",
+    Arial,
+    sans-serif !important;
+
+  font-size: 0.67rem !important;
+  font-weight: 700 !important;
+
+  line-height: 1.2 !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+}
+
+.blog-detail-page .related-list {
+  display: grid !important;
+  gap: 0 !important;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.09) !important;
+}
+
+.blog-detail-page .related-list > a {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+
+  gap: 0 !important;
+
+  padding: 13px 4px !important;
+
+  border: 0 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-radius: 0 !important;
+
+  background: transparent !important;
+
+  color: inherit !important;
+
+  text-decoration: none !important;
+
+  transition:
+    padding-left 180ms ease,
+    background-color 180ms ease !important;
+}
+
+.blog-detail-page .related-list > a:hover {
+  padding-left: 10px !important;
+
+  background: rgba(255, 255, 255, 0.018) !important;
+}
+
+
+/* thumbnails, if present */
+
+.blog-detail-page .related-list > a.has-thumbnail {
+  grid-template-columns: 72px minmax(0, 1fr) !important;
+  gap: 14px !important;
+}
+
+.blog-detail-page .related-list > a img {
+  width: 72px !important;
+  height: 52px !important;
+
+  border-radius: 4px !important;
+
+  object-fit: cover !important;
+
+  opacity: 0.78 !important;
+}
+
+
+/* title + date */
+
+.blog-detail-page .related-list > a > span {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+
+  gap: 16px !important;
+  align-items: baseline !important;
+}
+
+.blog-detail-page .related-list strong {
+  color: #c8ccc5 !important;
+
+  font-family:
+    "Host Grotesk Variable",
+    "Inter Variable",
+    "Helvetica Neue",
+    Arial,
+    sans-serif !important;
+
+  font-size: 0.94rem !important;
+  font-weight: 600 !important;
+
+  line-height: 1.3 !important;
+  letter-spacing: -0.018em !important;
+
+  transition: color 180ms ease !important;
+}
+
+.blog-detail-page .related-list a:hover strong {
+  color: #f5f5f2 !important;
+}
+
+.blog-detail-page .related-list small {
+  color: #666c65 !important;
+
+  font-family:
+    "Maple Mono",
+    monospace !important;
+
+  font-size: 0.64rem !important;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 720px) {
+
+  .blog-detail-page .article-content h2 {
+    margin-top: 38px !important;
+    padding: 15px 16px !important;
+
+    font-size: 1.45rem !important;
+  }
+
+  .blog-detail-page .series-neighbor-nav {
+    grid-template-columns: 1fr !important;
+  }
+
+  .blog-detail-page .series-neighbor-nav .next {
+    text-align: left !important;
+  }
+
+  .blog-detail-page .related-list > a > span {
+    grid-template-columns: 1fr !important;
+    gap: 4px !important;
+  }
+}
+
+
+/* accessibility */
+
+@media (prefers-reduced-motion: reduce) {
+  .blog-detail-page .toc-tree a,
+  .blog-detail-page .series-neighbor-nav > a,
+  .blog-detail-page .related-list > a {
+    transition: none !important;
+  }
+}
+
+/* =========================================================
+   NEXUS FINAL TWEAK
+   RELATED HOVER / TOC TITLE SIGNAL
+   ========================================================= */
+
+/* MORE FROM — orange hover frame */
+
+.blog-detail-page .related-list > a {
+  border-left: 1px solid transparent !important;
+  border-right: 1px solid transparent !important;
+
+  transition:
+    padding-left 180ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease !important;
+}
+
+.blog-detail-page .related-list > a:hover,
+.blog-detail-page .related-list > a:focus-visible {
+  padding-left: 10px !important;
+
+  border-left-color: rgba(255, 90, 0, 0.72) !important;
+  border-right-color: rgba(255, 90, 0, 0.72) !important;
+  border-bottom-color: rgba(255, 90, 0, 0.72) !important;
+
+  background: linear-gradient(
+    90deg,
+    rgba(255, 90, 0, 0.035),
+    rgba(255, 255, 255, 0.012),
+    rgba(255, 90, 0, 0.025)
+  ) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 90, 0, 0.72),
+    0 0 12px rgba(255, 90, 0, 0.05) !important;
+}
+
+
+
+
+/* === NEXUS NOTE ARTICLE TYPOGRAPHY FIX START === */
+
+/*
+   ARTICLE BODY
+   日本語は現在の読みやすさを維持。
+   英数字は Medium 系の自然なプロポーショナル書体へ。
+*/
+.blog-detail-page .article-content {
+  font-family:
+    "Helvetica Neue",
+    Helvetica,
+    Arial,
+    "Hiragino Kaku Gothic ProN",
+    "Hiragino Sans",
+    "Yu Gothic",
+    "YuGothic",
+    sans-serif !important;
+}
+
+
+/* ---------------------------------------------------------
+   PARAGRAPH / LIST
+   --------------------------------------------------------- */
+
+.blog-detail-page .article-content p,
+.blog-detail-page .article-content li {
+  font-family:
+    "Helvetica Neue",
+    Helvetica,
+    Arial,
+    "Hiragino Kaku Gothic ProN",
+    "Hiragino Sans",
+    "Yu Gothic",
+    "YuGothic",
+    sans-serif !important;
+
+  font-weight: 400 !important;
+  letter-spacing: 0 !important;
+}
+
+
+/* ---------------------------------------------------------
+   H2 / H3 / H4
+   Maple Mono を記事見出しから完全排除
+   --------------------------------------------------------- */
+
+.blog-detail-page .article-content h2,
+.blog-detail-page .article-content h3,
+.blog-detail-page .article-content h4 {
+  font-family:
+    "Helvetica Neue",
+    Helvetica,
+    Arial,
+    "Hiragino Kaku Gothic ProN",
+    "Hiragino Sans",
+    "Yu Gothic",
+    "YuGothic",
+    sans-serif !important;
+
+  font-style: normal !important;
+  letter-spacing: -0.015em !important;
+}
+
+
+/*
+   H4は特に以前のコード表示っぽさを除去
+*/
+.blog-detail-page .article-content h4 {
+  color: #dedfdb !important;
+
+  font-size: 1.05rem !important;
+  font-weight: 600 !important;
+
+  line-height: 1.5 !important;
+  letter-spacing: 0 !important;
+
+  background: none !important;
+  border: 0 !important;
+
+  padding: 0 !important;
+  margin: 2.1rem 0 0.75rem !important;
+
+  text-transform: none !important;
+}
+
+
+/* ---------------------------------------------------------
+   BLOCKQUOTE
+   note型：暗いニュートラルグレー
+   --------------------------------------------------------- */
+
+.blog-detail-page .article-content blockquote {
+  box-sizing: border-box !important;
+
+  width: 100% !important;
+  max-width: 100% !important;
+
+  margin: 2.25rem auto !important;
+  padding: 1.8rem 2rem !important;
+
+  background: #171918 !important;
+  background-color: #171918 !important;
+
+  color: #eeeeeb !important;
+
+  border: 1px solid #292c2a !important;
+  border-left: 1px solid #292c2a !important;
+  border-radius: 4px !important;
+
+  box-shadow: none !important;
+
+  font-family:
+    "Helvetica Neue",
+    Helvetica,
+    Arial,
+    "Hiragino Kaku Gothic ProN",
+    "Hiragino Sans",
+    "Yu Gothic",
+    "YuGothic",
+    sans-serif !important;
+
+  font-size: 1rem !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+
+  line-height: 1.85 !important;
+  letter-spacing: 0 !important;
+
+  text-align: left !important;
+}
+
+
+/*
+   blockquote内部のpに通常本文の巨大marginを継承させない。
+   これが「文字の下に不要な段落」に見える余白を消す。
+*/
+.blog-detail-page .article-content blockquote p {
+  color: #eeeeeb !important;
+
+  font-family: inherit !important;
+  font-size: inherit !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+
+  line-height: inherit !important;
+  letter-spacing: 0 !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+
+/*
+   本当に複数段落ある引用だけ、
+   二段目以降に必要な間隔を与える。
+*/
+.blog-detail-page .article-content blockquote p + p {
+  margin-top: 1rem !important;
+}
+
+
+/*
+   Markdownテーマ等が引用符を自動生成している場合も排除
+*/
+.blog-detail-page .article-content blockquote::before,
+.blog-detail-page .article-content blockquote::after,
+.blog-detail-page .article-content blockquote p::before,
+.blog-detail-page .article-content blockquote p::after {
+  content: none !important;
+}
+
+
+/* ---------------------------------------------------------
+   ENGLISH
+   lang属性がある場合はさらに Medium 的な serif を優先
+   --------------------------------------------------------- */
+
+.blog-detail-page .article-content :lang(en) {
+  font-family:
+    Georgia,
+    "Times New Roman",
+    Times,
+    serif !important;
+
+  letter-spacing: 0 !important;
+}
+
+
+/* スマホ */
+@media (max-width: 700px) {
+
+  .blog-detail-page .article-content blockquote {
+    margin: 1.8rem auto !important;
+    padding: 1.35rem 1.25rem !important;
+
+    font-size: 0.98rem !important;
+    line-height: 1.8 !important;
+  }
+
+  .blog-detail-page .article-content h4 {
+    font-size: 1rem !important;
+  }
+}
+
+/* === NEXUS NOTE ARTICLE TYPOGRAPHY FIX END === */
+
+/* =========================================================
+   BLOG ARTICLE — QUOTE + TYPOGRAPHY FIX
+   2026-09-15
+   ========================================================= */
+
+/* ---------- ARTICLE HEADINGS ---------- */
+
+.blog-detail-page .article-content h2,
+.blog-detail-page .article-content h3,
+.blog-detail-page .article-content h4 {
+  font-family:
+    "Helvetica Neue",
+    Helvetica,
+    Arial,
+    "Hiragino Sans",
+    "Yu Gothic",
+    YuGothic,
+    sans-serif !important;
+
+  font-style: normal !important;
+  text-transform: none !important;
+}
+
+
+/* H4：コード／端末風の見た目を完全に除去 */
+
+.blog-detail-page .article-content h4 {
+  color: #e2e3df !important;
+
+  font-size: 1.08rem !important;
+  font-weight: 600 !important;
+  line-height: 1.5 !important;
+
+  letter-spacing: 0 !important;
+
+  margin: 2.2rem 0 0.85rem !important;
+  padding: 0 !important;
+
+  background: transparent !important;
+  border: 0 !important;
+}
+
+
+/* ---------- BLOCKQUOTE ---------- */
+
+.blog-detail-page .article-content blockquote {
+  box-sizing: border-box !important;
+
+  display: block !important;
+
+  width: 100% !important;
+  max-width: 100% !important;
+
+  margin: 2rem auto !important;
+
+  padding: 1.55rem 1.8rem !important;
+
+  background: #181a19 !important;
+  background-color: #181a19 !important;
+
+  color: #eeeeeb !important;
+
+  border: 1px solid #292b2a !important;
+  border-left: 1px solid #292b2a !important;
+
+  border-radius: 4px !important;
+
+  box-shadow: none !important;
+
+  font-family:
+    "Helvetica Neue",
+    Helvetica,
+    Arial,
+    "Hiragino Sans",
+    "Yu Gothic",
+    YuGothic,
+    sans-serif !important;
+
+  font-size: 1rem !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+
+  line-height: 1.8 !important;
+  letter-spacing: 0 !important;
+
+  text-align: left !important;
+}
+
+
+/* 引用BOX内部の不要な上下余白を消す */
+
+.blog-detail-page .article-content blockquote p {
+  margin: 0 !important;
+  padding: 0 !important;
+
+  color: #eeeeeb !important;
+
+  font-family: inherit !important;
+  font-size: inherit !important;
+  font-style: normal !important;
+  font-weight: inherit !important;
+
+  line-height: inherit !important;
+  letter-spacing: 0 !important;
+}
+
+
+/* 本当に二段落ある場合だけ段落間を作る */
+
+.blog-detail-page .article-content blockquote p + p {
+  margin-top: 0.9rem !important;
+}
+
+
+/* テーマ側が勝手に引用記号を追加しても消す */
+
+.blog-detail-page .article-content blockquote::before,
+.blog-detail-page .article-content blockquote::after,
+.blog-detail-page .article-content blockquote p::before,
+.blog-detail-page .article-content blockquote p::after {
+  content: none !important;
+}
+
+
+/* ---------- ENGLISH TYPOGRAPHY ---------- */
+
+/*
+   英文だけMedium系の読み物らしいserifへ。
+   日本語本文には適用しない。
+*/
+
+.blog-detail-page .article-content :lang(en) {
+  font-family:
+    Georgia,
+    "Times New Roman",
+    Times,
+    serif !important;
+
+  font-style: normal !important;
+  letter-spacing: 0 !important;
+}
+
+
+/* ---------- MOBILE ---------- */
+
+@media (max-width: 700px) {
+
+  .blog-detail-page .article-content blockquote {
+    margin: 1.7rem auto !important;
+    padding: 1.3rem 1.25rem !important;
+
+    font-size: 0.98rem !important;
+    line-height: 1.8 !important;
+  }
+
+  .blog-detail-page .article-content h4 {
+    font-size: 1.03rem !important;
+  }
+}
+
+/* === NEXUS TOC 8-ITEM SCROLL FIX === */
+
+.blog-detail-page .toc-card[data-expanded='true'] .toc-list-wrap {
+  max-height: 300px !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+
+  scrollbar-width: thin !important;
+  scrollbar-color:
+    rgba(255,255,255,0.32)
+    rgba(255,255,255,0.035) !important;
+}
+
+/* Chromium / Edge scrollbar */
+.blog-detail-page .toc-card[data-expanded='true'] .toc-list-wrap::-webkit-scrollbar {
+  width: 7px;
+}
+
+.blog-detail-page .toc-card[data-expanded='true'] .toc-list-wrap::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.035);
+}
+
+.blog-detail-page .toc-card[data-expanded='true'] .toc-list-wrap::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.32);
+  border-radius: 999px;
+}
+
+.blog-detail-page .toc-card[data-expanded='true'] .toc-list-wrap::-webkit-scrollbar-thumb:hover {
+  background: rgba(183,255,0,0.48);
+}
+
+/* closed */
+.blog-detail-page .toc-card[data-expanded='false'] .toc-list-wrap {
+  max-height: 0 !important;
+  overflow: hidden !important;
+}
+
+/* =========================================================
+   NEXUS ARTICLE DIVIDER
+   previous content -> 7mm -> line -> 7mm -> next content
+   ========================================================= */
+
+.blog-detail-page .article-content hr {
+    display: block !important;
+
+    width: 100% !important;
+    height: 0 !important;
+
+    margin-top: 7mm !important;
+    margin-bottom: 7mm !important;
+
+    padding: 0 !important;
+
+    border: 0 !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.18) !important;
+
+    background: none !important;
+}

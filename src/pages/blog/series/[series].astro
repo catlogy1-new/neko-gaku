@@ -1,22 +1,23 @@
----
+﻿---
 import { getCollection } from 'astro:content';
 import BaseHead from '../../../components/BaseHead.astro';
 import Footer from '../../../components/Footer.astro';
-import BackLink from '../../../components/blog/BackLink.astro';
+import FullFontWarmup from '../../../components/FullFontWarmup.astro';
 import BlogPostList from '../../../components/blog/BlogPostList.astro';
 import BlogTopNav from '../../../components/blog/BlogTopNav.astro';
-import SeriesProgress from '../../../components/blog/SeriesProgress.astro';
 import { getSiteConfig } from '../../../data/site';
 import { getAllSeries, getPostsBySeries } from '../../../utils/content-groups';
 import { getUiText } from '../../../utils/ui-text';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => !data.draft);
+  const allSeries = getAllSeries(posts);
 
-  return getAllSeries(posts).map((series) => ({
+  return allSeries.map((series, index) => ({
     params: { series: series.slug },
     props: {
       series,
+      seriesIndex: index + 1,
       posts: getPostsBySeries(posts, series.slug),
     },
   }));
@@ -26,50 +27,398 @@ const siteConfig = await getSiteConfig();
 const { site, theme, pages } = siteConfig;
 const palette = theme.palette;
 const pageMeta = pages.blog;
-const { series, posts } = Astro.props;
+
+const { series, seriesIndex, posts } = Astro.props;
+
 const ui = getUiText(siteConfig);
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const seriesNumber = String(seriesIndex).padStart(2, '0');
+const articleLabel = posts.length === 1 ? 'ARTICLE' : 'ARTICLES';
 ---
 
 <!doctype html>
 <html lang={ui.locale} data-palette={palette}>
   <head>
-    <BaseHead title={`${series.name} | ${site.title}`} description={site.description} />
+    <BaseHead
+      title={`${series.name} | ${site.title}`}
+      description={site.description}
+    />
+
     <style>
       main {
         width: min(100%, var(--layout-shell-width));
         max-width: none;
-        padding: 118px var(--layout-page-gutter) var(--layout-page-bottom);
+
+        padding:
+          118px
+          var(--layout-page-gutter)
+          var(--layout-page-bottom);
       }
 
-      .series-detail-header {
-        display: grid;
-        gap: 16px;
+      /* =====================================================
+         SERIES DETAIL — NEXUS
+         ===================================================== */
+
+      .series-detail-back {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        min-height: 34px;
+
+        margin: 0 0 42px;
+        padding: 7px 12px;
+
+        border: 1px solid rgba(183, 255, 0, 0.48);
+        border-radius: 6px;
+
+        background: rgba(183, 255, 0, 0.035);
+
+        color: #a4aaa1;
+
+        font-family: 'Maple Mono', monospace;
+        font-size: 0.66rem;
+        font-weight: 600;
+
+        line-height: 1;
+        letter-spacing: 0.06em;
+
+        text-decoration: none;
+
+        transition:
+          color 220ms ease,
+          border-color 220ms ease,
+          background 220ms ease,
+          box-shadow 220ms ease;
       }
+
+      .series-detail-back:hover,
+      .series-detail-back:focus-visible {
+        color: #e7e8e4;
+
+        border-color: #b7ff00;
+
+        background: rgba(183, 255, 0, 0.055);
+
+        box-shadow:
+          0 0 7px rgba(183, 255, 0, 0.20);
+
+        outline: none;
+      }
+
+
+      .series-detail-hero {
+        position: relative;
+
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: clamp(34px, 6vw, 90px);
+        align-items: end;
+
+        margin: 0 0 46px;
+        padding: 0 0 30px;
+
+        border-bottom: 1px solid rgba(150, 154, 148, 0.16);
+      }
+
+
+      .series-detail-kicker {
+        margin: 0 0 12px;
+
+        color: #b7ff00;
+
+        font-family: 'Maple Mono', monospace;
+        font-size: 0.68rem;
+        font-weight: 700;
+
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+      }
+
+
+      .series-detail-title {
+        margin: 0;
+
+        color: #e7e8e4;
+
+        font-family:
+          'Host Grotesk Variable',
+          'Inter Variable',
+          'Helvetica Neue',
+          Arial,
+          sans-serif;
+
+        font-size: clamp(2.85rem, 4.35vw, 4.7rem);
+        font-weight: 800;
+
+        line-height: 0.9;
+        letter-spacing: -0.065em;
+
+        text-transform: uppercase;
+      }
+
+
+      .series-detail-note {
+        margin: 18px 0 0;
+
+        color: #8f958d;
+
+        font-family:
+          'Inter Variable',
+          'Helvetica Neue',
+          Arial,
+          sans-serif;
+
+        font-size: 0.78rem;
+        font-weight: 430;
+
+        line-height: 1.5;
+        letter-spacing: 0.01em;
+      }
+
+
+      /* published signal */
+      .series-detail-status {
+        display: grid;
+        gap: 10px;
+
+        min-width: 190px;
+
+        padding-bottom: 4px;
+      }
+
+      .series-detail-status-line {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+
+        color: #a4aaa1;
+
+        font-family: 'Maple Mono', monospace;
+        font-size: 0.68rem;
+        font-weight: 600;
+
+        letter-spacing: 0.05em;
+        white-space: nowrap;
+      }
+
+      .series-detail-signal-dot {
+        width: 5px;
+        height: 5px;
+
+        flex: 0 0 auto;
+
+        border-radius: 50%;
+
+        background: #b7ff00;
+
+        box-shadow:
+          0 0 6px rgba(183, 255, 0, 0.72),
+          0 0 13px rgba(183, 255, 0, 0.24);
+
+        animation:
+          series-detail-dot
+          1.8s
+          ease-in-out
+          infinite;
+      }
+
+
+      .series-detail-track {
+        width: 100%;
+        height: 1px;
+
+        overflow: hidden;
+
+        background: rgba(150, 154, 148, 0.16);
+      }
+
+
+      .series-detail-track::after {
+        display: block;
+
+        width: 100%;
+        height: 100%;
+
+        content: '';
+
+        background: #b7ff00;
+
+        box-shadow:
+          0 0 5px rgba(183, 255, 0, 0.52),
+          0 0 12px rgba(183, 255, 0, 0.18);
+
+        transform: scaleX(0);
+        transform-origin: left center;
+
+        animation:
+          series-detail-track
+          1.55s
+          cubic-bezier(0.16, 1, 0.3, 1)
+          240ms
+          1
+          forwards;
+      }
+
+
+      @keyframes series-detail-track {
+        from {
+          transform: scaleX(0);
+        }
+
+        to {
+          transform: scaleX(1);
+        }
+      }
+
+
+      @keyframes series-detail-dot {
+        0%,
+        100% {
+          opacity: 0.42;
+        }
+
+        50% {
+          opacity: 1;
+        }
+      }
+
 
       @media (max-width: 720px) {
         main {
           padding-top: 88px;
         }
+
+        .series-detail-back {
+          margin-bottom: 32px;
+        }
+
+        .series-detail-hero {
+          grid-template-columns: 1fr;
+
+          gap: 26px;
+
+          margin-bottom: 34px;
+          padding-bottom: 24px;
+        }
+
+        .series-detail-title {
+        margin: 0;
+
+        color: #e7e8e4;
+
+        font-family:
+          'Host Grotesk Variable',
+          'Inter Variable',
+          'Helvetica Neue',
+          Arial,
+          sans-serif;
+
+        font-size: clamp(2.85rem, 4.35vw, 4.7rem);
+        font-weight: 800;
+
+        line-height: 0.9;
+        letter-spacing: -0.065em;
+
+        text-transform: uppercase;
+      }
+
+        .series-detail-status {
+          width: min(100%, 240px);
+          min-width: 0;
+        }
+      }
+
+
+      @media (prefers-reduced-motion: reduce) {
+        .series-detail-back,
+        .series-detail-back::after {
+          transition: none;
+        }
+
+        .series-detail-signal-dot,
+        .series-detail-track::after {
+          animation: none;
+        }
+
+        .series-detail-track::after {
+          transform: scaleX(1);
+        }
       }
     </style>
   </head>
+
   <body>
     <BlogTopNav />
+
     <main data-pagefind-body>
-      <BackLink href="/blog/series/" label={ui.groups.back} />
-      <header class="archive-hero archive-header-shared page-header-spacing">
-        <div class="archive-header-main series-detail-header">
-          <div>
-            <p class="archive-kicker">{ui.groups.series}</p>
-            <h1 class="archive-title">{series.name}</h1>
-          </div>
-          <SeriesProgress current={posts.length} total={posts.length} />
+
+      <a
+        class="series-detail-back"
+        href={`${basePath}/blog/series/`}
+      >
+        <span>← BACK</span>
+      </a>
+
+
+      <header class="series-detail-hero">
+
+        <div class="series-detail-main">
+
+          <p class="series-detail-kicker">
+            SERIES / {seriesNumber}
+          </p>
+
+          <h1 class="series-detail-title">
+            {series.name}
+          </h1>
+
+          <p class="series-detail-note">
+            {String(posts.length).padStart(2, '0')} {articleLabel} / READING ORDER
+          </p>
+
         </div>
-        <p class="archive-note">{ui.groups.seriesNote(posts.length)}</p>
+
+
+        <div
+          class="series-detail-status"
+          aria-label={`${posts.length} published`}
+        >
+          <div class="series-detail-status-line">
+
+            <span
+              class="series-detail-signal-dot"
+              aria-hidden="true"
+            ></span>
+
+            <span>
+              {posts.length} PUBLISHED
+            </span>
+
+          </div>
+
+          <span
+            class="series-detail-track"
+            aria-hidden="true"
+          ></span>
+        </div>
+
       </header>
 
-      <BlogPostList posts={posts} coverImageStyle={pageMeta.coverImageStyle} listTag="ol" />
+
+      <BlogPostList
+        posts={posts}
+        coverImageStyle={pageMeta.coverImageStyle}
+        listTag="ol"
+      />
+
     </main>
+
     <Footer />
   </body>
 </html>
+
+
+
+

@@ -1,7 +1,7 @@
 ---
 import TocTree from './TocTree.astro';
 import { getSiteConfig } from '../../data/site';
-import { countTocItems, type TocItem } from '../../utils/toc-tree';
+import { type TocItem } from '../../utils/toc-tree';
 import { getUiText } from '../../utils/ui-text';
 
 interface Props {
@@ -14,8 +14,7 @@ interface Props {
 const { items, compact = false, collapsible = false, font = 'ui' } = Astro.props;
 
 const hasItems = items.length > 0;
-const canCollapse = collapsible && countTocItems(items) > 3;
-const listId = collapsible ? 'mobile-article-toc-list' : undefined;
+const listId = collapsible ? 'mobile-article-toc-list' : 'article-toc-list';
 const treeIdPrefix = collapsible ? 'article-toc' : 'sidebar-toc';
 const ui = getUiText(await getSiteConfig());
 ---
@@ -23,34 +22,27 @@ const ui = getUiText(await getSiteConfig());
 {
   hasItems && (
     <nav
-      class:list={['toc-card', 'blog-card', { compact, collapsible, 'can-collapse': canCollapse }]}
+      class:list={['toc-card', 'blog-card', { compact, collapsible }]}
       aria-label={ui.toc.title}
       data-toc-root
       data-font={font}
-      data-mobile-toc={collapsible ? '' : undefined}
-      data-expanded={collapsible ? 'false' : undefined}
-      data-expand-aria-label={ui.toc.expand}
-      data-collapse-aria-label={ui.toc.collapse}
-      data-expand-label={ui.toc.showAll}
-      data-collapse-label={ui.toc.collapseButton}
+      data-toc-collapsible
+      data-expanded="true"
     >
-      <h2>{ui.toc.title}</h2>
+      <button
+        class="toc-header"
+        type="button"
+        aria-expanded="true"
+        aria-controls={listId}
+        data-toc-header
+      >
+        <span class="toc-header-arrow" aria-hidden="true"></span>
+        <span class="toc-header-title">{ui.toc.title}</span>
+      </button>
+
       <div id={listId} class="toc-list-wrap" data-toc-scroll>
         <TocTree items={items} idPrefix={treeIdPrefix} />
       </div>
-      {canCollapse && (
-        <button
-          class="toc-expand"
-          type="button"
-          aria-label={ui.toc.expand}
-          aria-expanded="false"
-          aria-controls={listId}
-          data-toc-expand
-        >
-          <span data-expand-label>{ui.toc.showAll}</span>
-          <i aria-hidden="true" />
-        </button>
-      )}
     </nav>
   )
 }
@@ -60,118 +52,306 @@ const ui = getUiText(await getSiteConfig());
 
   mountNavfolioTocSpy();
 
-  const initMobileTocToggle = () => {
-    for (const toc of document.querySelectorAll<HTMLElement>('[data-mobile-toc]')) {
-      const button = toc.querySelector<HTMLButtonElement>(':scope > [data-toc-expand]');
-      const label = toc.querySelector<HTMLElement>('[data-expand-label]');
+  const initTocToggle = () => {
+    for (const toc of document.querySelectorAll<HTMLElement>('[data-toc-collapsible]')) {
+      const button = toc.querySelector<HTMLButtonElement>(':scope > [data-toc-header]');
 
-      if (!button || button.dataset.tocExpandReady) {
+      if (!button || button.dataset.tocHeaderReady) {
         continue;
       }
 
-      button.dataset.tocExpandReady = 'true';
+      button.dataset.tocHeaderReady = 'true';
+
       button.addEventListener('click', () => {
         const expanded = toc.dataset.expanded === 'true';
         const nextExpanded = !expanded;
 
         toc.dataset.expanded = String(nextExpanded);
         button.setAttribute('aria-expanded', String(nextExpanded));
-        button.setAttribute(
-          'aria-label',
-          nextExpanded
-            ? (toc.dataset.collapseAriaLabel ?? 'Collapse table of contents')
-            : (toc.dataset.expandAriaLabel ?? 'Expand table of contents'),
-        );
-        if (label) {
-          label.textContent = nextExpanded
-            ? (toc.dataset.collapseLabel ?? 'Collapse')
-            : (toc.dataset.expandLabel ?? 'Show all');
-        }
       });
     }
   };
 
-  initMobileTocToggle();
-  document.addEventListener('astro:page-load', initMobileTocToggle);
+  initTocToggle();
+  document.addEventListener('astro:page-load', initTocToggle);
 </script>
 
 <style>
   .toc-card {
-    padding: 18px;
-    border: 0;
-    background: transparent;
+    width: 100%;
+    padding: 0;
+    overflow: hidden;
+    border: 3px solid #ffffff;
+    border-radius: 6px;
+    background: #151515;
     box-shadow: none;
   }
 
-  h2 {
-    margin: 0 0 14px;
-    color: var(--paper-ink);
+  .toc-header {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 58px;
+    gap: 11px;
+    padding: 0 20px;
+    border: 0;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.48);
     font-family: var(--font-ui-label);
-    font-size: 0.9rem;
+    font-size: 1rem;
+    font-weight: 700;
     line-height: 1.2;
+    letter-spacing: 0.08em;
+    text-align: left;
     text-transform: uppercase;
+    cursor: pointer;
+    transition:
+      color 160ms ease,
+      background-color 160ms ease;
   }
 
-  .compact {
-    padding: 18px;
+  .toc-header:hover,
+  .toc-header:focus-visible {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.025);
   }
 
-  .toc-expand {
-    display: none;
+  .toc-card[data-expanded='true'] .toc-header {
+    color: #fff;
+  }
+
+  .toc-header-arrow {
+    flex: 0 0 auto;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 7px solid currentColor;
+    transition: transform 160ms ease;
+  }
+
+  .toc-card[data-expanded='false'] .toc-header-arrow {
+    transform: rotate(-90deg);
+  }
+
+  .toc-header-title {
+    min-width: 0;
+  }
+
+  .toc-list-wrap {
+    max-height: 390px;
+    margin: 0 10px 12px 20px;
+    padding: 8px 12px 4px 0;
+    overflow-y: auto;
+    opacity: 1;
+    transition:
+      max-height 220ms ease,
+      opacity 160ms ease,
+      margin 220ms ease;
+  }
+
+  .toc-card[data-expanded='false'] .toc-list-wrap {
+    max-height: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    overflow: hidden;
+    opacity: 0;
+  }
+
+  /*
+   * TOC scrollbar
+   * Neutral metallic grey: visible without competing with the green accent.
+   */
+  .toc-list-wrap {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.28) rgba(255, 255, 255, 0.035);
+    scrollbar-gutter: stable;
   }
 
   @media (max-width: 900px) {
-    .collapsible {
-      padding: 16px;
-      border: 1px solid var(--paper-line);
-      background: var(--paper-surface);
-      box-shadow: var(--paper-shadow);
-      scroll-margin-top: 78px;
+    .toc-header {
+      min-height: 54px;
+      padding: 0 16px;
+      font-size: 0.94rem;
     }
 
-    .can-collapse .toc-expand {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      justify-content: center;
-      width: 100%;
-      margin-top: 10px;
-      padding: 8px 10px;
-      border: 1px solid var(--paper-line);
-      border-radius: 7px;
-      background: var(--paper-control);
-      color: var(--paper-ink-soft);
-      font-family: var(--font-ui-label);
-      font-size: 0.78rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition:
-        background-color 160ms ease,
-        color 160ms ease;
-    }
-
-    .can-collapse .toc-expand:hover {
-      background: var(--paper-control-hover);
-      color: var(--paper-accent);
-    }
-
-    .toc-expand i {
-      width: 7px;
-      height: 7px;
-      border-right: 1.5px solid currentColor;
-      border-bottom: 1.5px solid currentColor;
-      transform: translateY(-2px) rotate(45deg);
-      transition: transform 160ms ease;
-    }
-
-    .can-collapse[data-expanded='true'] .toc-expand i {
-      transform: translateY(2px) rotate(225deg);
+    .toc-list-wrap {
+      max-height: min(480px, 60vh);
+      margin-right: 8px;
+      margin-left: 16px;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .toc-expand i {
+    .toc-header,
+    .toc-header-arrow,
+    .toc-list-wrap {
       transition: none;
     }
   }
+</style>
+<style is:global>
+/* =========================================================
+   NEXUS TOC — VISIBLE FRAME + CUSTOM SCROLLBAR
+   ========================================================= */
+
+.blog-detail-page .toc-card {
+    border: 1px solid #1d2b38 !important;
+    border-radius: 0 !important;
+    background: #080d12 !important;
+}
+
+/* closed state */
+.blog-detail-page .toc-card[data-expanded="false"] {
+    background: #080d12 !important;
+}
+
+/* subtle divider appears only while open */
+.blog-detail-page .toc-card[data-expanded="true"] .toc-header {
+    border-bottom: 1px solid #17232e !important;
+}
+
+/* TOC header */
+.blog-detail-page .toc-header {
+    color: #71808c !important;
+}
+
+.blog-detail-page .toc-card[data-expanded="true"] .toc-header {
+    color: #f3f3f1 !important;
+}
+
+.blog-detail-page .toc-header:hover {
+    color: #ffffff !important;
+}
+
+/* scrolling area */
+.blog-detail-page .toc-list-wrap {
+    overflow-y: auto !important;
+
+    scrollbar-width: thin;
+    scrollbar-color:
+        #314453
+        #0b1218;
+}
+
+/* Edge / Chrome */
+.blog-detail-page .toc-list-wrap::-webkit-scrollbar {
+    width: 5px;
+}
+
+.blog-detail-page .toc-list-wrap::-webkit-scrollbar-track {
+    background: #0b1218;
+    border-radius: 0;
+}
+
+.blog-detail-page .toc-list-wrap::-webkit-scrollbar-thumb {
+    background: #314453;
+    border-radius: 0;
+}
+
+.blog-detail-page .toc-list-wrap::-webkit-scrollbar-thumb:hover {
+    background: #40596b;
+}
+
+/* closed = absolutely no scrollbar */
+.blog-detail-page .toc-card[data-expanded="false"] .toc-list-wrap {
+    overflow: hidden !important;
+}
+</style>
+<style is:global>
+/* =========================================================
+   NEXUS TOC — SIMPLE ACTIVE + DARK BLUE SCROLLBAR
+   ========================================================= */
+
+/* Active item: remove the box completely */
+.blog-detail-page .toc-card .toc-tree a[data-state='active'],
+.blog-detail-page .toc-card .toc-tree a[aria-current='true'] {
+    background: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    color: inherit !important;
+}
+
+/* All TOC links: no box on hover, text only */
+.blog-detail-page .toc-card .toc-tree a:hover,
+.blog-detail-page .toc-card .toc-tree a[data-state='active']:hover,
+.blog-detail-page .toc-card .toc-tree a[aria-current='true']:hover {
+    background: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    color: #ffffff !important;
+    transform: none !important;
+}
+
+/* Firefox scrollbar */
+.blog-detail-page .toc-card[data-expanded='true'] .toc-list-wrap {
+    scrollbar-color: #172633 #091018 !important;
+}
+
+/* Chromium / Edge scrollbar track */
+.blog-detail-page .toc-card[data-expanded='true']
+.toc-list-wrap::-webkit-scrollbar-track {
+    background: #091018 !important;
+}
+
+/* Chromium / Edge scrollbar */
+.blog-detail-page .toc-card[data-expanded='true']
+.toc-list-wrap::-webkit-scrollbar-thumb {
+    background: #172633 !important;
+    border-radius: 0 !important;
+}
+
+/* Scrollbar hover */
+.blog-detail-page .toc-card[data-expanded='true']
+.toc-list-wrap::-webkit-scrollbar-thumb:hover {
+    background: #284052 !important;
+}
+</style>
+<style is:global>
+/* NEXUS TOC — ACTIVE TEXT COLOR FIX */
+
+/* Active heading: same color as normal items */
+.blog-detail-page .toc-card .toc-tree a[data-state='active'],
+.blog-detail-page .toc-card .toc-tree a[aria-current='true'] {
+    color: var(--paper-ink-soft) !important;
+}
+
+/* White ONLY while hovering */
+.blog-detail-page .toc-card .toc-tree a[data-state='active']:hover,
+.blog-detail-page .toc-card .toc-tree a[aria-current='true']:hover {
+    color: #ffffff !important;
+}
+</style>
+<style is:global>
+/* =========================================================
+   NEXUS TOC TYPOGRAPHY
+   ========================================================= */
+
+/* TABLE OF CONTENTS */
+.blog-detail-page .toc-header {
+  font-family:
+    "Host Grotesk Variable",
+    "Noto Sans JP",
+    "Helvetica Neue",
+    Arial,
+    sans-serif !important;
+
+  font-weight: 650 !important;
+  letter-spacing: 0.09em !important;
+}
+
+/* TOC ITEMS — English + Japanese */
+.blog-detail-page .toc-card .toc-tree a {
+  font-family:
+    "Host Grotesk Variable",
+    "Noto Sans JP",
+    "Helvetica Neue",
+    Arial,
+    sans-serif !important;
+
+  font-weight: 450 !important;
+  letter-spacing: 0 !important;
+}
 </style>

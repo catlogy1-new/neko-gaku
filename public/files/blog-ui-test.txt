@@ -1,0 +1,5 @@
+NEXUS BLOG UI TEST
+
+This is a temporary file used to test file attachments inside Blog articles.
+
+2026-09-15
