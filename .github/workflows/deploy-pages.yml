@@ -55,8 +55,8 @@ jobs:
 
       - name: Build site
         env:
-          TINA_PUBLIC_CLIENT_ID: ${{ secrets.TINA_PUBLIC_CLIENT_ID }}
-          TINA_TOKEN: ${{ secrets.TINA_TOKEN }}
+        　NEXT_PUBLIC_TINA_CLIENT_ID: ${{ secrets.TINA_PUBLIC_CLIENT_ID }}
+        　TINA_TOKEN: ${{ secrets.TINA_TOKEN }}
           NAVFOLIO_CONTENT_SOURCE: docs
           SITE_URL: https://astro.navfolio.site
           SITE_BASE: /
