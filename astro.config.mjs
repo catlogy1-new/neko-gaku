@@ -1,4 +1,4 @@
-// @ts-check
+﻿// @ts-check
 
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -67,6 +67,7 @@ const resolvedBase =
 
 // https://astro.build/config
 export default defineConfig({
+  adapter: node({ mode: 'standalone' }),
   site: resolvedSite,
   base: resolvedBase,
   markdown: {
@@ -90,4 +91,5 @@ export default defineConfig({
     },
   },
 });
+
 
