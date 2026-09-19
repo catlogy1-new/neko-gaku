@@ -70,6 +70,14 @@ jobs:
           NAVFOLIO_GISCUS_CATEGORY_ID: ${{ vars.NAVFOLIO_GISCUS_CATEGORY_ID }}
         run: bun run docs:build
 
+      - name: Verify TinaCMS admin
+        run: |
+          echo "===== DIST CLIENT ====="
+          find dist/client -maxdepth 3 -type f | sort
+          echo "===== ADMIN CHECK ====="
+          test -f dist/client/admin/index.html
+          echo "TinaCMS admin/index.html exists"
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5
         with:
@@ -86,4 +94,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
-
