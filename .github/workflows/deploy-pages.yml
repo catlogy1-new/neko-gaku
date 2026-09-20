@@ -87,6 +87,14 @@ jobs:
           echo "===== ADMIN ASSET URLS ====="
           grep -E "localhost:4001|src=|assets/" dist/client/admin/index.html || true
 
+      - name: Locate TinaCMS production assets
+        run: |
+          echo "===== ALL TINA ADMIN FILES ====="
+          find . -type f \( -name "index-BfEaUiqa.js" -o -name "index-ckJGPzv8.css" \) -print
+          echo "===== PUBLIC ADMIN ====="
+          find public/admin -maxdepth 3 -type f -print 2>/dev/null || true
+          echo "===== DIST ADMIN ====="
+          find dist/client/admin -maxdepth 3 -type f -print 2>/dev/null || true
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5
         with:
