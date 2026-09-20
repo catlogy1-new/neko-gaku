@@ -70,6 +70,13 @@ jobs:
           NAVFOLIO_GISCUS_CATEGORY_ID: ${{ vars.NAVFOLIO_GISCUS_CATEGORY_ID }}
         run: bun run docs:build
 
+      - name: Copy TinaCMS production assets
+        run: |
+          mkdir -p dist/client/admin
+          cp -R public/admin/. dist/client/admin/
+          test -f dist/client/admin/index.html
+          test -d dist/client/admin/assets
+          echo "TinaCMS admin and assets copied successfully"
       - name: Verify TinaCMS admin
         run: |
           echo "===== DIST CLIENT ====="
