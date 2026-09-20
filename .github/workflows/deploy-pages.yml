@@ -1,4 +1,4 @@
-﻿name: Deploy Astro to GitHub Pages
+name: Deploy Astro to GitHub Pages
 
 on:
   push:
@@ -77,6 +77,8 @@ jobs:
           echo "===== ADMIN CHECK ====="
           test -f dist/client/admin/index.html
           echo "TinaCMS admin/index.html exists"
+          echo "===== ADMIN ASSET URLS ====="
+          grep -E "localhost:4001|src=|assets/" dist/client/admin/index.html || true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5
