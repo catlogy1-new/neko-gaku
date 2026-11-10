@@ -80,6 +80,36 @@ export default defineConfig({
             },
 
             {
+              type: 'object',
+              name: 'galleryImages',
+              label: 'Gallery Images',
+              list: true,
+              ui: {
+                itemProps: (item) => ({
+                  label: item?.title || 'Gallery Image',
+                }),
+              },
+              fields: [
+                {
+                  type: 'image',
+                  name: 'src',
+                  label: 'Image',
+                  required: true,
+                },
+                {
+                  type: 'string',
+                  name: 'title',
+                  label: 'Title',
+                },
+                {
+                  type: 'string',
+                  name: 'alt',
+                  label: 'Alt Text',
+                },
+              ],
+            },
+
+            {
               type: 'boolean',
               name: 'showHeroImage',
               label: 'Show Hero Image',
@@ -314,18 +344,18 @@ export default defineConfig({
           {
             type: "string",
             name: "japaneseTitle",
-            label: "日本語タイトル / Japanese Title",
+            label: "鬮ｫ・ｴ鬲・ｼ夲ｽｽ・ｽ繝ｻ・･鬮ｫ・ｴ陝ｷ・｢繝ｻ・ｽ繝ｻ・ｬ鬯ｮ・ｫ繝ｻ・ｱ髫ｶ謚ｵ・ｽ・ｭ驍ｵ・ｺ繝ｻ・｡鬩幢ｽ｢繝ｻ・ｧ郢晢ｽｻ繝ｻ・､鬩幢ｽ｢隴主・讓溘・蠑ｱ繝ｻ/ Japanese Title",
           },
           {
             type: "string",
             name: "japaneseDescription",
-            label: "日本語説明文 / Japanese Description",
+            label: "鬮ｫ・ｴ鬲・ｼ夲ｽｽ・ｽ繝ｻ・･鬮ｫ・ｴ陝ｷ・｢繝ｻ・ｽ繝ｻ・ｬ鬯ｮ・ｫ繝ｻ・ｱ髫ｶ螢ｹ繝ｻ繝ｻ・ｽ繝ｻ・ｪ郢晢ｽｻ繝ｻ・ｬ鬮ｫ・ｴ闕ｳ讒ｫ蠕宣垓・ｫ郢晢ｽｻ/ Japanese Description",
             ui: { component: "textarea" },
           },
           {
             type: "string",
             name: "japaneseBody",
-            label: "日本語本文 / Japanese Body (改行対応)",
+            label: "鬮ｫ・ｴ鬲・ｼ夲ｽｽ・ｽ繝ｻ・･鬮ｫ・ｴ陝ｷ・｢繝ｻ・ｽ繝ｻ・ｬ鬯ｮ・ｫ繝ｻ・ｱ髫ｶ鬥ｴ・ｰ莉｣笳・ｫｫ・ｴ遶丞｣ｹ繝ｻ/ Japanese Body (鬮ｫ・ｰ繝ｻ・ｾ郢晢ｽｻ繝ｻ・ｹ鬯ｮ・ｯ繝ｻ・ｦ髫ｰ逍ｲ・ｻ繧托ｽｽ・ｽ繝ｻ・ｯ郢晢ｽｻ繝ｻ・ｾ鬮ｯ貊ゑｽｽ・｢驛｢譎｢・ｽ・ｻ",
             ui: { component: "textarea" },
           },
           {

@@ -17,6 +17,7 @@ import {
 } from 'lucide-astro';
 
 import FormattedDate from '../../components/FormattedDate.astro';
+import portfolioBlocksData from '../../data/portfolio-blocks.json';
 import Footer from '../../components/Footer.astro';
 import BlogArticle from '../../layouts/BlogArticle.astro';
 import { getSiteConfig } from '../../data/site';
@@ -95,6 +96,263 @@ function withBase(href: string) {
 
   return `${basePath}${href.startsWith('/') ? href : `/${href}`}`;
 }
+// PORTFOLIO VISUAL AUTO START
+type PortfolioVisual = {
+  src: string;
+  full: string;
+  title: string;
+  type: string;
+  year: string;
+  alt: string;
+  className: string;
+  sequence: string;
+  displayIndex: string;
+};
+
+const portfolioVisualLayouts = [
+  'visual-card-main',
+  'visual-card-tall',
+  'visual-card-small',
+  'visual-card-fragment',
+  'visual-card-wide',
+  'visual-card-portrait',
+  'visual-card-extra-small',
+  'visual-card-extra-wide',
+];
+
+const fallbackPortfolioVisuals = [
+  ['https://picsum.photos/seed/remains-001/1500/1000?grayscale', 'SAMPLE IMAGE / 001', 'PHOTOGRAPHY', '2026'],
+  ['https://picsum.photos/seed/remains-002/1500/1000?grayscale', 'SAMPLE IMAGE / 002', 'PHOTOGRAPHY', '2026'],
+  ['https://picsum.photos/seed/remains-003/1500/1000?grayscale', 'SAMPLE IMAGE / 003', 'PHOTOGRAPHY', '2026'],
+  ['https://picsum.photos/seed/remains-004/1500/1000?grayscale', 'SAMPLE IMAGE / 004', 'PHOTOGRAPHY', '2026'],
+  ['https://picsum.photos/seed/remains-005/1500/1000?grayscale', 'SAMPLE IMAGE / 005', 'PHOTOGRAPHY', '2026'],
+  ['https://picsum.photos/seed/remains-006/1500/1000?grayscale', 'SAMPLE IMAGE / 006', 'PHOTOGRAPHY', '2026'],
+  ['https://picsum.photos/seed/remains-007/1500/1000?grayscale', 'SAMPLE IMAGE / 007', 'PHOTOGRAPHY', '2026'],
+  ['https://picsum.photos/seed/remains-008/1500/1000?grayscale', 'SAMPLE IMAGE / 008', 'PHOTOGRAPHY', '2026'],
+  ['https://picsum.photos/seed/remains-009/1500/1000?grayscale', 'SAMPLE IMAGE / 009', 'PHOTOGRAPHY', '2026'],
+  ['https://picsum.photos/seed/remains-010/1500/1000?grayscale', 'SAMPLE IMAGE / 010', 'PHOTOGRAPHY', '2026'],
+  ['https://picsum.photos/seed/remains-011/1500/1000?grayscale', 'SAMPLE IMAGE / 011', 'PHOTOGRAPHY', '2026'],
+  ['https://picsum.photos/seed/remains-012/1500/1000?grayscale', 'SAMPLE IMAGE / 012', 'PHOTOGRAPHY', '2026'],
+  ['https://picsum.photos/seed/remains-013/1500/1000?grayscale', 'SAMPLE IMAGE / 013', 'PHOTOGRAPHY', '2026'],
+  ['https://picsum.photos/seed/remains-014/1500/1000?grayscale', 'SAMPLE IMAGE / 014', 'PHOTOGRAPHY', '2026'],
+  ['https://picsum.photos/seed/remains-015/1500/1000?grayscale', 'SAMPLE IMAGE / 015', 'PHOTOGRAPHY', '2026'],
+  ['https://picsum.photos/seed/remains-016/1500/1000?grayscale', 'SAMPLE IMAGE / 016', 'PHOTOGRAPHY', '2026'],
+];
+
+function asRecord(value: unknown) {
+  return value && typeof value === 'object' && !Array.isArray(value)
+    ? value as Record<string, unknown>
+    : {};
+}
+
+function readImageCandidate(value: unknown): string | undefined {
+  if (typeof value === 'string' && value.trim()) {
+    return value.trim();
+  }
+
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      const found = readImageCandidate(item);
+
+      if (found) {
+        return found;
+      }
+    }
+  }
+
+  const record = asRecord(value);
+  const src = record.src ?? record.url ?? record.href ?? record.image;
+
+  return typeof src === 'string' && src.trim()
+    ? src.trim()
+    : undefined;
+}
+
+function resolvePortfolioImage(src: string) {
+  if (/^(https?:)?\/\//i.test(src) || /^(data|blob):/i.test(src)) {
+    return src;
+  }
+
+  if (src.startsWith('/')) {
+    return (basePath || '') + src;
+  }
+
+  return src;
+}
+
+function makePortfolioVisual(
+  src: string,
+  title: string,
+  type: string,
+  year: string,
+  alt: string,
+  index: number,
+): PortfolioVisual {
+  const full = resolvePortfolioImage(src);
+
+  return {
+    src: full,
+    full,
+    title,
+    type,
+    year,
+    alt,
+    className: portfolioVisualLayouts[index % portfolioVisualLayouts.length],
+    sequence: String(index + 1).padStart(3, '0'),
+    displayIndex: String(index + 1).padStart(2, '0'),
+  };
+}
+
+function getProjectVisual(project: (typeof projects)[number], index: number) {
+  const data = project.data as Record<string, unknown>;
+
+  const image = readImageCandidate(
+    data.visualImage ??
+      data.portfolioImage ??
+      data.coverImage ??
+      data.cover ??
+      data.image ??
+      data.thumbnail ??
+      data.heroImage ??
+      data.ogImage,
+  );
+
+  if (!image) {
+    return undefined;
+  }
+
+  const title = String(data.visualTitle ?? data.title ?? project.id).trim();
+
+  const type = String(
+    data.visualType ?? data.type ?? data.category ?? 'PHOTOGRAPHY',
+  ).trim().toUpperCase();
+
+  const yearSource = data.visualYear ?? data.year ?? data.date;
+
+  const year =
+    yearSource instanceof Date
+      ? String(yearSource.getFullYear())
+      : String(yearSource ?? '').slice(0, 4);
+
+  return makePortfolioVisual(
+    image,
+    title,
+    type,
+    /^\d{4}$/.test(year) ? year : '----',
+    String(data.imageAlt ?? data.alt ?? title),
+    index,
+  );
+}
+
+const postedPortfolioVisuals: PortfolioVisual[] = [];
+
+for (const project of projects) {
+  const data = project.data as Record<string, unknown>;
+  const gallery = data.galleryImages;
+
+  if (Array.isArray(gallery)) {
+    for (const item of gallery) {
+      if (!item || typeof item !== 'object') continue;
+
+      const photo = item as Record<string, unknown>;
+      const src = readImageCandidate(photo.src);
+      if (!src) continue;
+
+      const title = String(photo.title || data.title || project.id);
+      const alt = String(photo.alt || title);
+      const date = data.date;
+      const year =
+        date instanceof Date
+          ? String(date.getFullYear())
+          : String(date ?? '2026').slice(0, 4);
+
+      postedPortfolioVisuals.push(
+        makePortfolioVisual(
+          src,
+          title,
+          'PHOTOGRAPHY',
+          year,
+          alt,
+          postedPortfolioVisuals.length,
+        ),
+      );
+    }
+  }
+
+  if (!Array.isArray(gallery) || gallery.length === 0) {
+    const visual = getProjectVisual(project, postedPortfolioVisuals.length);
+
+    if (visual) {
+      postedPortfolioVisuals.push(visual);
+    }
+  }
+}
+
+const samplePortfolioVisuals = fallbackPortfolioVisuals.map(
+  ([src, title, type, year], index) =>
+    makePortfolioVisual(
+      src,
+      title,
+      type,
+      year,
+      'Temporary portfolio sample',
+      postedPortfolioVisuals.length + index,
+    ),
+);
+
+const allPortfolioVisuals = [
+  ...postedPortfolioVisuals,
+  ...samplePortfolioVisuals,
+];
+
+const portfolioVisuals = allPortfolioVisuals.slice(0, 16);
+// PORTFOLIO BLOCKS V1 START
+// The JSON order determines the order of galleries and independent texts.
+type PortfolioGalleryBlock = {
+  kind: 'gallery';
+  start?: number;
+  count?: number;
+  label?: string;
+  images?: Array<{
+    src: string;
+    title?: string;
+    type?: string;
+    year?: string;
+    alt?: string;
+  }>;
+};
+
+type PortfolioTextBlock = {
+  kind: 'text';
+  index?: string;
+  year?: string;
+  kicker?: string;
+  title: string;
+  paragraphs: string[];
+  status?: string;
+};
+
+type PortfolioBlock = PortfolioGalleryBlock | PortfolioTextBlock;
+const portfolioBlocks = portfolioBlocksData as PortfolioBlock[];
+
+function getPortfolioBlockVisuals(block: PortfolioGalleryBlock): PortfolioVisual[] {
+  const start = Math.max(0, Math.trunc(block.start ?? 0));
+  const count = Math.max(0, Math.trunc(block.count ?? 0));
+  const existing = allPortfolioVisuals.slice(start, start + count);
+  const added = (block.images ?? []).map((image, index) =>
+    makePortfolioVisual(
+      image.src,
+      image.title ?? `IMAGE / ${String(start + count + index + 1).padStart(3, '0')}`,
+      image.type ?? 'PHOTOGRAPHY',
+      image.year ?? '----',
+      image.alt ?? image.title ?? 'Portfolio photograph',
+      start + count + index,
+    ),
+  );
+  return [...existing, ...added];
+}
+// PORTFOLIO BLOCKS V1 END
+// PORTFOLIO VISUAL AUTO END
 ---
 
 <BlogArticle
@@ -129,585 +387,77 @@ function withBase(href: string) {
       </div>
 
       <span class="portfolio-index">
-        001 — 004
+        001 - {String(portfolioVisuals.length).padStart(3, '0')}
       </span>
 
     </header>
-
-
-    <div class="portfolio-grid">
-
-      <article class="visual-card visual-card-main">
-
-        <a class="visual-link visual-lightbox-trigger" href="https://picsum.photos/id/1011/1600/1050?grayscale" data-full="https://picsum.photos/id/1011/1600/1050?grayscale" data-title="KAMAGASAKI / UNTITLED" aria-label="Open Sample work 001">
-
-          <figure class="visual-image">
-            <img
-              src="https://picsum.photos/id/1011/1600/1050?grayscale"
-              alt="Temporary portfolio sample"
-              loading="eager"
-            />
-
-            <span class="visual-overlay">
-              VIEW / 001
-            </span>
-          </figure>
-
-          <footer class="visual-meta">
-            <div>
-              <span class="visual-type">
-                01 / PHOTOGRAPHY
-              </span>
-
-              <h3>KAMAGASAKI / UNTITLED</h3>
-            </div>
-
-            <span class="visual-year">
-              2026
-            </span>
-          </footer>
-
-        </a>
-
-      </article>
-
-
-      <article class="visual-card visual-card-tall">
-
-        <a class="visual-link visual-lightbox-trigger" href="https://picsum.photos/id/1015/900/1500?grayscale" data-full="https://picsum.photos/id/1015/900/1500?grayscale" data-title="TRACE / 02" aria-label="Open Sample work 002">
-
-          <figure class="visual-image">
-            <img
-              src="https://picsum.photos/id/1015/900/1500?grayscale"
-              alt="Temporary portfolio sample"
-              loading="lazy"
-            />
-
-            <span class="visual-overlay">
-              VIEW / 002
-            </span>
-          </figure>
-
-          <footer class="visual-meta">
-            <div>
-              <span class="visual-type">
-                02 / DOCUMENT
-              </span>
-
-              <h3>TRACE / 02</h3>
-            </div>
-
-            <span class="visual-year">
-              2026
-            </span>
-          </footer>
-
-        </a>
-
-      </article>
-
-
-      <article class="visual-card visual-card-small">
-
-        <a class="visual-link visual-lightbox-trigger" href="https://picsum.photos/id/1021/1000/850?grayscale" data-full="https://picsum.photos/id/1021/1000/850?grayscale" data-title="RESIDUAL LIGHT" aria-label="Open Sample work 003">
-
-          <figure class="visual-image">
-            <img
-              src="https://picsum.photos/id/1021/1000/850?grayscale"
-              alt="Temporary portfolio sample"
-              loading="lazy"
-            />
-
-            <span class="visual-overlay">
-              VIEW / 003
-            </span>
-          </figure>
-
-          <footer class="visual-meta">
-            <div>
-              <span class="visual-type">
-                03 / PHOTOGRAPHY
-              </span>
-
-              <h3>RESIDUAL LIGHT</h3>
-            </div>
-
-            <span class="visual-year">
-              2025
-            </span>
-          </footer>
-
-        </a>
-
-      </article>
-
-
-      <article class="visual-card visual-card-fragment">
-
-        <a class="visual-link visual-lightbox-trigger" href="https://picsum.photos/id/1031/900/900?grayscale" data-full="https://picsum.photos/id/1031/900/900?grayscale" data-title="NO SIGNAL" aria-label="Open Sample work 004">
-
-          <figure class="visual-image">
-            <img
-              src="https://picsum.photos/id/1031/900/900?grayscale"
-              alt="Temporary portfolio sample"
-              loading="lazy"
-            />
-
-            <span class="visual-overlay">
-              VIEW / 004
-            </span>
-          </figure>
-
-          <footer class="visual-meta">
-            <div>
-              <span class="visual-type">
-                04 / FRAGMENT
-              </span>
-
-              <h3>NO SIGNAL</h3>
-            </div>
-
-            <span class="visual-year">
-              2025
-            </span>
-          </footer>
-
-        </a>
-
-      </article>
-
-    </div>
-
-
-    <article class="text-remain">
-
-      <div class="text-remain-index">
-        <span>05 / TEXT</span>
-        <span>2026</span>
-      </div>
-
-      <div class="text-remain-body">
-
-        <p class="text-remain-kicker">
-          RESIDUAL NOTE / 005
-        </p>
-
-        <h3>
-          THE IMAGE AFTER REALITY
-        </h3>
-
-        <p class="text-remain-copy">
-          A photograph does not preserve reality.
-          It preserves only what remains after perception,
-          language and signs have already passed through it.
-        </p>
-
-        <p class="text-remain-copy">
-          What appears before us may once have been called
-          a flower, a street, a body, or a light.
-          By the time it becomes an image, however,
-          the certainty of that name has already begun to decay.
-        </p>
-
-        <span class="text-remain-status">
-          TEXT / FRAGMENT / UNRESOLVED
-        </span>
-
-      </div>
-
-    </article>
-  </section>
-  <!-- TEXT PORTFOLIO SAMPLE START -->
-
-  <section class="text-work">
-
-    <div class="text-work-rail">
-
-      <span class="text-work-number">
-        05 / TEXT
-      </span>
-
-      <span class="text-work-year">
-        2026
-      </span>
-
-    </div>
-
-
-    <div class="text-work-content">
-
-      <p class="text-work-kicker">
-        RESIDUAL NOTE / PERCEPTION
-      </p>
-
-      <h2>
-        THE FLOWER THAT REFUSES ITS NAME
-      </h2>
-
-      <div class="text-work-excerpt">
-
-        <p>
-          What appears before us as a flower may indeed be a flower.
-          But at precisely the same intensity with which we predict
-          its identity, something within it continues to insist that
-          it is not a flower.
-        </p>
-
-        <p>
-          Reality may be nothing more than the temporary stability
-          produced by that contradiction — a momentary residue left
-          behind by perception, language and signs.
-        </p>
-
-      </div>
-
-
-      <footer class="text-work-footer">
-
-        <span>
-          TEXT / FRAGMENT
-        </span>
-
-        <a href="/blog/transmission-test-05/">
-          READ TEXT
-          <span aria-hidden="true">→</span>
-        </a>
-
-      </footer>
-
-    </div>
-
+    <!-- PORTFOLIO BLOCKS V1: editable order in src/data/portfolio-blocks.json -->
+    {portfolioBlocks.map((block, blockIndex) =>
+      block.kind === 'gallery' ? (
+        <div
+          class="portfolio-gallery-block"
+          aria-label={block.label ?? `Photo group ${blockIndex + 1}`}
+        >
+          {block.label && (
+            <p class="portfolio-gallery-label">{block.label}</p>
+          )}
+          <div class="portfolio-grid">
+            {getPortfolioBlockVisuals(block).map((visual, index) => (
+              <article class:list={['visual-card', visual.className]}>
+                <a
+                  class="visual-link visual-lightbox-trigger"
+                  href={visual.full}
+                  data-full={visual.full}
+                  data-title={visual.title}
+                  aria-label={'Open ' + visual.title}
+                >
+                  <figure class="visual-image">
+                    <img
+                      src={visual.src}
+                      alt={visual.alt}
+                      loading={index === 0 && blockIndex === 0 ? 'eager' : 'lazy'}
+                    />
+                    <span class="visual-overlay">VIEW / {visual.sequence}</span>
+                  </figure>
+                  <footer class="visual-meta">
+                    <div>
+                      <span class="visual-type">
+                        {visual.displayIndex} / {visual.type}
+                      </span>
+                      <h3>{visual.title}</h3>
+                    </div>
+                    <span class="visual-year">{visual.year}</span>
+                  </footer>
+                </a>
+              </article>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <article class="text-remain portfolio-text-block">
+          <div class="text-remain-index">
+            <span>{block.index ?? 'TEXT'}</span>
+            <span>{block.year ?? ''}</span>
+          </div>
+          <div class="text-remain-body">
+            {block.kicker && (
+              <p class="text-remain-kicker">{block.kicker}</p>
+            )}
+            <h3>{block.title}</h3>
+            {block.paragraphs.map((paragraph) => (
+              <p class="text-remain-copy">{paragraph}</p>
+            ))}
+            {block.status && (
+              <span class="text-remain-status">{block.status}</span>
+            )}
+          </div>
+        </article>
+      ),
+    )}
   </section>
 
-  <!-- TEXT PORTFOLIO SAMPLE END -->
 
 
-
-  <!-- TEXT PORTFOLIO SAMPLE START -->
-
-  <section class="text-work">
-
-    <div class="text-work-rail">
-
-      <span class="text-work-number">
-        05 / TEXT
-      </span>
-
-      <span class="text-work-year">
-        2026
-      </span>
-
-    </div>
-
-
-    <div class="text-work-content">
-
-      <p class="text-work-kicker">
-        RESIDUAL NOTE / PERCEPTION
-      </p>
-
-      <h2>
-        THE FLOWER THAT REFUSES ITS NAME
-      </h2>
-
-      <div class="text-work-excerpt">
-
-        <p>
-          What appears before us as a flower may indeed be a flower.
-          But at precisely the same intensity with which we predict
-          its identity, something within it continues to insist that
-          it is not a flower.
-        </p>
-
-        <p>
-          Reality may be nothing more than the temporary stability
-          produced by that contradiction — a momentary residue left
-          behind by perception, language and signs.
-        </p>
-
-      </div>
-
-
-      <footer class="text-work-footer">
-
-        <span>
-          TEXT / FRAGMENT
-        </span>
-
-        <a href="/blog/transmission-test-05/">
-          READ TEXT
-          <span aria-hidden="true">→</span>
-        </a>
-
-      </footer>
-
-    </div>
-
-  </section>
-
-  <!-- TEXT PORTFOLIO SAMPLE END -->
-
-
-
-  <!-- TEXT PORTFOLIO SAMPLE START -->
-
-  <section class="text-work">
-
-    <div class="text-work-rail">
-
-      <span class="text-work-number">
-        05 / TEXT
-      </span>
-
-      <span class="text-work-year">
-        2026
-      </span>
-
-    </div>
-
-
-    <div class="text-work-content">
-
-      <p class="text-work-kicker">
-        RESIDUAL NOTE / PERCEPTION
-      </p>
-
-      <h2>
-        THE FLOWER THAT REFUSES ITS NAME
-      </h2>
-
-      <div class="text-work-excerpt">
-
-        <p>
-          What appears before us as a flower may indeed be a flower.
-          But at precisely the same intensity with which we predict
-          its identity, something within it continues to insist that
-          it is not a flower.
-        </p>
-
-        <p>
-          Reality may be nothing more than the temporary stability
-          produced by that contradiction — a momentary residue left
-          behind by perception, language and signs.
-        </p>
-
-      </div>
-
-
-      <footer class="text-work-footer">
-
-        <span>
-          TEXT / FRAGMENT
-        </span>
-
-        <a href="/blog/transmission-test-05/">
-          READ TEXT
-          <span aria-hidden="true">→</span>
-        </a>
-
-      </footer>
-
-    </div>
-
-  </section>
-
-  <!-- TEXT PORTFOLIO SAMPLE END -->
-
-
-
-  <!-- TEXT PORTFOLIO SAMPLE START -->
-
-  <section class="text-work">
-
-    <div class="text-work-rail">
-
-      <span class="text-work-number">
-        05 / TEXT
-      </span>
-
-      <span class="text-work-year">
-        2026
-      </span>
-
-    </div>
-
-
-    <div class="text-work-content">
-
-      <p class="text-work-kicker">
-        RESIDUAL NOTE / PERCEPTION
-      </p>
-
-      <h2>
-        THE FLOWER THAT REFUSES ITS NAME
-      </h2>
-
-      <div class="text-work-excerpt">
-
-        <p>
-          What appears before us as a flower may indeed be a flower.
-          But at precisely the same intensity with which we predict
-          its identity, something within it continues to insist that
-          it is not a flower.
-        </p>
-
-        <p>
-          Reality may be nothing more than the temporary stability
-          produced by that contradiction — a momentary residue left
-          behind by perception, language and signs.
-        </p>
-
-      </div>
-
-
-      <footer class="text-work-footer">
-
-        <span>
-          TEXT / FRAGMENT
-        </span>
-
-        <a href="/blog/transmission-test-05/">
-          READ TEXT
-          <span aria-hidden="true">→</span>
-        </a>
-
-      </footer>
-
-    </div>
-
-  </section>
-
-  <!-- TEXT PORTFOLIO SAMPLE END -->
-
- 
-  <!-- TEXT PORTFOLIO SAMPLE START -->
-
-  <section class="text-work">
-
-    <div class="text-work-rail">
-
-      <span class="text-work-number">
-        05 / TEXT
-      </span>
-
-      <span class="text-work-year">
-        2026
-      </span>
-
-    </div>
-
-
-    <div class="text-work-content">
-
-      <p class="text-work-kicker">
-        RESIDUAL NOTE / PERCEPTION
-      </p>
-
-      <h2>
-        THE FLOWER THAT REFUSES ITS NAME
-      </h2>
-
-      <div class="text-work-excerpt">
-
-        <p>
-          What appears before us as a flower may indeed be a flower.
-          But at precisely the same intensity with which we predict
-          its identity, something within it continues to insist that
-          it is not a flower.
-        </p>
-
-        <p>
-          Reality may be nothing more than the temporary stability
-          produced by that contradiction — a momentary residue left
-          behind by perception, language and signs.
-        </p>
-
-      </div>
-
-
-      <footer class="text-work-footer">
-
-        <span>
-          TEXT / FRAGMENT
-        </span>
-
-        <a href="/blog/transmission-test-05/">
-          READ TEXT
-          <span aria-hidden="true">→</span>
-        </a>
-
-      </footer>
-
-    </div>
-
-  </section>
-
-  <!-- TEXT PORTFOLIO SAMPLE END -->
-
- 
-  <!-- TEXT PORTFOLIO SAMPLE START -->
-
-  <section class="text-work">
-
-    <div class="text-work-rail">
-
-      <span class="text-work-number">
-        05 / TEXT
-      </span>
-
-      <span class="text-work-year">
-        2026
-      </span>
-
-    </div>
-
-
-    <div class="text-work-content">
-
-      <p class="text-work-kicker">
-        RESIDUAL NOTE / PERCEPTION
-      </p>
-
-      <h2>
-        THE FLOWER THAT REFUSES ITS NAME
-      </h2>
-
-      <div class="text-work-excerpt">
-
-        <p>
-          What appears before us as a flower may indeed be a flower.
-          But at precisely the same intensity with which we predict
-          its identity, something within it continues to insist that
-          it is not a flower.
-        </p>
-
-        <p>
-          Reality may be nothing more than the temporary stability
-          produced by that contradiction — a momentary residue left
-          behind by perception, language and signs.
-        </p>
-
-      </div>
-
-
-      <footer class="text-work-footer">
-
-        <span>
-          TEXT / FRAGMENT
-        </span>
-
-        <a href="/blog/transmission-test-05/">
-          READ TEXT
-          <span aria-hidden="true">→</span>
-        </a>
-
-      </footer>
-
-    </div>
-
-  </section>
-
-  <!-- TEXT PORTFOLIO SAMPLE END -->
 
 <!-- =====================================================
        PROJECT INDEX
@@ -936,7 +686,7 @@ function withBase(href: string) {
           </div>
 
           <span class="empty-status">
-            ● STANDBY
+            鬮ｫ・ｨ繝ｻ・ｳ驛｢譎｢・ｽ・ｻSTANDBY
           </span>
 
         </div>
@@ -965,9 +715,7 @@ function withBase(href: string) {
     class="remains-lightbox-close"
     type="button"
     aria-label="Close image"
-  >
-    ×
-  </button>
+  >&#10005;</button>
 
   <div class="remains-lightbox-stage">
 
@@ -1178,6 +926,112 @@ function withBase(href: string) {
   })();
 </script>
 
+
+
+
+
+<!-- PORTFOLIO TOP BLOG UI ISOLATION START -->
+
+<style is:global>
+
+  /* =====================================================
+     PORTFOLIO TOP ONLY
+
+     Blog article UI must never appear here.
+     ===================================================== */
+
+
+  body.blog-detail-page:has(.portfolio-section)
+  .nexus-article-actions,
+
+  body.blog-detail-page:has(.portfolio-section)
+  .nexus-author-footer,
+
+  body.blog-detail-page:has(.portfolio-section)
+  .nexus-prevnext-divider,
+
+  body.blog-detail-page:has(.portfolio-section)
+  .nexus-prevnext-nav,
+
+  body.blog-detail-page:has(.portfolio-section)
+  .series-neighbor-nav,
+
+  body.blog-detail-page:has(.portfolio-section)
+  .related-posts,
+
+  body.blog-detail-page:has(.portfolio-section)
+  .article-after-related {
+
+    display: none !important;
+
+    width: 0 !important;
+    height: 0 !important;
+    min-height: 0 !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    border: 0 !important;
+
+    overflow: hidden !important;
+  }
+
+
+  /* =====================================================
+     Remove BlogArticle's bottom space on Portfolio TOP
+     ===================================================== */
+
+  body.blog-detail-page:has(.portfolio-section)
+  .article-content {
+
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+
+  body.blog-detail-page:has(.portfolio-section)
+  .article-card {
+
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+
+  body.blog-detail-page:has(.portfolio-section)
+  .article-column {
+
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+
+    min-height: 0 !important;
+  }
+
+
+  body.blog-detail-page:has(.portfolio-section)
+  .blog-layout {
+
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+
+    min-height: 0 !important;
+  }
+
+
+  /* =====================================================
+     Existing site Footer
+     Bring it directly up after Portfolio content
+     ===================================================== */
+
+  body.blog-detail-page:has(.portfolio-section)
+  .site-footer {
+
+    margin-top: 0 !important;
+  }
+
+</style>
+
+<!-- PORTFOLIO TOP BLOG UI ISOLATION END -->
+
 <Footer />
 
 
@@ -1199,7 +1053,7 @@ function withBase(href: string) {
 
 
 /* =========================================================
-   REMAINS — PAGE HEADER
+   REMAINS 鬩包ｽｯ繝ｻ・ｶ驛｢譎｢・ｽ・ｻPAGE HEADER
    Match FRAGMENTS typography
    ========================================================= */
 
@@ -1436,6 +1290,8 @@ body:has(.portfolio-section) .article-header-archive .archive-note {
   gap: 14px;
 
   align-items: stretch;
+
+  grid-auto-flow: dense;
 }
 
 
@@ -1446,7 +1302,7 @@ body:has(.portfolio-section) .article-header-archive .archive-note {
 
 .visual-card-main {
   grid-column: 1 / 9;
-  grid-row: span 8;
+  grid-row: span 9;
 }
 
 
@@ -1464,6 +1320,28 @@ body:has(.portfolio-section) .article-header-archive .archive-note {
 
 .visual-card-fragment {
   grid-column: 6 / 9;
+  grid-row: span 6;
+}
+.visual-card-wide {
+  grid-column: 1 / 8;
+  grid-row: span 7;
+}
+
+
+.visual-card-portrait {
+  grid-column: 8 / 13;
+  grid-row: span 10;
+}
+
+
+.visual-card-extra-small {
+  grid-column: 1 / 5;
+  grid-row: span 6;
+}
+
+
+.visual-card-extra-wide {
+  grid-column: 5 / 13;
   grid-row: span 6;
 }
 
@@ -1492,7 +1370,16 @@ body:has(.portfolio-section) .article-header-archive .archive-note {
 
   overflow: hidden;
 
+  box-sizing: border-box;
+
+  border:
+    1px solid rgba(255,255,255,.12);
+
   background: #080908;
+
+  transition:
+    border-color 260ms ease,
+    box-shadow 260ms ease;
 }
 
 
@@ -1503,13 +1390,9 @@ body:has(.portfolio-section) .article-header-archive .archive-note {
 
   content: "";
 
-  border:
-    1px solid rgba(255,255,255,.12);
+  border: 0;
 
   pointer-events: none;
-
-  transition:
-    border-color 260ms ease;
 }
 
 
@@ -1546,12 +1429,27 @@ body:has(.portfolio-section) .article-header-archive .archive-note {
 }
 
 
-.visual-link:hover .visual-image::after {
-  border-color:
+.visual-link:hover .visual-image {
+  outline-color:
     rgba(255,82,0,.82);
+
+  box-shadow:
+    0 0 18px rgba(255,82,0,.16);
 }
 
+.visual-card:hover .visual-image,
+.visual-link:hover .visual-image,
+.visual-card:focus-within .visual-image {
+  border-color:
+    rgba(255,82,0,.9);
 
+  box-shadow:
+    0 0 18px rgba(255,82,0,.18);
+}
+
+.visual-link:hover .visual-image::after {
+  border: 0;
+}
 .visual-overlay {
   position: absolute;
 
@@ -2588,7 +2486,7 @@ body:has(.portfolio-section) .article-header-archive .archive-note {
   width: auto;
   height: auto;
 
-  max-width: 100%;
+  max-width: min(92vw, 1280px);
   max-height: calc(100vh - 130px);
 
   object-fit: contain;
@@ -2665,42 +2563,55 @@ body:has(.portfolio-section) .article-header-archive .archive-note {
   padding: 0;
 
   border:
-    1px solid rgba(255,255,255,.18);
+    1px solid rgba(150,150,150,.48);
 
   border-radius: 50%;
 
-  color: #e7e8e4;
+  color: #d8ddd4;
 
   font-family:
     "Host Grotesk Variable",
     Arial,
     sans-serif;
 
-  font-size: 1.55rem;
-  font-weight: 300;
+  font-size: 1.35rem;
+  font-weight: 400;
 
   line-height: 1;
 
   background:
-    rgba(8,8,8,.72);
+    rgba(22,22,22,.86);
+
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.04);
 
   cursor: pointer;
 
   transition:
     color 180ms ease,
     border-color 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease,
     transform 180ms ease;
 }
 
 
-.remains-lightbox-close:hover {
+.remains-lightbox-close:hover,
+.remains-lightbox-close:focus-visible {
   color: #b7ff00;
 
   border-color:
-    rgba(183,255,0,.65);
+    rgba(183,255,0,.82);
+
+  background:
+    rgba(14,18,12,.92);
+
+  box-shadow:
+    0 0 14px rgba(183,255,0,.28),
+    inset 0 0 10px rgba(183,255,0,.10);
 
   transform:
-    rotate(4deg);
+    scale(1.04);
 }
 
 
@@ -2723,9 +2634,22 @@ body.remains-lightbox-open {
 
 
   .remains-lightbox-image {
-    max-height:
-      calc(100vh - 125px);
-  }
+  display: block;
+
+  width: auto;
+  height: auto;
+
+  max-width: min(92vw, 1280px);
+  max-height: calc(100vh - 130px);
+
+  object-fit: contain;
+
+  border: 0;
+  border-radius: 0 !important;
+
+  box-shadow:
+    0 0 50px rgba(0,0,0,.55);
+}
 
 
   .remains-lightbox-close {
@@ -2768,11 +2692,10 @@ body.remains-lightbox-open {
 .visual-link:hover .visual-image::after {
   border-radius: inherit !important;
 }
-
 /* REMAINS PHOTO RADIUS FINAL END */
 
 /* =========================================================
-   REMAINS HEADER — FINAL WIDTH / GRADIENT
+   REMAINS HEADER 鬩包ｽｯ繝ｻ・ｶ驛｢譎｢・ｽ・ｻFINAL WIDTH / GRADIENT
    ========================================================= */
 
 /*
@@ -2831,15 +2754,252 @@ body:has(.portfolio-section) .article-header-archive .archive-subtitle {
   white-space: pre-line !important;
   text-wrap: nowrap !important;
 }
-/* REMAINS HEADER — FINAL WIDTH / GRADIENT END */
+/* REMAINS HEADER 鬩包ｽｯ繝ｻ・ｶ驛｢譎｢・ｽ・ｻFINAL WIDTH / GRADIENT END */
 
+
+/* PORTFOLIO 鬩包ｽｯ繝ｻ・ｶ驛｢譎｢・ｽ・ｻFULL SHELL WIDTH */
+body:has(.portfolio-section) .article-prose {
+  width: 100% !important;
+  max-width: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* REMAINS MOBILE TITLE SIZE START */
+@media (max-width: 760px) {
+  body:has(.portfolio-section) .article-header-archive .archive-title {
+    font-size: 2.65rem !important;
+  }
+}
+/* REMAINS MOBILE TITLE SIZE END */
+
+
+
+/* PORTFOLIO MOSAIC V1 START */
+/* Scoped to the portfolio page; does not alter blog articles or project cards. */
+body.blog-detail-page:has(.portfolio-section) .portfolio-section,
+body.blog-detail-page:has(.portfolio-section) .portfolio-grid {
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+
+body.blog-detail-page:has(.portfolio-section) .portfolio-grid {
+  display: grid !important;
+  width: 100% !important;
+  grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
+  grid-template-rows: none !important;
+  grid-auto-columns: minmax(0, 1fr) !important;
+  grid-auto-rows: 24px !important;
+  grid-auto-flow: row !important;
+  gap: 10px !important;
+  align-items: stretch !important;
+}
+
+body.blog-detail-page:has(.portfolio-section) .portfolio-grid > .visual-card {
+  box-sizing: border-box !important;
+  display: block !important;
+  grid-column: auto !important;
+  grid-row: auto !important;
+  width: auto !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* The eight-item rhythm repeats for the second group of eight photos. */
+body.blog-detail-page:has(.portfolio-section) .portfolio-grid > .visual-card-main {
+  grid-column: span 7 !important;
+  grid-row: span 12 !important;
+}
+body.blog-detail-page:has(.portfolio-section) .portfolio-grid > .visual-card-tall {
+  grid-column: span 5 !important;
+  grid-row: span 12 !important;
+}
+body.blog-detail-page:has(.portfolio-section) .portfolio-grid > .visual-card-small {
+  grid-column: span 4 !important;
+  grid-row: span 9 !important;
+}
+body.blog-detail-page:has(.portfolio-section) .portfolio-grid > .visual-card-fragment {
+  grid-column: span 3 !important;
+  grid-row: span 9 !important;
+}
+body.blog-detail-page:has(.portfolio-section) .portfolio-grid > .visual-card-wide {
+  grid-column: span 5 !important;
+  grid-row: span 9 !important;
+}
+body.blog-detail-page:has(.portfolio-section) .portfolio-grid > .visual-card-portrait {
+  grid-column: span 5 !important;
+  grid-row: span 12 !important;
+}
+body.blog-detail-page:has(.portfolio-section) .portfolio-grid > .visual-card-extra-small {
+  grid-column: span 3 !important;
+  grid-row: span 12 !important;
+}
+body.blog-detail-page:has(.portfolio-section) .portfolio-grid > .visual-card-extra-wide {
+  grid-column: span 4 !important;
+  grid-row: span 12 !important;
+}
+
+/* A photograph and its clickable area always occupy exactly one grid cell. */
+body.blog-detail-page:has(.portfolio-section) .portfolio-grid .visual-link {
+  position: relative !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  border-radius: 5px !important;
+}
+body.blog-detail-page:has(.portfolio-section) .portfolio-grid .visual-image {
+  display: block !important;
+  position: relative !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  aspect-ratio: auto !important;
+  margin: 0 !important;
+  border-radius: 5px !important;
+}
+body.blog-detail-page:has(.portfolio-section) .portfolio-grid .visual-image img {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  border-radius: 5px !important;
+}
+
+/* Caption is available on desktop hover/focus and in the existing lightbox. */
+body.blog-detail-page:has(.portfolio-section) .portfolio-grid .visual-meta {
+  position: absolute !important;
+  z-index: 3 !important;
+  inset: auto 0 0 !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  width: 100% !important;
+  min-height: 0 !important;
+  max-width: 100% !important;
+  padding: 38px 12px 11px !important;
+  margin: 0 !important;
+  gap: 8px !important;
+  align-items: end !important;
+  background: linear-gradient(transparent, rgba(0,0,0,.88)) !important;
+  opacity: 0 !important;
+  transform: translateY(5px) !important;
+  transition: opacity .2s ease, transform .2s ease !important;
+  pointer-events: none !important;
+}
+body.blog-detail-page:has(.portfolio-section) .portfolio-grid .visual-meta > div {
+  min-width: 0 !important;
+}
+body.blog-detail-page:has(.portfolio-section) .portfolio-grid .visual-type {
+  font-size: .55rem !important;
+  line-height: 1.3 !important;
+  overflow-wrap: anywhere !important;
+}
+body.blog-detail-page:has(.portfolio-section) .portfolio-grid .visual-meta h3 {
+  font-size: clamp(.7rem, 1.05vw, .9rem) !important;
+  line-height: 1.25 !important;
+  overflow-wrap: anywhere !important;
+}
+body.blog-detail-page:has(.portfolio-section) .portfolio-grid .visual-year {
+  flex: none !important;
+  font-size: .55rem !important;
+}
+body.blog-detail-page:has(.portfolio-section) .portfolio-grid .visual-overlay {
+  top: 10px !important;
+  right: 10px !important;
+  bottom: auto !important;
+}
+body.blog-detail-page:has(.portfolio-section) .portfolio-grid .visual-link:hover .visual-meta,
+body.blog-detail-page:has(.portfolio-section) .portfolio-grid .visual-link:focus-visible .visual-meta {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+@media (min-width: 761px) and (max-width: 1100px) {
+  body.blog-detail-page:has(.portfolio-section) .portfolio-grid {
+    grid-template-columns: repeat(8, minmax(0, 1fr)) !important;
+    grid-auto-rows: 18px !important;
+    gap: 8px !important;
+  }
+  body.blog-detail-page:has(.portfolio-section) .portfolio-grid > .visual-card-main { grid-column: span 5 !important; grid-row: span 12 !important; }
+  body.blog-detail-page:has(.portfolio-section) .portfolio-grid > .visual-card-tall { grid-column: span 3 !important; grid-row: span 12 !important; }
+  body.blog-detail-page:has(.portfolio-section) .portfolio-grid > .visual-card-small { grid-column: span 3 !important; grid-row: span 9 !important; }
+  body.blog-detail-page:has(.portfolio-section) .portfolio-grid > .visual-card-fragment { grid-column: span 2 !important; grid-row: span 9 !important; }
+  body.blog-detail-page:has(.portfolio-section) .portfolio-grid > .visual-card-wide { grid-column: span 3 !important; grid-row: span 9 !important; }
+  body.blog-detail-page:has(.portfolio-section) .portfolio-grid > .visual-card-portrait { grid-column: span 3 !important; grid-row: span 12 !important; }
+  body.blog-detail-page:has(.portfolio-section) .portfolio-grid > .visual-card-extra-small { grid-column: span 2 !important; grid-row: span 12 !important; }
+  body.blog-detail-page:has(.portfolio-section) .portfolio-grid > .visual-card-extra-wide { grid-column: span 3 !important; grid-row: span 12 !important; }
+}
+
+@media (max-width: 760px) {
+  body.blog-detail-page:has(.portfolio-section) .portfolio-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    grid-template-rows: none !important;
+    grid-auto-columns: minmax(0, 1fr) !important;
+    grid-auto-rows: clamp(12px, 3.9vw, 17px) !important;
+    grid-auto-flow: row !important;
+    gap: 6px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  body.blog-detail-page:has(.portfolio-section) .portfolio-grid > .visual-card-main { grid-column: span 4 !important; grid-row: span 10 !important; }
+  body.blog-detail-page:has(.portfolio-section) .portfolio-grid > .visual-card-tall { grid-column: span 2 !important; grid-row: span 12 !important; }
+  body.blog-detail-page:has(.portfolio-section) .portfolio-grid > .visual-card-small { grid-column: span 2 !important; grid-row: span 12 !important; }
+  body.blog-detail-page:has(.portfolio-section) .portfolio-grid > .visual-card-fragment { grid-column: span 2 !important; grid-row: span 8 !important; }
+  body.blog-detail-page:has(.portfolio-section) .portfolio-grid > .visual-card-wide { grid-column: span 2 !important; grid-row: span 8 !important; }
+  body.blog-detail-page:has(.portfolio-section) .portfolio-grid > .visual-card-portrait { grid-column: span 2 !important; grid-row: span 12 !important; }
+  body.blog-detail-page:has(.portfolio-section) .portfolio-grid > .visual-card-extra-small { grid-column: span 2 !important; grid-row: span 12 !important; }
+  body.blog-detail-page:has(.portfolio-section) .portfolio-grid > .visual-card-extra-wide { grid-column: span 4 !important; grid-row: span 9 !important; }
+  body.blog-detail-page:has(.portfolio-section) .portfolio-grid .visual-meta,
+  body.blog-detail-page:has(.portfolio-section) .portfolio-grid .visual-overlay {
+    display: none !important;
+  }
+  body.blog-detail-page:has(.portfolio-section) .portfolio-grid .visual-link,
+  body.blog-detail-page:has(.portfolio-section) .portfolio-grid .visual-image,
+  body.blog-detail-page:has(.portfolio-section) .portfolio-grid .visual-image img {
+    border-radius: 3px !important;
+  }
+}
+
+@media (hover: none) {
+  body.blog-detail-page:has(.portfolio-section) .portfolio-grid .visual-meta,
+  body.blog-detail-page:has(.portfolio-section) .portfolio-grid .visual-overlay {
+    display: none !important;
+  }
+}
+/* PORTFOLIO MOSAIC V1 END */
+
+/* PORTFOLIO BLOCK SEQUENCE V1 START */
+/* Gallery blocks reuse the existing mosaic rules without changing their sizing. */
+.portfolio-section .portfolio-gallery-block {
+  width: 100%;
+  min-width: 0;
+}
+.portfolio-section .portfolio-gallery-block > .portfolio-grid {
+  min-width: 0;
+}
+.portfolio-section .portfolio-gallery-block + .portfolio-gallery-block,
+.portfolio-section .text-remain + .portfolio-gallery-block {
+  margin-top: clamp(38px, 6vw, 76px);
+}
+.portfolio-section .portfolio-gallery-label {
+  margin: 0 0 16px;
+  color: #b7ff00;
+  font-family: "Maple Mono", monospace;
+  font-size: .63rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+}
+/* PORTFOLIO BLOCK SEQUENCE V1 END */
 </style>
-
-
-
-
-
-
 
 
 
