@@ -31,7 +31,7 @@ const siteUrlSchema = z.preprocess((value) => {
 }, z.url());
 
 const contentImageSchema = ({ image }: Parameters<CollectionSchemaFactory>[0]) =>
-  z.union([image(), remoteImageSchema]);
+  z.union([z.string().startsWith("/"), remoteImageSchema, image()]);
 
 const articleSchema = ({ image }: Parameters<CollectionSchemaFactory>[0]) =>
   z.object({
@@ -42,6 +42,10 @@ const articleSchema = ({ image }: Parameters<CollectionSchemaFactory>[0]) =>
     draft: z.boolean().optional().default(false),
     heroImage: z.optional(contentImageSchema({ image })),
     showHeroImage: z.boolean().optional().default(true),
+    japaneseUrl: z.string().optional(),
+    japaneseTitle: z.string().optional(),
+    japaneseDescription: z.string().optional(),
+    japaneseBody: z.string().optional(),
     tags: z.array(z.string()).optional().default([]),
     categories: z.array(z.string()).optional().default([]),
     series: z.array(z.string()).optional().default([]),
@@ -192,7 +196,7 @@ const defaultPagesConfig = {
     note: 'Field notes, drafts, and technical margins arranged for slow browsing.',
     postsPerPage: 6,
     dateFormat: 'MMM d, yyyy',
-    metadataSeparator: '·',
+    metadataSeparator: 'ﾂｷ',
     coverImageStyle: 'card',
     categories: {
       title: 'Categories',
@@ -459,13 +463,40 @@ const blog = defineCollection({
 
 const about = defineCollection({
   loader: glob({ base: contentBase, pattern: 'about.{md,mdx}' }),
-  schema: articleSchema,
+  schema: (context) =>
+    articleSchema(context).extend({
+      profileLead: z.string().optional(),
+      profileEnglish: z.string().optional(),
+      profileJapanese: z.string().optional(),
+      profileName: z.string().optional(),
+      profileAlias: z.string().optional(),
+      profileField: z.string().optional(),
+      profileLocation: z.string().optional(),
+      profileStatus: z.string().optional(),
+      statementEnglish: z.string().optional(),
+      statementJapanese: z.string().optional(),
+    }),
 });
 
 const projects = defineCollection({
   loader: glob({ base: `${contentBase}/projects`, pattern: '**/*.{md,mdx}' }),
   schema: (context) =>
     articleSchema(context).extend({
+      photographyNote: z.object({
+        index: z.string().optional(),
+        year: z.string().optional(),
+        kicker: z.string().optional(),
+        title: z.string().optional(),
+        paragraphs: z.array(z.string()).optional().default([]),
+        status: z.string().optional(),
+      }).optional(),
+      galleryImages: z.array(
+        z.object({
+          src: z.string(),
+          title: z.string().optional(),
+          alt: z.string().optional(),
+        }),
+      ).optional().default([]),
       sticky: z.union([z.boolean(), z.number().positive()]).optional().default(false),
       icon: z
         .enum([

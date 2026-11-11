@@ -35,6 +35,271 @@ export default defineConfig({
   // See docs on content modeling for more info on how to setup new content models: https://tina.io/docs/r/content-modelling-collections/
   schema: {
     collections: [
+    {
+      name: "about",
+      label: "About",
+      path: "src/content",
+      format: "mdx",
+      match: {
+        include: "about",
+      },
+      ui: {
+        allowedActions: {
+          create: false,
+          delete: false,
+          createNestedFolder: false,
+        },
+      },
+      fields: [
+        {
+          type: "string",
+          name: "profileLead",
+          label: "PROFILE - Introduction",
+          ui: { component: "textarea" },
+        },
+        {
+          type: "string",
+          name: "profileEnglish",
+          label: "PROFILE - English",
+          ui: { component: "textarea" },
+        },
+        {
+          type: "string",
+          name: "profileJapanese",
+          label: "PROFILE - Japanese",
+          ui: { component: "textarea" },
+        },
+        {
+          type: "string",
+          name: "profileName",
+          label: "PROFILE - Name",
+        },
+        {
+          type: "string",
+          name: "profileAlias",
+          label: "PROFILE - Alias",
+        },
+        {
+          type: "string",
+          name: "profileField",
+          label: "PROFILE - Field",
+        },
+        {
+          type: "string",
+          name: "profileLocation",
+          label: "PROFILE - Location",
+        },
+        {
+          type: "string",
+          name: "profileStatus",
+          label: "PROFILE - Status",
+        },
+        {
+          type: "string",
+          name: "statementEnglish",
+          label: "STATEMENT - English paragraphs",
+          ui: { component: "textarea" },
+        },
+        {
+          type: "string",
+          name: "statementJapanese",
+          label: "STATEMENT - Japanese paragraphs",
+          ui: { component: "textarea" },
+        },
+        {
+          type: "string",
+          name: "title",
+          label: "Title",
+          isTitle: true,
+          required: true,
+        },
+        {
+          type: "string",
+          name: "description",
+          label: "Description",
+        },
+        {
+          type: "string",
+          name: "date",
+          label: "Date",
+        },
+        {
+          type: "rich-text",
+          name: "body",
+          label: "About Body",
+          isBody: true,
+        },
+      ],
+    },
+      {
+        name: "pulse",
+        label: "Pulse",
+        path: "src/content/vibe",
+        format: "mdx",
+        fields: [
+          {
+            type: "string",
+            name: "title",
+            label: "Title",
+          },
+          {
+            type: "datetime",
+            name: "date",
+            label: "Date",
+            required: true,
+          },
+          {
+            type: "datetime",
+            name: "updatedDate",
+            label: "Updated Date",
+          },
+          {
+            type: "boolean",
+            name: "draft",
+            label: "Draft",
+          },
+          {
+            type: "string",
+            name: "type",
+            label: "Type",
+            options: ["text", "photo", "quote", "code", "mixed"],
+          },
+          {
+            type: "string",
+            name: "mood",
+            label: "Mood",
+          },
+          {
+            type: "string",
+            name: "location",
+            label: "Location",
+          },
+          {
+            type: "image",
+            name: "images",
+            label: "Images",
+            list: true,
+          },
+          {
+            type: "string",
+            name: "tags",
+            label: "Tags",
+            list: true,
+          },
+          {
+            type: "string",
+            name: "align",
+            label: "Alignment",
+            options: ["left", "right", "center"],
+          },
+          {
+            type: "string",
+            name: "size",
+            label: "Size",
+            options: ["sm", "md", "lg"],
+          },
+          {
+            type: "rich-text",
+            name: "body",
+            label: "Pulse Body",
+            isBody: true,
+          },
+        ],
+      },
+      {
+        name: "media",
+        label: "Media",
+        path: "src/content/media",
+        format: "mdx",
+        ui: {
+          allowedActions: {
+            create: false,
+            delete: false,
+            createNestedFolder: false,
+          },
+        },
+        fields: [
+          {
+            type: "string",
+            name: "title",
+            label: "Title",
+            isTitle: true,
+            required: true,
+          },
+          {
+            type: "string",
+            name: "description",
+            label: "Description",
+          },
+          {
+            type: "string",
+            name: "creator",
+            label: "Creator",
+            required: true,
+          },
+          {
+            type: "string",
+            name: "type",
+            label: "Media Type",
+            required: true,
+            options: ["book", "film", "series", "album", "podcast"],
+          },
+          {
+            type: "string",
+            name: "status",
+            label: "Status",
+            options: ["completed", "in-progress", "planned", "abandoned"],
+          },
+          {
+            type: "datetime",
+            name: "completedAt",
+            label: "Completed At",
+          },
+          {
+            type: "boolean",
+            name: "draft",
+            label: "Draft",
+          },
+          {
+            type: "image",
+            name: "cover",
+            label: "Cover",
+          },
+          {
+            type: "string",
+            name: "coverAspect",
+            label: "Cover Aspect",
+            options: ["portrait", "landscape", "square", "wide"],
+          },
+          {
+            type: "number",
+            name: "rating",
+            label: "Rating",
+          },
+          {
+            type: "boolean",
+            name: "review",
+            label: "Review",
+          },
+          {
+            type: "string",
+            name: "tags",
+            label: "Tags",
+            list: true,
+          },
+          {
+            type: "string",
+            name: "externalUrl",
+            label: "External URL",
+          },
+          {
+            type: "rich-text",
+            name: "body",
+            label: "Review Body",
+            isBody: true,
+          },
+        ],
+      },
         {
           name: 'project',
           label: 'Portfolio',
@@ -109,6 +374,25 @@ export default defineConfig({
               ],
             },
 
+            {
+              type: 'object',
+              name: 'photographyNote',
+              label: 'Photography / Text Below Gallery',
+              fields: [
+                { type: 'string', name: 'index', label: 'Index' },
+                { type: 'string', name: 'year', label: 'Year' },
+                { type: 'string', name: 'kicker', label: 'Small Heading' },
+                { type: 'string', name: 'title', label: 'Text Title' },
+                {
+                  type: 'string',
+                  name: 'paragraphs',
+                  label: 'Paragraphs',
+                  list: true,
+                  ui: { component: 'textarea' },
+                },
+                { type: 'string', name: 'status', label: 'Footer Text' },
+              ],
+            },
             {
               type: 'boolean',
               name: 'showHeroImage',
@@ -344,18 +628,18 @@ export default defineConfig({
           {
             type: "string",
             name: "japaneseTitle",
-            label: "鬮ｫ・ｴ鬲・ｼ夲ｽｽ・ｽ繝ｻ・･鬮ｫ・ｴ陝ｷ・｢繝ｻ・ｽ繝ｻ・ｬ鬯ｮ・ｫ繝ｻ・ｱ髫ｶ謚ｵ・ｽ・ｭ驍ｵ・ｺ繝ｻ・｡鬩幢ｽ｢繝ｻ・ｧ郢晢ｽｻ繝ｻ・､鬩幢ｽ｢隴主・讓溘・蠑ｱ繝ｻ/ Japanese Title",
+            label: "日本語タイトル / Japanese Title",
           },
           {
             type: "string",
             name: "japaneseDescription",
-            label: "鬮ｫ・ｴ鬲・ｼ夲ｽｽ・ｽ繝ｻ・･鬮ｫ・ｴ陝ｷ・｢繝ｻ・ｽ繝ｻ・ｬ鬯ｮ・ｫ繝ｻ・ｱ髫ｶ螢ｹ繝ｻ繝ｻ・ｽ繝ｻ・ｪ郢晢ｽｻ繝ｻ・ｬ鬮ｫ・ｴ闕ｳ讒ｫ蠕宣垓・ｫ郢晢ｽｻ/ Japanese Description",
+            label: "日本語の説明 / Japanese Description",
             ui: { component: "textarea" },
           },
           {
             type: "string",
             name: "japaneseBody",
-            label: "鬮ｫ・ｴ鬲・ｼ夲ｽｽ・ｽ繝ｻ・･鬮ｫ・ｴ陝ｷ・｢繝ｻ・ｽ繝ｻ・ｬ鬯ｮ・ｫ繝ｻ・ｱ髫ｶ鬥ｴ・ｰ莉｣笳・ｫｫ・ｴ遶丞｣ｹ繝ｻ/ Japanese Body (鬮ｫ・ｰ繝ｻ・ｾ郢晢ｽｻ繝ｻ・ｹ鬯ｮ・ｯ繝ｻ・ｦ髫ｰ逍ｲ・ｻ繧托ｽｽ・ｽ繝ｻ・ｯ郢晢ｽｻ繝ｻ・ｾ鬮ｯ貊ゑｽｽ・｢驛｢譎｢・ｽ・ｻ",
+            label: "日本語本文 / Japanese Body",
             ui: { component: "textarea" },
           },
           {
@@ -394,5 +678,3 @@ export default defineConfig({
     ],
   },
 });
-
-

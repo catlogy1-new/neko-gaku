@@ -2,6 +2,10 @@
 import BlogTopNav from '../components/blog/BlogTopNav.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/global.css';
+import { getCollection } from 'astro:content';
+
+const aboutEntry = (await getCollection('about'))[0];
+const statementParagraphs = aboutEntry?.data.statementParagraphs ?? [];
 ---
 
 <html lang="ja">
@@ -9,7 +13,54 @@ import '../styles/global.css';
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>ABOUT | NEXUS</title>
-  </head>
+<!-- NEXUS ABOUT FIRST PAINT START -->
+<style is:inline>
+  html:not([data-about-paint-ready]) .about-hero {
+    visibility: hidden !important;
+  }
+</style>
+
+<script is:inline>
+  (() => {
+    let revealed = false;
+
+    const reveal = () => {
+      if (revealed) return;
+      revealed = true;
+      document.documentElement.setAttribute(
+        "data-about-paint-ready", ""
+      );
+    };
+
+    const afterPaintPreparation = () => {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(reveal);
+      });
+    };
+
+    const prepare = async () => {
+      try {
+        if (document.fonts) {
+          await document.fonts.ready;
+        }
+      } catch (_) {
+        // フォント取得失敗時も表示を妨げない
+      }
+
+      afterPaintPreparation();
+    };
+
+    if (document.readyState === "complete") {
+      prepare();
+    } else {
+      window.addEventListener("load", prepare, { once: true });
+    }
+
+    window.setTimeout(reveal, 4000);
+  })();
+</script>
+<!-- NEXUS ABOUT FIRST PAINT END -->
+</head>
 
   <body>
     <BlogTopNav />
@@ -22,9 +73,7 @@ import '../styles/global.css';
         <h1>ABOUT</h1>
 
         <p class="about-quote">
-          Ma théorie de la vie est que, plutôt que la vérité, le mensonge est une vérité plus humaine.
-          <br />
-          Car la vérité existe même sans les hommes, mais le mensonge n'existe jamais sans les hommes.
+          Le réel a disparu, seuls subsistent les simulacres.
         </p>
       </header>
 
@@ -65,50 +114,40 @@ import '../styles/global.css';
                 />
 
                 <p class="profile-lead">
-                  My name is "猫学" (NEKO GAKU).<br />
-                  "猫学" means "catology".
+                  {aboutEntry?.data.profileLead?.split(/\r?\n/).map((line, i) => (
+                    <>{i > 0 && <br />}{line}</>
+                  ))}
                 </p>
               </div>
 
-              <p>
-                Bipolar affective disorder, ADHD, ASD, Tourette syndrome,
-                narcolepsy, social anxiety disorder / Domestic violence witness,
-                bullying, abuse survivor / Recovering meth addict /
-                17 criminal convictions / Juvenile training school,
-                juvenile prison, ex-offender
-              </p>
-
-              <p lang="ja">
-                双極性感情障害、ADHD、ASD、トゥレット症候群、ナルコレプシー、
-                社交不安障害 / 面前DV、イジメ、虐待サバイバー /
-                元薬物依存症者 / 前科17犯 / 少年院、少年刑務所、元受刑者
-              </p>
+              <p>{aboutEntry?.data.profileEnglish}</p>
+              <p lang="ja">{aboutEntry?.data.profileJapanese}</p>
             </div>
 
             <aside class="profile-data">
               <div>
                 <span>NAME</span>
-                <strong>猫学 / NEKO GAKU</strong>
+                <strong>{aboutEntry?.data.profileName}</strong>
               </div>
 
               <div>
                 <span>ALIAS</span>
-                <strong>CATOLOGY</strong>
+                <strong>{aboutEntry?.data.profileAlias}</strong>
               </div>
 
               <div>
                 <span>FIELD</span>
-                <strong>PHOTOGRAPHY / WRITING / MUSIC / RESEARCH</strong>
+                <strong>{aboutEntry?.data.profileField}</strong>
               </div>
 
               <div>
                 <span>LOCATION</span>
-                <strong>OSAKA, JAPAN</strong>
+                <strong>{aboutEntry?.data.profileLocation}</strong>
               </div>
 
               <div>
                 <span>STATUS</span>
-                <strong>ARCHIVING</strong>
+                <strong>{aboutEntry?.data.profileStatus}</strong>
               </div>
             </aside>
           </div>
@@ -126,25 +165,21 @@ import '../styles/global.css';
           </div>
 
           <div class="statement-copy">
-            <p>NEXUS is not designed around a single medium. Images, language, memory and perception intersect here.</p>
-
-            <p>Right now, the scenery you are looking at is something you yourself imagined and created, and it has nothing to do with me whatsoever.</p>
-
-            <p>Please don't ever forget that.</p>
-
-            <p>This is nothing more than a poem—a hallucination—created by yourself.</p>
-
-            <p>I haven't written anything, and I have never once taken a photo.</p>
+            {aboutEntry?.data.statementEnglish
+              ?.split(/\r?\n/)
+              .filter((paragraph) => paragraph.trim() !== '')
+              .map((paragraph) => (
+                <p>{paragraph}</p>
+              ))}
 
             <div class="statement-divider"></div>
 
-            <p lang="ja">ここには何も書かれていないし、写真など１枚も撮られていない。</p>
-
-            <p lang="ja">１０人の者がこの風景と相対したら、１０通りの記号の残像のようなものが明滅し、その明滅の光源と漆黒の狭間で瞬間的に見えたかのような錯視のことを人は＜現実＞と呼び、一時の安堵を得ようと試みる。</p>
-
-            <p lang="ja">僕は無関係です。</p>
-
-            <p lang="ja">どうぞご自由に、アナタ自身のポエムと戯れてください。</p>
+            {aboutEntry?.data.statementJapanese
+              ?.split(/\r?\n/)
+              .filter((paragraph) => paragraph.trim() !== '')
+              .map((paragraph) => (
+                <p lang="ja">{paragraph}</p>
+              ))}
           </div>
         </section>
 
@@ -169,13 +204,13 @@ import '../styles/global.css';
               </label>
 
               <label>
-                <span>EMAIL <strong class="contact-required-dot">●</strong></span>
+                <span>EMAIL <strong style="color: #c94713;">*</strong></span>
                 <input type="email" name="email" required placeholder="Email address" />
               </label>
             </div>
 
             <label class="contact-message">
-              <span>MESSAGE <strong>*</strong></span>
+              <span>MESSAGE <strong style="color: #c94713;">*</strong></span>
               <textarea
                 name="message"
                 rows="6"
@@ -762,7 +797,7 @@ import '../styles/global.css';
   @media (max-width: 720px) {
     .about-page {
       width: calc(100% - 36px);
-      padding-top: 98px;
+      padding-top: 38px;
     }
 
     .about-hero {
@@ -1302,3 +1337,82 @@ a[href^="tel:"]:visited {
     color: #ffffff !important;
 }
 </style>
+
+<!-- NEXUS_ABOUT_PROFILE_MOBILE_3X2_V1 -->
+<style>
+  @media (max-width: 720px) {
+
+    /* PROFILE: 3 columns -> 1 column */
+    .profile-panel .profile-grid {
+      display: grid !important;
+      grid-template-columns: minmax(0, 1fr) !important;
+      gap: 24px !important;
+      width: 100%;
+      min-width: 0;
+      align-items: start;
+    }
+
+    /* Show the original 3:2 photograph without cropping */
+    .profile-panel .profile-visual {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      min-height: 0 !important;
+      height: auto !important;
+      aspect-ratio: 3 / 2;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    .profile-panel .profile-visual img {
+      display: block;
+      width: 100%;
+      height: auto !important;
+      min-height: 0 !important;
+      max-height: none !important;
+      object-fit: contain !important;
+      object-position: center;
+    }
+
+    /* Profile text below the photograph */
+    .profile-panel .profile-copy {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      padding-top: 0;
+    }
+
+    .profile-panel .profile-copy p {
+      max-width: 100%;
+      overflow-wrap: anywhere;
+    }
+
+    .profile-panel .profile-id-row {
+      max-width: 100%;
+      min-width: 0;
+    }
+
+    .profile-panel .profile-id-row .profile-lead {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    /* Identity data below the text */
+    .profile-panel .profile-data {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      padding: 22px 0 0;
+      border-left: 0;
+      border-top: 1px solid rgba(144, 154, 148, 0.25);
+      gap: 20px;
+    }
+
+    .profile-panel .profile-data strong {
+      overflow-wrap: anywhere;
+    }
+
+  }
+</style>
+<!-- NEXUS_ABOUT_PROFILE_MOBILE_3X2_V1 END -->
