@@ -8,11 +8,11 @@ galleryImages:
     title: サンプル
 photographyNote:
   index: ''
-  year: ''
-  kicker: ''
-  title: ''
+  year: '2026'
+  kicker: 貼っだー
+  title: 釜ヶ崎
   paragraphs:
-    - ''
+    - っっかかかふぉｒんげ；ｒｇなｒ；ががんら
   status: ''
 ---
 
