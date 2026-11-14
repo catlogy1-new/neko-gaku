@@ -9,7 +9,7 @@ categories:
   - Blog Test
 series:
   - AFTER HOURS
-comments: false
+comments: true
 sticky: true
 ---
 
