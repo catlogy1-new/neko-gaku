@@ -1,16 +1,16 @@
 ---
-title: "AFTER HOURS / 01"
-description: "Temporary test article for NEXUS Series pagination."
+title: AFTER HOURS / 01
+description: Temporary test article for NEXUS Series pagination.
 date: '2026-11-02'
 draft: false
-categories:
-  - Blog Test
 tags:
   - Series Layout Test
+categories:
+  - Blog Test
 series:
-  - "AFTER HOURS"
+  - AFTER HOURS
 comments: false
-sticky: false
+sticky: true
 ---
 
 # AFTER HOURS / 01
