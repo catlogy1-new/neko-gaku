@@ -1,6 +1,8 @@
-﻿---
-title: 'TOC Layout Test / 04'
-description: 'Temporary article for checking the table of contents layout.'
+---
+title: TOC Layout Test / 04
+headerKicker: ESSAY
+tocVisibility: 'off'
+description: Temporary article for checking the table of contents layout.
 date: '2026-08-28'
 draft: false
 tags:
