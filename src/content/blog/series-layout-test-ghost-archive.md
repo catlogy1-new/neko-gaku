@@ -1,16 +1,16 @@
 ---
-title: "GHOST ARCHIVE / 01"
-description: "Temporary test article for NEXUS Series pagination."
+title: GHOST ARCHIVE / 01
+description: Temporary test article for NEXUS Series pagination.
 date: '2026-11-02'
 draft: false
-categories:
-  - Blog Test
 tags:
   - Series Layout Test
+categories:
+  - Blog Test
 series:
-  - "GHOST ARCHIVE"
+  - GHOST ARCHIVE
 comments: false
-sticky: false
+sticky: true
 ---
 
 # GHOST ARCHIVE / 01
