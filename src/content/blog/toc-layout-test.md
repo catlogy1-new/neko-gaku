@@ -1,7 +1,7 @@
 ---
 title: TOC Layout Test / 04
-headerKicker: ESSAY
-tocVisibility: 'off'
+headerKicker: ''
+tocVisibility: 'on'
 description: Temporary article for checking the table of contents layout.
 date: '2026-08-28'
 draft: false
