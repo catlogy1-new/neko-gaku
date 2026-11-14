@@ -10,7 +10,7 @@ categories:
 series:
   - GHOST ARCHIVE
 comments: false
-sticky: true
+sticky: false
 ---
 
 # GHOST ARCHIVE / 01
