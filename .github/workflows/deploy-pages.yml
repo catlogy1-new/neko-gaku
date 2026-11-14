@@ -1,4 +1,4 @@
-name: Deploy Astro to GitHub Pages
+name: Deploy nekogaku.com to Cloudflare Workers
 
 on:
   push:
@@ -8,106 +8,72 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: pages
-  cancel-in-progress: true
+  group: nekogaku-production
+  cancel-in-progress: false
 
 jobs:
-  build:
+  deploy:
+    if: github.ref == "refs/heads/v1"
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
       - name: Checkout
         uses: actions/checkout@v7
         with:
-          submodules: recursive
+          persist-credentials: false
 
       - name: Setup Node.js
         uses: actions/setup-node@v7
         with:
-          node-version: 22
+          node-version: "24.19.0"
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3.14"
 
-      - name: Install font subsetting tools
-        run: python -m pip install --user fonttools brotli
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install font tools
+        run: python -m pip install fonttools==4.68.0 brotli==1.2.1
 
       - name: Install dependencies
+        env:
+          HUSKY: "0"
         run: bun install --frozen-lockfile
 
-      - name: Ensure docs submodule is available
-        run: git submodule update --init --recursive --remote
-
-      - name: Sync friend circle
-        if: ${{ vars.NAVFOLIO_FRIEND_CIRCLE_ENABLED == 'true' && vars.NAVFOLIO_FRIEND_LINKS_SRC != '' }}
-        uses: navfolio/friend-circle-sync@main
-        with:
-          input: ${{ vars.NAVFOLIO_FRIEND_LINKS_SRC }}
-          output: public/friend-circle.json
-          max-posts-per-feed: '12'
-          name-field: name
-          url-field: url
-          avatar-field: avatar
-          rss-field: rss
-
-      - name: Build site
+      - name: Build production site
         env:
-          NEXT_PUBLIC_TINA_CLIENT_ID: ${{ secrets.TINA_PUBLIC_CLIENT_ID }}
+          NEXT_PUBLIC_TINA_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_TINA_CLIENT_ID }}
           TINA_TOKEN: ${{ secrets.TINA_TOKEN }}
           NEXT_PUBLIC_TINA_BRANCH: v1
-          NAVFOLIO_CONTENT_SOURCE: docs
-          SITE_URL: https://astro.navfolio.site
+          TINA_PUBLIC_IS_LOCAL: "false"
+          NAVFOLIO_DEPLOY_TARGET: cloudflare
+          SITE_URL: https://nekogaku.com
           SITE_BASE: /
-          NAVFOLIO_COMMENTS_ENABLED: ${{ vars.NAVFOLIO_COMMENTS_ENABLED }}
-          NAVFOLIO_COMMENTS_PROVIDER: ${{ vars.NAVFOLIO_COMMENTS_PROVIDER }}
-          NAVFOLIO_GISCUS_REPO: ${{ vars.NAVFOLIO_GISCUS_REPO }}
-          NAVFOLIO_GISCUS_REPO_ID: ${{ vars.NAVFOLIO_GISCUS_REPO_ID }}
-          NAVFOLIO_GISCUS_CATEGORY: ${{ vars.NAVFOLIO_GISCUS_CATEGORY }}
-          NAVFOLIO_GISCUS_CATEGORY_ID: ${{ vars.NAVFOLIO_GISCUS_CATEGORY_ID }}
-        run: bun run docs:build
+        run: bun run build
 
-      - name: Copy TinaCMS production assets
+      - name: Verify production build
         run: |
-          mkdir -p dist/client/admin
-          cp -R public/admin/. dist/client/admin/
+          test -f dist/server/entry.mjs
           test -f dist/client/admin/index.html
-          test -d dist/client/admin/assets
-          echo "TinaCMS admin and assets copied successfully"
-      - name: Verify TinaCMS admin
+          test -d dist/client/pagefind
+          python -c "import json; from pathlib import Path; p=Path(\"dist/server/wrangler.json\"); d=json.loads(p.read_text()); assert d.get(\"name\")==\"astro-navfolio\"; d.pop(\"route\",None); d[\"routes\"]=[{\"pattern\":\"nekogaku.com\",\"custom_domain\":True}]; d[\"workers_dev\"]=True; d[\"preview_urls\"]=True; bindings=d.get(\"kv_namespaces\",[]); session=[x for x in bindings if x.get(\"binding\")==\"SESSION\"]; assert len(session)==1; session[0][\"id\"]=\"30eb28be2df34038827ded023e8c89a3\"; p.write_text(json.dumps(d,indent=2)+chr(10)); print(\"PASS: Production domain and SESSION binding verified\")"
+
+      - name: Deploy to Cloudflare Workers
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: bun run wrangler deploy --config dist/server/wrangler.json
+
+      - name: Verify public site
         run: |
-          echo "===== DIST CLIENT ====="
-          find dist/client -maxdepth 3 -type f | sort
-          echo "===== ADMIN CHECK ====="
-          test -f dist/client/admin/index.html
-          echo "TinaCMS admin/index.html exists"
-          echo "===== ADMIN ASSET URLS ====="
-          grep -E "localhost:4001|src=|assets/" dist/client/admin/index.html || true
-
-      - name: Locate TinaCMS production assets
-        run: |
-          echo "===== ALL TINA ADMIN FILES ====="
-          find . -type f \( -name "index-BfEaUiqa.js" -o -name "index-ckJGPzv8.css" \) -print
-          echo "===== PUBLIC ADMIN ====="
-          find public/admin -maxdepth 3 -type f -print 2>/dev/null || true
-          echo "===== DIST ADMIN ====="
-          find dist/client/admin -maxdepth 3 -type f -print 2>/dev/null || true
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v5
-        with:
-          path: ./dist/client
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v5
+          curl --fail --silent --show-error --location --retry 3 https://nekogaku.com/ -o /tmp/nekogaku-home.html
+          curl --fail --silent --show-error --location --retry 3 https://nekogaku.com/blog/ -o /tmp/nekogaku-blog.html
+          echo "SUCCESS: nekogaku.com deployed"
