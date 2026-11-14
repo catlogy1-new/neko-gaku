@@ -1902,8 +1902,7 @@ const tinaEditHref = blogArticleId
 
 
   const editorMode = () => {
-    return window.location.hostname === 'localhost' ||
-      window.location.hostname === '127.0.0.1';
+    return window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.__nexusTinaAdmin === true;
   };
 
 
@@ -2606,21 +2605,29 @@ const tinaEditHref = blogArticleId
         event.preventDefault();
         event.stopPropagation();
 
-        if (!['localhost', '127.0.0.1'].includes(window.location.hostname)) return;
+        if (!['localhost', '127.0.0.1'].includes(window.location.hostname) && window.__nexusTinaAdmin !== true) return;
 
         const kind = adminAction.dataset.nexusAdminAction;
-        const messages = {
-          pin: adminAction.dataset.nexusSticky === 'true' ? 'TinaCMSで Sticky をオフにして Save を押してください。' : 'TinaCMSで Sticky をオンにして Save を押してください。',
-          draft: 'TinaCMSで Draft をオンにして Save を押してください。',
-          delete: 'TinaCMSの編集画面で Delete を実行してください。'
-        };
-
-        if (kind === 'delete' &&
-            !window.confirm('削除操作のためTinaCMSを開きます。続けますか？')) return;
-
-        if (messages[kind]) window.alert(messages[kind]);
-
-        window.location.assign(adminAction.href);
+        if (kind === "edit") {
+          window.location.assign(adminAction.href);
+          return;
+        }
+        if (kind === "delete" && !window.confirm("Delete this article permanently?")) return;
+        if (kind === "draft" && !window.confirm("Revert this article to draft?")) return;
+        try {
+          if (typeof window.__nexusBlogMutation !== "function") throw new Error("Admin connection unavailable");
+          await window.__nexusBlogMutation(kind, window.location.pathname, adminAction.dataset.nexusSticky !== "true");
+          showToast("Saved successfully. Changes will appear after deployment.");
+          if (kind === "pin") {
+            const pinned = adminAction.dataset.nexusSticky !== "true";
+            adminAction.dataset.nexusSticky = String(pinned);
+            adminAction.textContent = pinned ? "Unpin from profile" : "Pin to profile";
+          } else {
+            window.location.assign("/blog/");
+          }
+        } catch (error) {
+          showToast(error instanceof Error ? error.message : "Update failed", true);
+        }
         return;
       }
       const label =
@@ -2812,3 +2819,7 @@ const tinaEditHref = blogArticleId
 </script>
 
 <!-- NEXUS EDITOR ACTION BRIDGE END -->
+
+<script>
+  import "../../utils/nexus-admin-auth";
+</script>

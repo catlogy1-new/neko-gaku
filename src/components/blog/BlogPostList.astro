@@ -8,7 +8,7 @@ import Icon from '../Icon.astro';
 import SmartImage from '../SmartImage.astro';
 import { getSiteConfig } from '../../data/site';
 import { slugifyGroupName } from '../../utils/content-groups';
-import { isStickyEntry } from '../../utils/content-dates';
+import { getStickyPriority, isStickyEntry } from '../../utils/content-dates';
 import { getUiText } from '../../utils/ui-text';
 
 type BlogPost = CollectionEntry<'blog'>;
@@ -58,6 +58,7 @@ function withBase(href: string) {
               <div class="nexus-pinned-strip">
                 <Icon name="pin" size={12} />
                 <span>PINNED ARTICLE</span>
+                <span class="nexus-mobile-pin-priority">{getStickyPriority(post)}</span>
               </div>
             )}
             <a
@@ -133,6 +134,7 @@ function withBase(href: string) {
                   <span class="nexus-journal-pin">
                     <Icon name="pin" size={14} />
                     {ui.article.pinned}
+                    <span class="nexus-pin-priority">{getStickyPriority(post)}</span>
                   </span>
                 )}
               </h2>
@@ -955,33 +957,7 @@ function withBase(href: string) {
   window.__nexusSafeBlogPinBound = true;
 
 
-  const isEditorMode = () => {
-
-    const params =
-      new URLSearchParams(
-        window.location.search
-      );
-
-    if (params.get('editor') === '1') {
-      return true;
-    }
-
-    try {
-
-      if (
-        window.self !== window.top &&
-        document.referrer.includes('/admin')
-      ) {
-        return true;
-      }
-
-    } catch (_) {
-      return true;
-    }
-
-    return false;
-  };
-
+  const isEditorMode = () => window.__nexusTinaAdmin === true;
 
   const closeMenus = () => {
 
@@ -1015,6 +991,7 @@ function withBase(href: string) {
 
           pin.removeAttribute('role');
           pin.removeAttribute('tabindex');
+          pin.querySelector('.nexus-pin-admin-menu')?.remove();
 
           return;
         }
@@ -1104,10 +1081,18 @@ function withBase(href: string) {
         event.stopPropagation();
         event.stopImmediatePropagation();
 
-        /*
-          TinaCMS未接続なので今はUI確認のみ。
-          実際のsticky変更は後でCMSに接続する。
-        */
+        const row = unpin.closest("[data-archive-post-href]");
+        const href = row?.getAttribute("data-archive-post-href");
+        if (!href || typeof window.__nexusBlogMutation !== "function") return;
+        if (unpin.disabled) return;
+        unpin.disabled = true;
+        window.__nexusBlogMutation("pin", new URL(href, location.origin).pathname, false)
+          .then(() => {
+            closeMenus();
+            window.alert("Unpinned. Changes will appear after deployment.");
+          })
+          .catch(error => window.alert(error.message || "Unpin failed"))
+          .finally(() => { unpin.disabled = false; });
 
         return;
       }
@@ -1183,6 +1168,7 @@ function withBase(href: string) {
   );
 
 
+  document.addEventListener("nexus-admin-auth-change", initPins);
   initPins();
 
   document.addEventListener(
@@ -1339,7 +1325,7 @@ function withBase(href: string) {
       );
 
       toast.textContent =
-        'Unpinning will be enabled when TinaCMS is connected.';
+        '';
 
       document.body.appendChild(
         toast
@@ -1480,3 +1466,18 @@ function withBase(href: string) {
   }
 </style>
 <!-- NEXUS PINNED STRIP V2 END -->
+<script>
+  import "../../utils/nexus-admin-auth";
+</script>
+<style is:global>
+  @media (min-width: 721px) {
+    .nexus-journal-row .nexus-journal-pin { width: 44px !important; }
+    .nexus-journal-row .nexus-journal-pin > svg { left: 15px !important; }
+    .nexus-journal-row .nexus-pin-priority {
+      position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+      font-family: "Maple Mono", monospace; font-size: 11px !important;
+      line-height: 1; color: #b7ff00;
+    }
+  }
+  .nexus-mobile-pin-priority { color: #b7ff00; font-size: 10px !important; }
+</style>
