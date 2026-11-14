@@ -5,11 +5,21 @@ import { TinaCloudAuthProvider } from 'tinacms';
     frontendUrl: 'https://app.tina.io',
     tokenStorage: 'LOCAL_STORAGE',
   });
+  const NEXUS_OWNER_HASH = "799e0adfd93ab640fc358f4673104045dbae27beaa5df9881173ca67ada333e7";
+  async function isNexusOwner(user: unknown): Promise<boolean> {
+    if (!user || typeof user !== "object") return false;
+    const u = user as { id?: unknown; verified?: unknown; enabled?: unknown };
+    if (typeof u.id !== "string" || !u.id || u.verified !== true || u.enabled !== true) return false;
+    const bytes = new TextEncoder().encode(u.id);
+    const digest = await crypto.subtle.digest("SHA-256", bytes);
+    const hash = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, "0")).join("");
+    return hash === NEXUS_OWNER_HASH;
+  }
   const state = window as Window & { __nexusTinaAdmin?: boolean };
   const adminWindow = window as Window & { __nexusBlogMutation?: (kind: string, pathname: string, sticky: boolean) => Promise<void> };
   adminWindow.__nexusBlogMutation = async (kind, pathname, sticky) => {
     const user = await provider.getUser();
-    if (!user || user.verified !== true || user.enabled !== true || String(user.role).toLowerCase() !== "admin") throw new Error("Administrator login required");
+    if (!user || !(await isNexusOwner(user))) throw new Error("Administrator login required");
     const slug = new RegExp("^/blog/([^/]+)/?$").exec(pathname)?.[1];
     if (!slug) throw new Error("Invalid article path");
     const token = await provider.getToken();
@@ -44,7 +54,7 @@ import { TinaCloudAuthProvider } from 'tinacms';
       if (!localStorage.getItem('tinacms-auth')) return;
       const user = await provider.getUser();
       if (current !== revision) return;
-      state.__nexusTinaAdmin = Boolean(user && user.verified === true && user.enabled === true && String(user.role).toLowerCase() === 'admin');
+      state.__nexusTinaAdmin = await isNexusOwner(user);
       apply();
     } catch {
       if (current === revision) { state.__nexusTinaAdmin = false; apply(); }
