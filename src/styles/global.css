@@ -3585,7 +3585,18 @@ body.media-review-page .media-review-content blockquote {
 /* NEXUS MEDIA REVIEW TYPOGRAPHY START */
 
 body.media-review-page .media-review-intro h1 {
+  color: #e7e8e4 !important;
   font-family: "Host Grotesk Variable", "Inter Variable", "Helvetica Neue", Arial, sans-serif !important;
+  font-size: clamp(2.85rem, 4.35vw, 4.7rem) !important;
+  font-weight: 800 !important;
+  line-height: 0.98 !important;
+  letter-spacing: -0.055em !important;
+}
+
+@media (max-width: 720px) {
+  body.media-review-page .media-review-intro h1 {
+    font-size: clamp(2.45rem, 12vw, 3.7rem) !important;
+  }
 }
 
 body.media-review-page .media-review-creator {
