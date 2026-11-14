@@ -3581,3 +3581,67 @@ body.media-review-page .media-review-content blockquote {
 }
 
 /* NEXUS_MEDIA_REVIEW_MOBILE_STACK_V1 END */
+
+/* NEXUS MEDIA REVIEW TYPOGRAPHY START */
+
+body.media-review-page .media-review-intro h1 {
+  font-family: "Host Grotesk Variable", "Inter Variable", "Helvetica Neue", Arial, sans-serif !important;
+}
+
+body.media-review-page .media-review-creator {
+  font-family: "Inter Variable", "Helvetica Neue", Arial, sans-serif !important;
+}
+
+body.media-review-page .media-review-kicker,
+body.media-review-page .media-review-details {
+  font-family: "Maple Mono", monospace !important;
+}
+
+body.media-review-page .media-review-content,
+body.media-review-page .media-review-content p,
+body.media-review-page .media-review-content li {
+  font-family: "Helvetica Neue", Helvetica, Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", "YuGothic", sans-serif !important;
+  font-size: 1rem !important;
+  font-weight: 400 !important;
+  line-height: 1.8 !important;
+  letter-spacing: 0 !important;
+}
+
+body.media-review-page .media-review-content h2,
+body.media-review-page .media-review-content h3,
+body.media-review-page .media-review-content h4 {
+  font-family: "Helvetica Neue", Helvetica, Arial, "Hiragino Sans", "Yu Gothic", "YuGothic", sans-serif !important;
+  font-style: normal !important;
+  text-transform: none !important;
+  letter-spacing: -0.015em !important;
+}
+
+body.media-review-page .media-review-content blockquote {
+  font-family: "Helvetica Neue", Helvetica, Arial, "Hiragino Sans", "Yu Gothic", "YuGothic", sans-serif !important;
+  font-size: 1rem !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  line-height: 1.8 !important;
+  letter-spacing: 0 !important;
+}
+
+body.media-review-page .media-review-content blockquote p {
+  font-family: inherit !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+}
+
+body.media-review-page .media-review-content :lang(en) {
+  font-family: Georgia, "Times New Roman", Times, serif !important;
+  font-style: normal !important;
+  letter-spacing: 0 !important;
+}
+
+@media (max-width: 700px) {
+  body.media-review-page .media-review-content blockquote {
+    font-size: 0.98rem !important;
+    line-height: 1.8 !important;
+  }
+}
+
+/* NEXUS MEDIA REVIEW TYPOGRAPHY END */
