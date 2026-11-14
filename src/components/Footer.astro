@@ -15,6 +15,9 @@
         <a class="author" href="/about">
           猫学
         </a>
+
+        <span class="footer-admin-separator" aria-hidden="true">|</span>
+        <a class="footer-admin" href="/admin/index.html" target="_blank" rel="noopener noreferrer" aria-label="ADMIN - TinaCMS management (opens in a new tab)">ADMIN <span aria-hidden="true">↗</span></a>
       </span>
     </div>
   </div>
@@ -445,3 +448,33 @@
 }
 </style>
 
+
+
+<style is:global>
+  /* NEXUS FOOTER ADMIN LINK */
+  .site-footer .footer-admin-separator {
+    color: #454b42;
+    user-select: none;
+  }
+  .site-footer .footer-admin,
+  .site-footer .footer-admin:visited {
+    display: inline-block;
+    color: #b7ff00;
+    font: inherit;
+    white-space: nowrap;
+    text-decoration: none;
+    transition: color 220ms ease, text-shadow 220ms ease;
+  }
+  .site-footer .footer-admin:hover,
+  .site-footer .footer-admin:focus-visible {
+    color: #e1ff99;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-shadow: 0 0 8px rgba(183, 255, 0, 0.35);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .site-footer .footer-admin {
+      transition: none;
+    }
+  }
+</style>
