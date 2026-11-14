@@ -13,6 +13,10 @@ type TagLink = string | { name: string; slug: string };
 interface Props {
   title: string;
   description?: string;
+  japaneseTitle?: string;
+  japaneseDescription?: string;
+  hasJapaneseTranslation?: boolean;
+  sticky?: boolean;
   date?: Date;
   wordCount: number;
   readingTime: string;
@@ -31,6 +35,10 @@ interface Props {
 const {
   title,
   description,
+  japaneseTitle = "",
+  japaneseDescription = "",
+  hasJapaneseTranslation = false,
+  sticky = false,
   date,
   wordCount,
   readingTime,
@@ -56,6 +64,10 @@ const isArchiveHeader = variant === 'archive';
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
 const ui = getUiText(await getSiteConfig());
 const wordCountLabel = ui.article.wordCount(wordCount);
+const blogArticleId = /^\/blog\/([^/]+)\/?$/.exec(pathname)?.[1];
+const tinaEditHref = blogArticleId
+  ? `${basePath}/admin/index.html#/collections/edit/blog/${encodeURIComponent(blogArticleId)}`
+  : `${basePath}/admin/index.html#/collections/blog`;
 ---
 
 <header
@@ -153,10 +165,10 @@ const wordCountLabel = ui.article.wordCount(wordCount);
 
           <div class="editorial-author-row">
             <div class="editorial-author">
-              <div class="editorial-avatar" aria-hidden="true">N</div>
+              <div class="editorial-avatar"><img src="/images/about/cat-icon.gif" alt="" /></div>
 
               <div class="editorial-author-info">
-                <span class="editorial-author-name">NEXUS</span>
+                <span class="editorial-author-name">猫学</span>
 
                 {date && (
                   <span class="editorial-published">
@@ -166,16 +178,58 @@ const wordCountLabel = ui.article.wordCount(wordCount);
               </div>
             </div>
 
-            <button
-              class="editorial-menu"
-              type="button"
-              aria-label="Article menu"
-              title="Article menu"
-            >
-              <span></span>
-              <span></span>
-              <span></span>
-            </button>
+            <div
+  class="editorial-controls"
+  data-editorial-controls
+  data-ja-title={japaneseTitle}
+  data-ja-description={japaneseDescription}
+  data-editor-href={`${basePath}/admin/#/~${pathname}`}
+>
+  <button
+      class="editorial-language"
+      type="button"
+      data-japanese-original
+      data-current-lang="en"
+      aria-label="日本語訳を表示"
+    >
+      日本語
+    </button>
+
+  <div class="editorial-menu-wrap">
+    <button
+      class="editorial-menu"
+      type="button"
+      aria-label="Article menu"
+      aria-expanded="false"
+      data-editorial-menu-trigger
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <div
+      class="editorial-menu-panel"
+      data-editorial-menu-panel
+      hidden
+    >
+      <div data-editorial-public-menu>
+        <button class="editorial-menu-item" type="button" data-editorial-copy>Copy Link</button>
+        <button class="editorial-menu-item" type="button" data-editorial-share>Share</button>
+      </div>
+
+      <div data-editorial-editor-menu hidden>
+        <a class="editorial-menu-item" href={tinaEditHref} data-nexus-admin-action="pin" data-nexus-sticky={sticky ? "true" : "false"}>{sticky ? "Unpin from profile" : "Pin to profile"}</a>
+        <a class="editorial-menu-item" href={tinaEditHref} data-nexus-admin-action="edit">Edit</a>
+        <a class="editorial-menu-item" href={tinaEditHref} data-nexus-admin-action="draft">Revert to draft</a>
+        <a class="editorial-menu-item is-danger" href={tinaEditHref} data-nexus-admin-action="delete">Delete</a>
+        <div class="editor-admin-menu-divider" aria-hidden="true"></div>
+        <button class="editorial-menu-item" type="button" data-editorial-copy>Copy Link</button>
+        <button class="editorial-menu-item" type="button" data-editorial-share>Share</button>
+      </div>
+    </div>
+  </div>
+</div>
           </div>
         </div>
       </>
@@ -1310,6 +1364,9 @@ const wordCountLabel = ui.article.wordCount(wordCount);
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
     font-size: 0.78rem !important;
     font-weight: 700 !important;
+    box-shadow:
+      0 0 5px rgba(183, 255, 0, 0.22),
+      0 0 12px rgba(183, 255, 0, 0.08) !important;
   }
 
   .editorial-author-info {
@@ -1577,7 +1634,1181 @@ const wordCountLabel = ui.article.wordCount(wordCount);
 
 .blog-detail-page .editorial-author-row {
   border-bottom: 1px solid rgba(255, 255, 255, 0.18) !important;
-  padding-bottom: 7mm !important;
-  margin-bottom: 7mm !important;
+  padding-bottom: 1cm !important;
+  margin-bottom: 1cm !important;
 }
 </style>
+<style is:global>
+/* NEXUS ARTICLE AUTHOR AVATAR — CAT GIF */
+
+.blog-detail-page .editorial-avatar {
+  overflow: hidden !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.blog-detail-page .editorial-avatar img {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  border: 0 !important;
+  border-radius: 50% !important;
+}
+</style>
+
+
+<!-- NEXUS ARTICLE HEADER CONTROLS START -->
+
+<style is:global>
+
+/* RIGHT SIDE */
+.blog-detail-page
+.article-header:not(.article-header-archive)
+.editorial-controls {
+  position: relative !important;
+
+  display: flex !important;
+  align-items: center !important;
+
+  gap: 8px !important;
+
+  margin-left: auto !important;
+}
+
+
+/* JAPANESE BOX */
+.blog-detail-page
+.article-header:not(.article-header-archive)
+.editorial-language {
+  appearance: none !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  height: 29px !important;
+
+  padding: 0 10px !important;
+
+  border:
+    1px solid
+    rgba(183, 255, 0, 0.48) !important;
+
+  border-radius: 4px !important;
+
+  background:
+    rgba(5, 5, 5, 0.65) !important;
+
+  color:
+    #92978f !important;
+
+  font-family:
+    "Helvetica Neue",
+    Helvetica,
+    Arial,
+    sans-serif !important;
+
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+
+  line-height: 1 !important;
+
+  cursor: pointer !important;
+
+  transition:
+    color 170ms ease,
+    border-color 170ms ease,
+    box-shadow 190ms ease !important;
+}
+
+.blog-detail-page
+.article-header:not(.article-header-archive)
+.editorial-language:hover {
+  color: #b7ff00 !important;
+
+  border-color:
+    rgba(183, 255, 0, 0.82) !important;
+
+  box-shadow:
+    0 0 7px
+    rgba(183, 255, 0, 0.10) !important;
+}
+
+
+/* THREE DOTS */
+.blog-detail-page
+.article-header:not(.article-header-archive)
+.editorial-menu-wrap {
+  position: relative !important;
+}
+
+.blog-detail-page
+.article-header:not(.article-header-archive)
+.editorial-menu {
+  appearance: none !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  gap: 3px !important;
+
+  width: 30px !important;
+  height: 30px !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  border: 0 !important;
+
+  background: transparent !important;
+
+  cursor: pointer !important;
+}
+
+.blog-detail-page
+.article-header:not(.article-header-archive)
+.editorial-menu span {
+  display: block !important;
+
+  width: 3px !important;
+  height: 3px !important;
+
+  border-radius: 50% !important;
+
+  background: #b7ff00 !important;
+
+  box-shadow:
+    0 0 4px
+    rgba(183, 255, 0, 0.42) !important;
+}
+
+
+/* POPUP */
+.blog-detail-page
+.article-header:not(.article-header-archive)
+.editorial-menu-panel {
+  position: absolute !important;
+
+  top: calc(100% + 8px) !important;
+  right: 0 !important;
+
+  z-index: 200 !important;
+
+  width: 180px !important;
+
+  padding: 6px !important;
+
+  border:
+    1px solid
+    rgba(183, 255, 0, 0.16) !important;
+
+  border-radius: 6px !important;
+
+  background:
+    rgba(7, 8, 7, 0.985) !important;
+
+  box-shadow:
+    0 16px 40px
+    rgba(0, 0, 0, 0.52) !important;
+}
+
+.blog-detail-page
+.editorial-menu-panel[hidden] {
+  display: none !important;
+}
+
+.blog-detail-page
+.editorial-menu-item {
+  appearance: none !important;
+
+  display: flex !important;
+  align-items: center !important;
+
+  width: 100% !important;
+
+  padding: 9px 10px !important;
+
+  border: 0 !important;
+  border-radius: 4px !important;
+
+  background: transparent !important;
+
+  color:
+    #a9ada6 !important;
+
+  font-family:
+    "Helvetica Neue",
+    Helvetica,
+    Arial,
+    sans-serif !important;
+
+  font-size: 0.78rem !important;
+  font-weight: 500 !important;
+
+  text-align: left !important;
+  text-decoration: none !important;
+
+  cursor: pointer !important;
+}
+
+.blog-detail-page
+.editorial-menu-item:hover {
+  background:
+    rgba(183, 255, 0, 0.055) !important;
+
+  color: #b7ff00 !important;
+}
+
+.blog-detail-page
+.editorial-menu-item.is-danger {
+  color: #e86464 !important;
+}
+
+.blog-detail-page
+.editorial-menu-item.is-danger:hover {
+  background:
+    rgba(255, 75, 75, 0.07) !important;
+
+  color: #ff6d6d !important;
+}
+
+</style>
+
+
+<script is:inline>
+(() => {
+
+  const closeMenus = () => {
+
+    document
+      .querySelectorAll('[data-editorial-menu-panel]')
+      .forEach((panel) => {
+        panel.hidden = true;
+      });
+
+    document
+      .querySelectorAll('[data-editorial-menu-trigger]')
+      .forEach((button) => {
+        button.setAttribute(
+          'aria-expanded',
+          'false'
+        );
+      });
+
+  };
+
+
+  const editorMode = () => {
+    return window.location.hostname === 'localhost' ||
+      window.location.hostname === '127.0.0.1';
+  };
+
+
+  const init = () => {
+
+    const editing =
+      editorMode();
+
+    document
+      .querySelectorAll('[data-editorial-controls]')
+      .forEach((root) => {
+
+        const publicMenu =
+          root.querySelector(
+            '[data-editorial-public-menu]'
+          );
+
+        const editorMenu =
+          root.querySelector(
+            '[data-editorial-editor-menu]'
+          );
+
+        if (publicMenu) {
+          publicMenu.hidden = editing;
+        }
+
+        if (editorMenu) {
+          editorMenu.hidden = !editing;
+        }
+
+      });
+
+  };
+
+
+  if (!window.__nexusHeaderControlsBound) {
+
+    window.__nexusHeaderControlsBound = true;
+
+
+    document.addEventListener(
+      'click',
+      async (event) => {
+
+        const target = event.target;
+
+        if (!(target instanceof Element)) {
+          return;
+        }
+
+
+        const trigger =
+          target.closest(
+            '[data-editorial-menu-trigger]'
+          );
+
+        if (trigger) {
+
+          const root =
+            trigger.closest(
+              '[data-editorial-controls]'
+            );
+
+          const panel =
+            root?.querySelector(
+              '[data-editorial-menu-panel]'
+            );
+
+          if (!panel) return;
+
+          const open =
+            panel.hidden;
+
+          closeMenus();
+
+          panel.hidden = !open;
+
+          trigger.setAttribute(
+            'aria-expanded',
+            open ? 'true' : 'false'
+          );
+
+          return;
+        }
+
+
+        const copy =
+          target.closest(
+            '[data-editorial-copy]'
+          );
+
+        if (copy) {
+
+          try {
+
+            await navigator.clipboard.writeText(
+              window.location.href
+            );
+
+            copy.textContent = 'Copied';
+
+            setTimeout(() => {
+              copy.textContent = 'Copy Link';
+            }, 1000);
+
+          } catch (_) {}
+
+          return;
+        }
+
+
+        const share =
+          target.closest(
+            '[data-editorial-share]'
+          );
+
+        if (share) {
+
+          if (navigator.share) {
+
+            try {
+
+              await navigator.share({
+                title: document.title,
+                url: window.location.href
+              });
+
+            } catch (_) {}
+
+          } else {
+
+            try {
+
+              await navigator.clipboard.writeText(
+                window.location.href
+              );
+
+            } catch (_) {}
+
+          }
+
+          closeMenus();
+
+          return;
+        }
+
+
+        const draft =
+          target.closest(
+            '[data-editorial-draft]'
+          );
+
+        if (draft) {
+
+          const root =
+            draft.closest(
+              '[data-editorial-controls]'
+            );
+
+          const href =
+            root?.dataset.editorHref;
+
+          if (
+            href &&
+            confirm(
+              'Open the editor to move this article to draft?'
+            )
+          ) {
+
+            sessionStorage.setItem(
+              'nexus-editor-intent',
+              'draft'
+            );
+
+            window.location.href = href;
+          }
+
+          return;
+        }
+
+
+        const del =
+          target.closest(
+            '[data-editorial-delete]'
+          );
+
+        if (del) {
+
+          const root =
+            del.closest(
+              '[data-editorial-controls]'
+            );
+
+          const href =
+            root?.dataset.editorHref;
+
+          if (
+            href &&
+            confirm(
+              'Open the editor to delete this article?'
+            )
+          ) {
+
+            sessionStorage.setItem(
+              'nexus-editor-intent',
+              'delete'
+            );
+
+            window.location.href = href;
+          }
+
+          return;
+        }
+
+
+        const languageButton = target.closest('[data-japanese-original]');
+        if (languageButton) {
+          const controls = languageButton.closest('[data-editorial-controls]');
+          const article = controls?.closest('article');
+          const heading = article?.querySelector('.editorial-heading > h1');
+          const subtitle = article?.querySelector('.editorial-subtitle');
+          const englishBody = article?.querySelector('#article-start');
+          const japaneseBody = article?.querySelector('#article-start-ja');
+          if (!heading || !englishBody || !controls) return;
+          if (!japaneseBody) {
+            window.alert('この記事の日本語訳はまだ登録されていません。');
+            return;
+          }
+
+          if (!heading.hasAttribute('data-original-title')) {
+            heading.dataset.originalTitle = heading.textContent || '';
+          }
+          if (subtitle && !subtitle.hasAttribute('data-original-description')) {
+            subtitle.dataset.originalDescription = subtitle.textContent || '';
+          }
+          if (!document.documentElement.hasAttribute('data-nexus-original-lang')) {
+            document.documentElement.dataset.nexusOriginalLang = document.documentElement.lang;
+          }
+
+          const showJapanese = languageButton.dataset.currentLang !== 'ja';
+          heading.textContent = showJapanese
+            ? (controls.dataset.jaTitle || '')
+            : (heading.dataset.originalTitle || '');
+          if (subtitle) {
+            subtitle.textContent = showJapanese
+              ? (controls.dataset.jaDescription || '')
+              : (subtitle.dataset.originalDescription || '');
+          }
+          englishBody.hidden = showJapanese;
+          japaneseBody.hidden = !showJapanese;
+          const toc = article.querySelector('.mobile-article-toc');
+          if (toc) toc.hidden = showJapanese;
+          languageButton.dataset.currentLang = showJapanese ? 'ja' : 'en';
+          languageButton.textContent = showJapanese ? 'English' : '日本語';
+          languageButton.setAttribute('aria-label',
+            showJapanese ? 'Show English original' : '日本語訳を表示');
+          document.documentElement.lang = showJapanese
+            ? 'ja'
+            : (document.documentElement.dataset.nexusOriginalLang || 'en');
+          heading.classList.toggle('nexus-title-japanese',
+            /[\u3040-\u30ff\u3400-\u9fff]/.test(heading.textContent || ''));
+          closeMenus();
+          return;
+        }
+
+
+        if (
+          !target.closest(
+            '[data-editorial-menu-panel]'
+          )
+        ) {
+          closeMenus();
+        }
+
+      }
+    );
+
+
+    document.addEventListener(
+      'keydown',
+      (event) => {
+
+        if (event.key === 'Escape') {
+          closeMenus();
+        }
+
+      }
+    );
+
+
+    document.addEventListener(
+      'astro:page-load',
+      init
+    );
+
+  }
+
+
+  init();
+
+})();
+</script>
+
+<!-- NEXUS ARTICLE HEADER CONTROLS END -->
+
+
+<!-- NEXUS JAPANESE TITLE SPACING START -->
+
+<style is:global>
+/*
+ * English title keeps the current tight display treatment.
+ * Japanese/CJK titles need more vertical breathing room.
+ */
+.blog-detail-page
+.article-header:not(.article-header-archive)
+.editorial-heading > h1.nexus-title-japanese {
+  line-height: 1.14 !important;
+  letter-spacing: -0.02em !important;
+}
+
+@media (max-width: 720px) {
+  .blog-detail-page
+  .article-header:not(.article-header-archive)
+  .editorial-heading > h1.nexus-title-japanese {
+    line-height: 1.16 !important;
+    letter-spacing: -0.015em !important;
+  }
+}
+</style>
+
+<script is:inline>
+(() => {
+  const applyJapaneseTitleSpacing = () => {
+    document
+      .querySelectorAll(
+        '.blog-detail-page .article-header:not(.article-header-archive) .editorial-heading > h1'
+      )
+      .forEach((title) => {
+        const text = title.textContent || '';
+
+        const hasJapanese =
+          /[\u3040-\u30ff\u3400-\u9fff]/.test(text);
+
+        title.classList.toggle(
+          'nexus-title-japanese',
+          hasJapanese
+        );
+      });
+  };
+
+  applyJapaneseTitleSpacing();
+
+  document.addEventListener(
+    'astro:page-load',
+    applyJapaneseTitleSpacing
+  );
+})();
+</script>
+
+<!-- NEXUS JAPANESE TITLE SPACING END -->
+
+
+
+
+<style is:global>
+  .editor-admin-menu-block {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .editor-admin-menu-item {
+    appearance: none;
+
+    display: flex;
+
+    width: 100%;
+
+    padding: 9px 10px;
+
+    border: 0;
+    border-radius: 4px;
+
+    background: transparent;
+
+    color: rgba(203, 206, 200, 0.80);
+
+    font-family:
+      "Helvetica Neue",
+      Helvetica,
+      Arial,
+      sans-serif;
+
+    font-size: 0.78rem;
+    font-weight: 500;
+    line-height: 1.25;
+
+    text-align: left;
+    text-decoration: none;
+
+    cursor: pointer;
+}
+
+  .editor-admin-menu-item:hover {
+    background: rgba(255, 255, 255, 0.035);
+  }
+
+  .editor-admin-menu-item-danger {
+    color: rgba(255, 92, 92, 0.88) !important;
+}
+
+  .editor-admin-menu-divider {
+    width: 100%;
+    height: 1px;
+    margin: 0.22rem 0;
+
+    background: rgba(255, 255, 255, 0.11);
+  }
+</style>
+
+<!-- NEXUS EDITOR ACTION BRIDGE START -->
+
+<style is:global>
+  .nexus-editor-action-toast {
+    position: fixed;
+    right: 22px;
+    bottom: 24px;
+    z-index: 99999;
+
+    max-width: min(360px, calc(100vw - 32px));
+
+    padding: 11px 14px;
+
+    border:
+      1px solid
+      rgba(183, 255, 0, 0.28);
+
+    border-radius: 5px;
+
+    background:
+      rgba(8, 9, 8, 0.97);
+
+    color:
+      rgba(225, 228, 221, 0.94);
+
+    font-family:
+      "Helvetica Neue",
+      Helvetica,
+      Arial,
+      sans-serif;
+
+    font-size: 0.78rem;
+    font-weight: 500;
+    line-height: 1.45;
+
+    box-shadow:
+      0 12px 34px
+      rgba(0, 0, 0, 0.42);
+
+    opacity: 0;
+
+    transform:
+      translateY(8px);
+
+    pointer-events: none;
+
+    transition:
+      opacity 160ms ease,
+      transform 160ms ease;
+  }
+
+  .nexus-editor-action-toast.is-visible {
+    opacity: 1;
+
+    transform:
+      translateY(0);
+  }
+
+  .nexus-editor-action-toast.is-danger {
+    border-color:
+      rgba(255, 92, 92, 0.38);
+
+    color:
+      rgba(255, 135, 135, 0.96);
+  }
+</style>
+
+<script is:inline>
+(() => {
+
+  if (
+    window.__nexusEditorActionBridge
+  ) {
+    return;
+  }
+
+  window.__nexusEditorActionBridge =
+    true;
+
+
+  let toastTimer = null;
+
+
+  const cleanPageUrl = () => {
+
+    const url =
+      new URL(
+        window.location.href
+      );
+
+    /*
+     * 管理確認用パラメータを
+     * Copy / Share には含めない。
+     */
+    url.searchParams.delete(
+      'editor'
+    );
+
+    return url.href;
+  };
+
+
+  const getToast = () => {
+
+    let toast =
+      document.querySelector(
+        '.nexus-editor-action-toast'
+      );
+
+    if (toast) {
+      return toast;
+    }
+
+    toast =
+      document.createElement(
+        'div'
+      );
+
+    toast.className =
+      'nexus-editor-action-toast';
+
+    toast.setAttribute(
+      'role',
+      'status'
+    );
+
+    toast.setAttribute(
+      'aria-live',
+      'polite'
+    );
+
+    document.body.appendChild(
+      toast
+    );
+
+    return toast;
+  };
+
+
+  const showToast = (
+    message,
+    danger = false
+  ) => {
+
+    const toast =
+      getToast();
+
+    toast.textContent =
+      message;
+
+    toast.classList.toggle(
+      'is-danger',
+      danger
+    );
+
+    toast.classList.add(
+      'is-visible'
+    );
+
+    if (toastTimer) {
+      clearTimeout(
+        toastTimer
+      );
+    }
+
+    toastTimer =
+      setTimeout(() => {
+
+        toast.classList.remove(
+          'is-visible'
+        );
+
+      }, 2200);
+  };
+
+
+  const copyText = async (
+    text
+  ) => {
+
+    if (
+      navigator.clipboard &&
+      window.isSecureContext
+    ) {
+
+      await navigator.clipboard.writeText(
+        text
+      );
+
+      return;
+    }
+
+    const textarea =
+      document.createElement(
+        'textarea'
+      );
+
+    textarea.value =
+      text;
+
+    textarea.style.position =
+      'fixed';
+
+    textarea.style.opacity =
+      '0';
+
+    document.body.appendChild(
+      textarea
+    );
+
+    textarea.focus();
+    textarea.select();
+
+    document.execCommand(
+      'copy'
+    );
+
+    textarea.remove();
+  };
+
+
+  const normaliseLabel = (
+    element
+  ) => {
+
+    return (
+      element?.textContent ||
+      ''
+    )
+      .replace(
+        /\s+/g,
+        ' '
+      )
+      .trim();
+  };
+
+
+  /*
+   * capture=true:
+   * 既存メニュースクリプトより先に
+   * Copy / Share / CMS待ち操作を処理する。
+   */
+  window.addEventListener(
+    'click',
+    async (event) => {
+
+      const target =
+        event.target;
+
+      if (
+        !(target instanceof Element)
+      ) {
+        return;
+      }
+
+      const action =
+        target.closest(
+          'button, a'
+        );
+
+      if (!action) {
+        return;
+      }
+
+      /*
+       * 記事上部の三点メニュー以外は対象外。
+       */
+      const inArticleMenu =
+        action.closest(
+          '.editorial-menu-panel, .editor-admin-menu-block, [data-editorial-menu-panel]'
+        );
+
+      if (!inArticleMenu) {
+        return;
+      }
+
+      const adminAction = action.closest('[data-nexus-admin-action]');
+
+      if (adminAction) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (!['localhost', '127.0.0.1'].includes(window.location.hostname)) return;
+
+        const kind = adminAction.dataset.nexusAdminAction;
+        const messages = {
+          pin: adminAction.dataset.nexusSticky === 'true' ? 'TinaCMSで Sticky をオフにして Save を押してください。' : 'TinaCMSで Sticky をオンにして Save を押してください。',
+          draft: 'TinaCMSで Draft をオンにして Save を押してください。',
+          delete: 'TinaCMSの編集画面で Delete を実行してください。'
+        };
+
+        if (kind === 'delete' &&
+            !window.confirm('削除操作のためTinaCMSを開きます。続けますか？')) return;
+
+        if (messages[kind]) window.alert(messages[kind]);
+
+        window.location.assign(adminAction.href);
+        return;
+      }
+      const label =
+        normaliseLabel(
+          action
+        );
+
+
+      /* =====================================
+         COPY LINK — 完全動作
+         ===================================== */
+
+      if (
+        label === 'Copy Link'
+      ) {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        try {
+
+          await copyText(
+            cleanPageUrl()
+          );
+
+          showToast(
+            'Link copied'
+          );
+
+        } catch (_) {
+
+          showToast(
+            'Could not copy link',
+            true
+          );
+
+        }
+
+        return;
+      }
+
+
+      /* =====================================
+         SHARE — 完全動作
+         ===================================== */
+
+      if (
+        label === 'Share'
+      ) {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        const shareData = {
+          title:
+            document.title,
+
+          url:
+            cleanPageUrl()
+        };
+
+        if (
+          typeof navigator.share ===
+          'function'
+        ) {
+
+          try {
+
+            await navigator.share(
+              shareData
+            );
+
+          } catch (error) {
+
+            /*
+             * ユーザー自身がShare UIを閉じた場合は
+             * エラー表示しない。
+             */
+            if (
+              error?.name !==
+              'AbortError'
+            ) {
+
+              showToast(
+                'Share failed',
+                true
+              );
+            }
+          }
+
+          return;
+        }
+
+        try {
+
+          await copyText(
+            shareData.url
+          );
+
+          showToast(
+            'Share link copied'
+          );
+
+        } catch (_) {
+
+          showToast(
+            'Share is unavailable',
+            true
+          );
+        }
+
+        return;
+      }
+
+
+      /* =====================================
+         CMS接続後に永続化する操作
+         ===================================== */
+
+      if (
+        label ===
+        'Pin to profile'
+      ) {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        showToast(
+          'Pinning will be enabled when TinaCMS is connected.'
+        );
+
+        return;
+      }
+
+
+      if (
+        label ===
+        'Edit'
+      ) {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        showToast(
+          'Editing will be enabled when TinaCMS is connected.'
+        );
+
+        return;
+      }
+
+
+      if (
+        label ===
+        'Revert to draft'
+      ) {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        showToast(
+          'Draft control will be enabled when TinaCMS is connected.'
+        );
+
+        return;
+      }
+
+
+      if (
+        label ===
+        'Delete'
+      ) {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        showToast(
+          'Delete will be enabled when TinaCMS is connected.',
+          true
+        );
+
+        return;
+      }
+
+    },
+    true
+  );
+
+})();
+</script>
+
+<!-- NEXUS EDITOR ACTION BRIDGE END -->

@@ -3,8 +3,8 @@ title = "Pour en finir avec le jugement de Dieu"
 description = "A personal navigation portfolio starter built with Astro."
 pageTitle = "navfolio | Digital Publication Space"
 pageDescription = "A calm AI-native personal publication space for notes, links, and writing."
-url = "https://astro.navfolio.site"
-repository = "https://github.com/dodolalorc/astro-navfolio"
+url = "https://nekogaku.com"
+repository = "https://github.com/catlogy1-new/neko-gaku"
 footerNote = "Released as an open-source starter."
 
 [config.theme]
@@ -84,7 +84,7 @@ subtitle = "Le \u201ccrime parfait\u201d n'existe pas, mais la r\u00e9alit\u00e9
 note = "l'abolition du r\u00e9el par son double."
 showTrail = true
 [config.pages.media]
-title = "书影音"
+title = "ECHOES"
 subtitle = "读过、看过、听过的作品，以及一点当时的感受。"
 note = "一页浏览书、电影、剧集、专辑与播客。"
 
@@ -121,8 +121,8 @@ name = "navfolio"
 handle = "@navfolio"
 role = "A Cat Developer"
 email = "hello@navfolio.site"
-website = "https://astro.navfolio.site/"
-github = "https://github.com/dodolalorc/astro-navfolio"
+website = "https://nekogaku.com/"
+github = "https://github.com/catlogy1-new/neko-gaku"
 avatar = "/images/logo-thin.webp"
 
 [[config.topNav.links]]
@@ -182,7 +182,7 @@ dateArchiveBaseHref = ""
 icon = "compass"
 title = "Portfolio"
 subtitle = "Selected work and case studies"
-href = "https://astro.navfolio.site/"
+href = "https://nekogaku.com/"
 
 [[config.home.navigation]]
 icon = "pen"
@@ -200,12 +200,12 @@ href = "https://github.com/dodolalorc/navfolio"
 icon = "github"
 title = "Open Source"
 subtitle = "Code, experiments, and tools"
-href = "https://github.com/dodolalorc/astro-navfolio"
+href = "https://github.com/catlogy1-new/neko-gaku"
 
 [[config.home.links]]
 label = "GitHub"
 icon = "github"
-tooltip = "https://github.com/dodolalorc/astro-navfolio"
+tooltip = "https://github.com/catlogy1-new/neko-gaku"
 copy = false
 
 [[config.home.links]]

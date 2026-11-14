@@ -1,0 +1,16 @@
+---
+import TinaMarkdown from '@tinacms/astro/TinaMarkdown.astro';
+import { tinaField } from '@tinacms/astro/tina-field';
+import type { BlogQuery } from '../../../tina/__generated__/types';
+
+interface Props {
+  data?: BlogQuery['blog'] | null;
+}
+
+const { data } = Astro.props;
+---
+{data?.body && (
+  <div data-tina-field={tinaField(data, 'body')}>
+    <TinaMarkdown content={data.body} />
+  </div>
+)}

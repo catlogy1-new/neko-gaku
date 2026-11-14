@@ -1,0 +1,1039 @@
+---
+import PulseEntry from '../../../components/tina/PulseEntry.astro';
+import { getCollection, render } from 'astro:content';
+import TinaIsland from '@tinacms/astro/TinaIsland.astro';
+import {
+  BaseHead,
+  BlogTopNav,
+  Footer,
+  FormattedDate,
+  SmartImage,
+  ZoomableImage,
+  getHtmlLang,
+  getI18n,
+  getSiteConfig,
+  vibeFlightIconUrl,
+} from 'virtual:navfolio/page-runtime';
+import { getVibeImageLayout } from './lib/vibe-image-layout';
+
+const siteConfig = await getSiteConfig();
+const { site, theme, pages } = siteConfig;
+const palette = theme.palette;
+const htmlLang = getHtmlLang(siteConfig);
+const i18n = getI18n(siteConfig);
+const pageMeta = pages.vibe;
+const showTrail = pageMeta.showTrail;
+
+const vibeEntries = (await getCollection('vibe'))
+  .filter((item) => !item.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const pulsePageSize = 10;
+const pulsePageNumber = Math.max(1, Math.floor(Number(Astro.props.pageNumber ?? 1)) || 1);
+const pulseTotalPages = Math.max(1, Math.ceil(vibeEntries.length / pulsePageSize));
+const pulsePageEntries = vibeEntries.slice(
+  (pulsePageNumber - 1) * pulsePageSize,
+  pulsePageNumber * pulsePageSize,
+);
+const pulseBaseUrl = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/vibe`;
+const pulsePageUrl = (number: number) =>
+  number === 1 ? pulseBaseUrl : `${pulseBaseUrl}/page/${number}`;
+
+
+const vibes = await Promise.all(
+  pulsePageEntries.map(async (entry, index) => {
+    const { Content } = await render(entry);
+    const align = entry.data.align ?? (index % 2 === 0 ? 'left' : 'right');
+    const imageLayout = getVibeImageLayout(entry.data.images.length);
+
+    return { entry, Content, align, imageLayout };
+  }),
+);
+import ScrollToTopButton from '../../../components/ScrollToTopButton.astro';
+---
+
+<!doctype html>
+<html
+  lang={htmlLang}
+  data-palette={palette}
+  style={`--vibe-flight-icon: url("${vibeFlightIconUrl}");`}
+>
+  <head>
+    <BaseHead title={`${pageMeta.title} | ${site.title}`} description={pageMeta.subtitle} />
+    <style is:global>
+      html {
+        scroll-behavior: smooth;
+      }
+
+      main {
+        width: min(100%, var(--layout-shell-width));
+        padding-top: 126px;
+      }
+
+      .vibe-shell {
+        position: relative;
+      }
+
+      .vibe-hero {
+        position: relative;
+        width: 100%;
+        margin-bottom: clamp(72px, 10vw, 132px);
+        padding-bottom: 17px;
+      }
+
+      .vibe-hero::after {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          rgba(255, 82, 0, 0.02) 0%,
+          rgba(255, 82, 0, 0.05) 18%,
+          rgba(255, 82, 0, 0.14) 42%,
+          rgba(255, 82, 0, 0.38) 68%,
+          rgba(255, 82, 0, 0.72) 86%,
+          rgba(255, 82, 0, 0.96) 100%
+        );
+        content: '';
+        pointer-events: none;
+      }
+
+      .vibe-kicker {
+        margin: 0 0 11px;
+        color: #b7ff00;
+        font-family:
+          "Maple Mono",
+          monospace;
+        font-size: 0.66rem;
+        font-weight: 700;
+        line-height: 1.2;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      .vibe-title {
+        margin: 0;
+        color: #e7e8e4;
+        font-family:
+          "Host Grotesk Variable",
+          "Inter Variable",
+          "Helvetica Neue",
+          Arial,
+          sans-serif;
+        font-size: clamp(2.85rem, 4.35vw, 4.7rem);
+        font-weight: 800;
+        line-height: 0.94;
+        letter-spacing: -0.065em;
+        text-transform: uppercase;
+      }
+
+      .vibe-description {
+        margin-top: 14px;
+        padding-bottom: 17px;
+      }
+
+      .vibe-subtitle,
+      .vibe-note {
+        width: auto;
+        max-width: none;
+        margin: 0;
+        color: #858b83;
+        font-family:
+          "Inter Variable",
+          "Helvetica Neue",
+          Arial,
+          sans-serif;
+        font-size: 0.82rem;
+        font-weight: 400;
+        line-height: 1.65;
+      }
+
+      .vibe-stream {
+        position: relative;
+        display: grid;
+        gap: clamp(58px, 8vw, 124px);
+        padding-bottom: clamp(24px, 7vw, 72px);
+      }
+
+      .vibe-thread {
+        position: absolute;
+        inset: -28px 0 -24px;
+        z-index: 0;
+        width: 100%;
+        height: calc(100% + 52px);
+        overflow: visible;
+        pointer-events: none;
+      }
+
+      .vibe-thread-path,
+      .vibe-thread-grain {
+        fill: none;
+        stroke: url(#vibe-pencil-fade);
+        stroke-width: 2px;
+        stroke-linecap: round;
+        opacity: 0.12;
+        filter:
+          url(#vibe-pencil-texture)
+          drop-shadow(0 0 6px rgba(168, 85, 247, 0.08));
+        pointer-events: none;
+      }
+
+      .vibe-thread-path {
+  fill: none;
+  stroke: url(#vibe-pencil-fade);
+  stroke-width: 1.45px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.82;
+  filter:
+    drop-shadow(0 0 3px rgba(54, 231, 255, 0.16))
+    drop-shadow(0 0 5px rgba(255, 60, 166, 0.10))
+    drop-shadow(0 0 6px rgba(168, 85, 247, 0.10));
+}
+
+
+      .vibe-item {
+        scroll-margin-top: 126px;
+        position: relative;
+        z-index: 1;
+        width: min(100%, 620px);
+        animation: vibe-arrive 520ms both;
+        animation-delay: calc(var(--vibe-index) * 72ms);
+      }
+
+      .vibe-item.is-vibe-hidden {
+        display: none;
+      }
+
+      .vibe-dot {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        border: 1px solid rgba(183, 255, 0, 0.72);
+        border-radius: 50%;
+        background: #050607;
+        box-shadow:
+          0 0 0 2px rgba(183, 255, 0, 0.05),
+          0 0 7px rgba(183, 255, 0, 0.16);
+      }
+
+      .vibe-item.left {
+        justify-self: start;
+        text-align: left;
+      }
+
+      .vibe-item.left .vibe-dot {
+        right: -28px;
+      }
+
+      .vibe-item.right {
+        justify-self: end;
+        text-align: right;
+      }
+
+      .vibe-item.right .vibe-dot {
+        left: -28px;
+      }
+
+      .vibe-item.center {
+        justify-self: center;
+        text-align: center;
+      }
+
+      .vibe-item.center .vibe-dot {
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .vibe-item.sm {
+        max-width: 330px;
+      }
+
+      .vibe-item.md {
+        max-width: 530px;
+      }
+
+      .vibe-item.lg {
+        max-width: 690px;
+      }
+
+      .vibe-item:nth-child(3n + 1) {
+        transform: translateX(2vw);
+      }
+
+      .vibe-item:nth-child(3n + 2) {
+        transform: translateX(-3vw);
+      }
+
+      .vibe-item:nth-child(3n) {
+        transform: translateX(0);
+      }
+
+      .vibe-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.38rem 0.7rem;
+        color: #b7ff00;
+        font-family:
+          "Inter Variable",
+          "Helvetica Neue",
+          Arial,
+          sans-serif;
+        font-size: 0.72rem;
+        font-weight: 500;
+        letter-spacing: 0.055em;
+      }
+
+      .vibe-item.right .vibe-meta {
+        justify-content: flex-end;
+      }
+
+      .vibe-item.center .vibe-meta {
+        justify-content: center;
+      }
+
+      .vibe-meta > * + *::before,
+      .vibe-tags::before {
+        margin: 0 8px;
+        color: var(--paper-line-strong);
+        content: '/';
+      }
+
+      .vibe-tags {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 0;
+      }
+
+      .vibe-tag + .vibe-tag::before {
+        margin: 0 6px;
+        color: var(--paper-line-strong);
+        content: ',';
+      }
+
+      .vibe-heading {
+  margin: 0.62rem 0 0;
+  color: #f1f2ef;
+  font-family:
+    "Host Grotesk Variable",
+    "Inter Variable",
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+  font-size: clamp(1.28rem, 1.75vw, 1.72rem);
+  font-weight: 560;
+  line-height: 1.18;
+  letter-spacing: -0.025em;
+}
+
+      .vibe-body {
+        color: #c4c8c3;
+        font-family:
+          "Inter Variable",
+          "Helvetica Neue",
+          Arial,
+          sans-serif;
+        font-weight: 400;
+        line-height: 1.82;
+      }
+
+      .vibe-body p {
+        margin: 0;
+        color: #c4c8c3;
+        font-family:
+          "Inter Variable",
+          "Helvetica Neue",
+          Arial,
+          sans-serif;
+        font-weight: 400;
+      }
+
+      .vibe-body p + p {
+        margin-top: 0.85em;
+      }
+
+      .vibe-body a {
+        color: var(--paper-accent);
+        text-underline-offset: 0.2em;
+      }
+
+      .vibe-body code {
+        color: var(--paper-accent);
+        background: transparent;
+      }
+
+      .vibe-images {
+        --vibe-image-active-columns: var(--vibe-image-columns);
+        --vibe-image-gap: 10px;
+        --vibe-image-cell: clamp(132px, 21vw, 172px);
+
+        display: grid;
+        grid-template-columns: repeat(var(--vibe-image-active-columns), minmax(0, 1fr));
+        gap: var(--vibe-image-gap);
+        margin: 16px 0 18px;
+        width: min(
+          100%,
+          calc(
+            (var(--vibe-image-columns) * var(--vibe-image-cell)) +
+              ((var(--vibe-image-columns) - 1) * var(--vibe-image-gap))
+          )
+        );
+      }
+
+      .vibe-item.right .vibe-images {
+        margin-left: auto;
+      }
+
+      .vibe-item.center .vibe-images {
+        margin-right: auto;
+        margin-left: auto;
+      }
+
+      .vibe-images[data-vibe-image-count='1'] {
+        width: min(100%, 420px);
+      }
+
+      .vibe-image {
+        position: relative;
+        margin: 0;
+        overflow: hidden;
+        aspect-ratio: 1;
+        border-radius: 10px;
+        cursor: zoom-in;
+        opacity: 0.94;
+        rotate: -0.6deg;
+      }
+
+      .vibe-image:focus-visible {
+        outline: 2px solid color-mix(in srgb, var(--paper-accent) 36%, transparent);
+        outline-offset: 4px;
+      }
+
+      .vibe-images[data-vibe-image-count='1'] .vibe-image {
+        aspect-ratio: auto;
+      }
+
+      .vibe-image.is-extra {
+        display: none;
+      }
+
+      .vibe-images.is-expanded .vibe-image.is-extra {
+        display: block;
+      }
+
+      .vibe-image:nth-child(even) {
+        rotate: 0.7deg;
+      }
+
+      .vibe-image::before,
+      .vibe-image::after {
+        position: absolute;
+        z-index: 1;
+        pointer-events: none;
+        opacity: 0;
+        transition:
+          opacity 160ms ease,
+          transform 160ms ease;
+        content: '';
+      }
+
+      .vibe-image::before {
+        inset: 0;
+        background: color-mix(in srgb, var(--paper-ink) 24%, transparent);
+      }
+
+      .vibe-image::after {
+        right: 10px;
+        bottom: 10px;
+        width: 34px;
+        height: 34px;
+        border: 1px solid color-mix(in srgb, var(--paper-surface) 72%, transparent);
+        border-radius: 999px;
+        background-color: color-mix(in srgb, var(--paper-surface) 88%, transparent);
+        background-image: url("data:image/svg+xml,%3Csvg width='18' height='18' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23343c35' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.8'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3M11 8v6M8 11h6'/%3E%3C/g%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: center;
+        box-shadow: 0 8px 20px color-mix(in srgb, var(--paper-ink) 10%, transparent);
+        transform: translateY(2px) scale(0.96);
+      }
+
+      .vibe-image:hover::before,
+      .vibe-image:hover::after,
+      .vibe-image:focus-visible::before,
+      .vibe-image:focus-visible::after {
+        opacity: 1;
+      }
+
+      .vibe-image:hover::after,
+      .vibe-image:focus-visible::after {
+        transform: translateY(0) scale(1);
+      }
+
+      .vibe-image img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border-radius: 10px;
+        filter: saturate(0.86) contrast(0.98);
+        object-fit: cover;
+      }
+
+      .vibe-images[data-vibe-image-count='1'] .vibe-image img {
+        height: auto;
+        object-fit: initial;
+      }
+
+      .vibe-image-toggle {
+        grid-column: 1 / -1;
+        justify-self: center;
+        margin: 4px 0 0;
+        padding: 0;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        color: var(--paper-ink-faint);
+        cursor: pointer;
+        font-family: var(--font-meta);
+        font-size: 0.68rem;
+        line-height: 1.8;
+        text-decoration: underline;
+        text-decoration-color: color-mix(in srgb, currentColor 28%, transparent);
+        text-underline-offset: 0.28em;
+        opacity: 0.78;
+        transition:
+          color 160ms ease,
+          opacity 160ms ease;
+      }
+
+      .vibe-image-toggle:hover,
+      .vibe-image-toggle:focus-visible {
+        color: var(--paper-ink-soft);
+        opacity: 1;
+      }
+
+      .vibe-image-toggle:focus-visible {
+        outline: 1px solid color-mix(in srgb, var(--paper-accent) 42%, transparent);
+        outline-offset: 4px;
+      }
+
+      .vibe-item.quote .vibe-body {
+  color: #c4c8c3;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+      @keyframes vibe-arrive {
+        from {
+          opacity: 0;
+        }
+
+        to {
+          opacity: 1;
+        }
+      }
+
+      @media (max-width: 720px) {
+        main {
+          padding-top: 94px;
+        }
+
+        .vibe-hero::after {
+          top: 0.2rem;
+          right: 0.4rem;
+          width: 3.18rem;
+          height: 2.12rem;
+        }
+
+        .vibe-hero {
+          margin-bottom: 62px;
+        }
+
+        .vibe-stream {
+          gap: 68px;
+        }
+
+        .vibe-thread {
+          display: none;
+        }
+
+        .vibe-item,
+        .vibe-item:nth-child(3n + 1),
+        .vibe-item:nth-child(3n + 2),
+        .vibe-item:nth-child(3n) {
+          justify-self: stretch;
+          max-width: none;
+          transform: none;
+        }
+
+        .vibe-dot {
+          display: none;
+          top: 0.58rem;
+        }
+
+        .vibe-item.left .vibe-dot {
+          right: -2px;
+          left: auto;
+        }
+
+        .vibe-item.right .vibe-dot {
+          left: -2px;
+          right: auto;
+        }
+
+        .vibe-item.center .vibe-dot {
+          right: -2px;
+          left: auto;
+          transform: none;
+        }
+
+        .vibe-item.sm {
+          max-width: 92%;
+        }
+
+        .vibe-item.center,
+        .vibe-item.right {
+          justify-self: end;
+        }
+
+        .vibe-body {
+          font-size: 0.96rem;
+          line-height: 1.86;
+        }
+
+        .vibe-images[data-vibe-image-columns='3'],
+        .vibe-images[data-vibe-image-columns='4'] {
+          --vibe-image-active-columns: 2;
+        }
+
+        .vibe-images {
+          width: 100%;
+        }
+
+        .vibe-image-toggle {
+          min-height: 34px;
+          font-size: 0.72rem;
+        }
+
+        .vibe-image::before,
+        .vibe-image::after {
+          display: none;
+        }
+      }
+
+  .vibe-headbox:hover {
+    border-color: rgba(183, 255, 0, 0.72) !important;
+    box-shadow:
+      0 0 5px rgba(183, 255, 0, 0.18),
+      0 0 12px rgba(183, 255, 0, 0.08) !important;
+  }
+
+  .vibe-headbox .vibe-heading {
+    transition: color 0.22s ease;
+  }
+
+  .vibe-headbox:hover .vibe-heading {
+    color: #e86a17 !important;
+  }
+
+  .vibe-body p {
+    display: inline;
+    margin: 0;
+  }
+
+  .vibe-body p + p::before {
+    content: "\A";
+    white-space: pre;
+  }
+
+      /* VIBE SCROLL TOP CLEARANCE START */
+      @media (min-width: 721px) {
+        .vibe-item.right {
+          margin-right: 38px;
+        }
+      }
+      /* VIBE SCROLL TOP CLEARANCE END */
+
+/* NEXUS VIBE MOBILE HERO FIX START */
+@media (max-width: 720px) {
+  .vibe-hero::after {
+    top: auto !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    height: 1.5px !important;
+    display: block !important;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 82, 0, 0.02) 0%,
+      rgba(255, 82, 0, 0.05) 18%,
+      rgba(255, 82, 0, 0.14) 42%,
+      rgba(255, 82, 0, 0.38) 68%,
+      rgba(255, 82, 0, 0.72) 86%,
+      rgba(255, 82, 0, 0.96) 100%
+    ) !important;
+  }
+
+  .vibe-description {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .vibe-description .vibe-subtitle,
+  .vibe-description .vibe-note {
+    display: block !important;
+    width: max-content !important;
+    max-width: none !important;
+    white-space: nowrap !important;
+  }
+
+  .vibe-description .vibe-subtitle {
+    font-size: clamp(8px, 2.35vw, 10px) !important;
+    letter-spacing: -0.035em !important;
+  }
+
+  .vibe-description .vibe-note {
+    font-size: clamp(10px, 3vw, 12px) !important;
+  }
+}
+/* NEXUS VIBE MOBILE HERO FIX END */
+</style>
+  <style is:global>
+  .pulse-page-nav {
+    position: relative;
+    z-index: 3;
+    width: min(100%, 1000px);
+    margin: 4.5rem auto 2rem;
+    padding: 1.5rem max(1rem, 3vw) 3.5rem;
+    border-top: 1px solid rgba(183, 255, 0, .22);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    font-family: var(--font-ui-label, system-ui);
+  }
+  .pulse-page-count { color: #b7ff00; font-size: .76rem; letter-spacing: .12em; }
+  .pulse-page-links { display: flex; align-items: center; gap: 1.8rem; }
+  .pulse-page-links a { color: #eaeaea; font-size: .9rem; font-weight: 600; text-decoration: none; letter-spacing: .07em; }
+  .pulse-page-links a:hover, .pulse-page-links a:focus-visible { color: #b7ff00; }
+  .pulse-page-links span { color: #555; font-size: .9rem; }
+  @media (max-width: 720px) {
+    .pulse-page-nav { margin-top: 3.5rem; padding-bottom: 6.5rem; flex-wrap: wrap; }
+    .pulse-page-links { width: 100%; justify-content: space-between; }
+    .pulse-mobile-trail { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 0; opacity: .7; }
+    .vibe-stream > .vibe-item { position: relative; z-index: 1; }
+  }
+  @media (min-width: 721px) { .pulse-mobile-trail { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .pulse-mobile-trail { opacity: .38; } }
+</style>
+<!-- PULSE_MOBILE_COMPACT_V1 -->
+<style is:global>
+  @media (max-width: 720px) {
+    .vibe-headbox {
+      padding: .38rem .56rem .43rem !important;
+    }
+
+    .vibe-headbox .vibe-heading {
+      font-size: clamp(1.4rem, 5.55vw, 1.75rem) !important;
+      line-height: 1.12 !important;
+      margin-top: .34rem !important;
+    }
+  }
+</style>
+</head>
+  <body>
+    <BlogTopNav />
+    <main data-pagefind-body>
+      <div class="vibe-shell">
+        <header class="vibe-hero">
+          <p class="vibe-kicker">{pageMeta.kicker}</p>
+          <h1 class="vibe-title">{pageMeta.title}</h1>
+          <div class="vibe-description">
+            <p class="vibe-subtitle">{pageMeta.subtitle}</p>
+            <p class="vibe-note">{pageMeta.note}</p>
+          </div>
+        </header>
+
+        <section class="vibe-stream" aria-label={i18n.t('vibe.notes')}>
+          {
+            showTrail && (
+              <svg class="vibe-thread" aria-hidden="true">
+                <defs>
+                  <linearGradient id="vibe-pencil-fade" x1="0" x2="0" y1="0" y2="1">
+  <stop offset="0%" stop-color="#36e7ff" stop-opacity="0" />
+  <stop offset="10%" stop-color="#36e7ff" stop-opacity="0.82" />
+  <stop offset="32%" stop-color="#ff7a45" stop-opacity="0.84" />
+  <stop offset="50%" stop-color="#ff3ca6" stop-opacity="0.86" />
+  <stop offset="68%" stop-color="#a855f7" stop-opacity="0.84" />
+  <stop offset="88%" stop-color="#3b82f6" stop-opacity="0.82" />
+  <stop offset="100%" stop-color="#36e7ff" stop-opacity="0" />
+</linearGradient>
+                  <filter id="vibe-pencil-texture" x="-12%" y="-12%" width="124%" height="124%">
+                    <feTurbulence
+                      type="fractalNoise"
+                      baseFrequency="0.9"
+                      numOctaves="2"
+                      seed="8"
+                      result="grain"
+                    />
+                    <feDisplacementMap in="SourceGraphic" in2="grain" scale="0.65" />
+                  </filter>
+                </defs>
+                <path class="vibe-thread-path" data-vibe-thread-path />
+                <path class="vibe-thread-grain" data-vibe-thread-grain />
+              </svg>
+            )
+          }
+          {
+            vibes.map(({ entry, Content, align, imageLayout }, index) => (
+              <article
+                class:list={[
+                  'vibe-item',
+                  align,
+                  entry.data.size,
+                  entry.data.type,
+                  index >= 6 && 'is-vibe-hidden',
+                ]}
+                style={`--vibe-index: ${index}`}
+                id={`pulse-${entry.id}`}
+                data-vibe-item
+                data-vibe-index={index}
+              >
+                {showTrail && <span class="vibe-dot" data-vibe-dot aria-hidden="true" />}
+                <TinaIsland
+                  name="pulse-body"
+                  params={{ path: `${entry.id}.mdx` }}
+                  wrapper={{ tag: 'div' }}
+                  primary
+                >
+                  <PulseEntry entry={entry} Content={Content} />
+                </TinaIsland>
+              </article>
+            ))
+          }
+        </section>
+        {pulseTotalPages > 1 && (
+          <nav class="pulse-page-nav" aria-label="Pulse pagination">
+            <span class="pulse-page-count">PAGE {String(pulsePageNumber).padStart(2, '0')} / {String(pulseTotalPages).padStart(2, '0')}</span>
+            <div class="pulse-page-links">
+              {pulsePageNumber > 1 ? (
+                <a href={pulsePageUrl(pulsePageNumber - 1)} rel="prev">← PREV</a>
+              ) : <span aria-hidden="true">← PREV</span>}
+              {pulsePageNumber < pulseTotalPages ? (
+                <a href={pulsePageUrl(pulsePageNumber + 1)} rel="next">NEXT →</a>
+              ) : <span aria-hidden="true">NEXT →</span>}
+            </div>
+          </nav>
+        )}
+      </div>
+    </main>
+  <ScrollToTopButton />
+    <Footer />
+    {
+      showTrail && (
+        <script>import {mountVibeThread} from './lib/vibe-thread'; mountVibeThread();</script>
+      )
+    }
+    <script>
+      const mountVibeProgressiveStream = () => {
+        const stream = document.querySelector<HTMLElement>('.vibe-stream');
+        const items = Array.from(document.querySelectorAll<HTMLElement>('[data-vibe-item]'));
+
+        if (!stream || stream.dataset.vibeProgressiveBound === 'true' || items.length === 0) return;
+
+        stream.dataset.vibeProgressiveBound = 'true';
+
+        let targetId = '';
+        try {
+          targetId = decodeURIComponent(window.location.hash.slice(1));
+        } catch {
+          targetId = '';
+        }
+
+        const targetIndex = targetId.startsWith('pulse-')
+          ? items.findIndex((item) => item.id === targetId)
+          : -1;
+
+        const target = targetIndex >= 0 ? items[targetIndex] : undefined;
+
+        let visibleCount = Math.min(
+          Math.max(6, targetIndex + 1),
+          items.length,
+        );
+        let observer: IntersectionObserver | undefined;
+
+        const revealUntil = (nextCount: number) => {
+          visibleCount = Math.min(nextCount, items.length);
+
+          items.forEach((item, index) => {
+            item.classList.toggle('is-vibe-hidden', index >= visibleCount);
+          });
+
+          window.dispatchEvent(new Event('resize'));
+        };
+
+        const observeTrigger = () => {
+          observer?.disconnect();
+
+          if (visibleCount >= items.length) return;
+
+          const trigger = items[Math.max(0, visibleCount - 3)];
+
+          observer = new IntersectionObserver(
+            (entries) => {
+              if (entries.some((entry) => entry.isIntersecting)) {
+                revealUntil(visibleCount + 6);
+                observeTrigger();
+              }
+            },
+            {
+              rootMargin: '0px 0px 32% 0px',
+              threshold: 0.1,
+            },
+          );
+          observer.observe(trigger);
+        };
+
+        if (!('IntersectionObserver' in window)) {
+          revealUntil(items.length);
+        } else {
+          revealUntil(visibleCount);
+          observeTrigger();
+        }
+
+        if (target) {
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              if (target.isConnected) {
+                target.scrollIntoView({
+                  block: 'start',
+                  inline: 'nearest',
+                  behavior: 'instant',
+                });
+              }
+            });
+          });
+        }
+
+        document.addEventListener(
+          'astro:before-swap',
+          () => {
+            observer?.disconnect();
+          },
+          { once: true },
+        );
+      };
+
+      const mountVibeImageToggles = () => {
+        document
+          .querySelectorAll<HTMLButtonElement>('[data-vibe-image-toggle]')
+          .forEach((button) => {
+            if (button.dataset.vibeImageToggleBound === 'true') {
+              return;
+            }
+
+            button.dataset.vibeImageToggleBound = 'true';
+
+            button.addEventListener('click', () => {
+              const group = button.closest<HTMLElement>('[data-vibe-image-group]');
+
+              if (!group) return;
+
+              const isExpanded = group.classList.toggle('is-expanded');
+              button.setAttribute('aria-expanded', String(isExpanded));
+              button.textContent = isExpanded
+                ? (button.dataset.collapseLabel ?? '收起图片')
+                : (button.dataset.expandLabel ?? '展开图片');
+            });
+          });
+      };
+
+      document.addEventListener('astro:page-load', mountVibeProgressiveStream);
+      document.addEventListener('astro:page-load', mountVibeImageToggles);
+      mountVibeProgressiveStream();
+      mountVibeImageToggles();
+    </script>
+    <ZoomableImage />
+  <script>
+  const mountPulseMobileTrail = () => {
+    const stream = document.querySelector<HTMLElement>('.vibe-stream');
+    if (!stream || !stream.querySelector('.vibe-thread')) return;
+    if (stream.dataset.pulseMobileTrailBound === 'true') return;
+    stream.dataset.pulseMobileTrailBound = 'true';
+    const NS = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('class', 'pulse-mobile-trail');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.setAttribute('preserveAspectRatio', 'none');
+    const defs = document.createElementNS(NS, 'defs');
+    const gradient = document.createElementNS(NS, 'linearGradient');
+    gradient.setAttribute('id', 'pulse-mobile-gradient');
+    gradient.setAttribute('x1', '0%');
+    gradient.setAttribute('y1', '0%');
+    gradient.setAttribute('x2', '0%');
+    gradient.setAttribute('y2', '100%');
+    ([['0%', '#f6a16c'], ['26%', '#35dfff'], ['54%', '#ff61b0'], ['78%', '#a178ff'], ['100%', '#35dfff']] as const).forEach(([offset, color]) => {
+      const stop = document.createElementNS(NS, 'stop');
+      stop.setAttribute('offset', offset);
+      stop.setAttribute('stop-color', color);
+      gradient.appendChild(stop);
+    });
+    defs.appendChild(gradient);
+    svg.appendChild(defs);
+    const path = document.createElementNS(NS, 'path');
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke', 'url(#pulse-mobile-gradient)');
+    path.setAttribute('stroke-width', '1.7');
+    path.setAttribute('stroke-linecap', 'round');
+    svg.appendChild(path);
+    stream.insertBefore(svg, stream.firstChild);
+
+    let scheduled = false;
+    const draw = () => {
+      scheduled = false;
+      if (window.matchMedia('(min-width: 721px)').matches) return;
+      const rect = stream.getBoundingClientRect();
+      const width = Math.max(1, rect.width);
+      const height = Math.max(1, stream.scrollHeight);
+      svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+      const cards = Array.from(stream.querySelectorAll<HTMLElement>('[data-vibe-item]'))
+        .filter((card) => getComputedStyle(card).display !== 'none' && !card.classList.contains('is-vibe-hidden'));
+      if (!cards.length) { path.setAttribute('d', ''); return; }
+      const points = cards.map((card, index) => {
+        const box = card.getBoundingClientRect();
+        const y = box.top - rect.top + Math.min(38, box.height * .2);
+        const x = width * ([.2, .77, .28, .68][index % 4]);
+        return { x, y };
+      });
+      let d = `M ${points[0].x} ${Math.max(0, points[0].y - 46)}`;
+      for (let i = 0; i < points.length; i++) {
+        const p = points[i];
+        const previous = i ? points[i - 1] : { x: points[0].x, y: points[0].y - 46 };
+        const middle = (previous.y + p.y) / 2;
+        d += ` C ${previous.x} ${middle}, ${p.x} ${middle}, ${p.x} ${p.y}`;
+      }
+      path.setAttribute('d', d);
+    };
+    const schedule = () => { if (!scheduled) { scheduled = true; requestAnimationFrame(draw); } };
+    window.addEventListener('resize', schedule, { passive: true });
+    window.addEventListener('load', schedule, { once: true });
+    const observer = new ResizeObserver(schedule);
+    observer.observe(stream);
+    const mutation = new MutationObserver(schedule);
+    mutation.observe(stream, { subtree: true, attributes: true, attributeFilter: ['class', 'style'] });
+    document.addEventListener('astro:before-swap', () => { observer.disconnect(); mutation.disconnect(); }, { once: true });
+    schedule();
+  };
+  document.addEventListener('astro:page-load', mountPulseMobileTrail);
+  mountPulseMobileTrail();
+</script>
+</body>
+</html>
+
+
+<style is:global>
+  [data-tina-island^="/tina-island/pulse-body?"] {
+    display: contents;
+  }
+</style>

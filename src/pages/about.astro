@@ -5,7 +5,6 @@ import '../styles/global.css';
 import { getCollection } from 'astro:content';
 
 const aboutEntry = (await getCollection('about'))[0];
-const statementParagraphs = aboutEntry?.data.statementParagraphs ?? [];
 ---
 
 <html lang="ja">

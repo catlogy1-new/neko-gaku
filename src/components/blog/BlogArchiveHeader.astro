@@ -15,6 +15,9 @@ const {
 
 const defaultSubtitle = 'The pulsation and gleaming of an unsightly residual reality, thoroughly corroded by signs.';
 const resolvedSubtitle = subtitle ?? note ?? defaultSubtitle;
+
+const normalizedPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const showRimbaudOnBlogTop = normalizedPath === '/blog';
 ---
 
 <header class="archive-hero">
@@ -24,6 +27,7 @@ const resolvedSubtitle = subtitle ?? note ?? defaultSubtitle;
     <p class="archive-subtitle">{resolvedSubtitle}</p>
   </div>
 
+  {showRimbaudOnBlogTop && (
   <div class="archive-copy">
   <div class="rimbaud-cyber-plate">
     <span class="rimbaud-screw top-left" aria-hidden="true"></span>
@@ -41,6 +45,7 @@ const resolvedSubtitle = subtitle ?? note ?? defaultSubtitle;
     <div class="rimbaud-engraved">Arthur Rimbaud, 1871</div>
   </div>
 </div>
+  )}
 </header>
 
 <style>
@@ -201,7 +206,7 @@ const resolvedSubtitle = subtitle ?? note ?? defaultSubtitle;
 
 
 <style>
-/* FRAGMENTS SUBTITLE — FINAL */
+/* FRAGMENTS SUBTITLE 窶・FINAL */
 .archive-subtitle {
   width: 60ch !important;
   max-width: 60ch !important;
@@ -266,3 +271,34 @@ const resolvedSubtitle = subtitle ?? note ?? defaultSubtitle;
     }
   })();
 </script>
+
+
+<style is:global>
+/* NEXUS MOBILE RIMBAUD HIDE START */
+
+@media (max-width: 720px) {
+  .archive-hero .archive-copy {
+    display: none !important;
+  }
+
+  .archive-hero {
+    gap: 0 !important;
+  }
+}
+
+/* NEXUS MOBILE RIMBAUD HIDE END */
+</style>
+
+<style is:global>
+/* NEXUS MOBILE RIMBAUD FINAL */
+
+@media (max-width: 720px) {
+  .archive-hero .archive-copy {
+    display: none !important;
+  }
+
+  .archive-hero {
+    gap: 0 !important;
+  }
+}
+</style>

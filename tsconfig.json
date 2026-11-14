@@ -1,7 +1,21 @@
 {
   "extends": "astro/tsconfigs/strict",
-  "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist"],
+  "include": [
+    ".astro/types.d.ts",
+    "src/**/*",
+    "tina/**/*",
+    "scripts/**/*",
+    "astro.config.*"
+  ],
+  "exclude": [
+    "dist",
+    "node_modules",
+    "backup",
+    "backups",
+    "nexus-backups",
+    "nexus-diagnostics",
+    "public/admin"
+  ],
   "compilerOptions": {
     "strictNullChecks": true
   }

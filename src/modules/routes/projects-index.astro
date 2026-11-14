@@ -1,4 +1,4 @@
----
+﻿---
 import { getCollection, render } from 'astro:content';
 import {
   Box,
@@ -17,7 +17,8 @@ import {
 } from 'lucide-astro';
 
 import FormattedDate from '../../components/FormattedDate.astro';
-import portfolioBlocksData from '../../data/portfolio-blocks.json';
+import PortfolioGallery from '../../components/tina/PortfolioGallery.astro';
+import TinaIsland from '@tinacms/astro/TinaIsland.astro';
 import Footer from '../../components/Footer.astro';
 import BlogArticle from '../../layouts/BlogArticle.astro';
 import { getSiteConfig } from '../../data/site';
@@ -39,7 +40,7 @@ const projectIndex = projectEntries.find(
 
 const projects = sortBlogPostsForArchive(
   projectEntries.filter(
-    (entry) => entry.id !== 'index' && !entry.data.draft,
+    (entry) => entry.id !== 'index' && entry.id.toLowerCase() !== 'photography' && !entry.data.draft,
   ),
 );
 
@@ -96,263 +97,14 @@ function withBase(href: string) {
 
   return `${basePath}${href.startsWith('/') ? href : `/${href}`}`;
 }
-// PORTFOLIO VISUAL AUTO START
-type PortfolioVisual = {
-  src: string;
-  full: string;
-  title: string;
-  type: string;
-  year: string;
-  alt: string;
-  className: string;
-  sequence: string;
-  displayIndex: string;
-};
-
-const portfolioVisualLayouts = [
-  'visual-card-main',
-  'visual-card-tall',
-  'visual-card-small',
-  'visual-card-fragment',
-  'visual-card-wide',
-  'visual-card-portrait',
-  'visual-card-extra-small',
-  'visual-card-extra-wide',
-];
-
-const fallbackPortfolioVisuals = [
-  ['https://picsum.photos/seed/remains-001/1500/1000?grayscale', 'SAMPLE IMAGE / 001', 'PHOTOGRAPHY', '2026'],
-  ['https://picsum.photos/seed/remains-002/1500/1000?grayscale', 'SAMPLE IMAGE / 002', 'PHOTOGRAPHY', '2026'],
-  ['https://picsum.photos/seed/remains-003/1500/1000?grayscale', 'SAMPLE IMAGE / 003', 'PHOTOGRAPHY', '2026'],
-  ['https://picsum.photos/seed/remains-004/1500/1000?grayscale', 'SAMPLE IMAGE / 004', 'PHOTOGRAPHY', '2026'],
-  ['https://picsum.photos/seed/remains-005/1500/1000?grayscale', 'SAMPLE IMAGE / 005', 'PHOTOGRAPHY', '2026'],
-  ['https://picsum.photos/seed/remains-006/1500/1000?grayscale', 'SAMPLE IMAGE / 006', 'PHOTOGRAPHY', '2026'],
-  ['https://picsum.photos/seed/remains-007/1500/1000?grayscale', 'SAMPLE IMAGE / 007', 'PHOTOGRAPHY', '2026'],
-  ['https://picsum.photos/seed/remains-008/1500/1000?grayscale', 'SAMPLE IMAGE / 008', 'PHOTOGRAPHY', '2026'],
-  ['https://picsum.photos/seed/remains-009/1500/1000?grayscale', 'SAMPLE IMAGE / 009', 'PHOTOGRAPHY', '2026'],
-  ['https://picsum.photos/seed/remains-010/1500/1000?grayscale', 'SAMPLE IMAGE / 010', 'PHOTOGRAPHY', '2026'],
-  ['https://picsum.photos/seed/remains-011/1500/1000?grayscale', 'SAMPLE IMAGE / 011', 'PHOTOGRAPHY', '2026'],
-  ['https://picsum.photos/seed/remains-012/1500/1000?grayscale', 'SAMPLE IMAGE / 012', 'PHOTOGRAPHY', '2026'],
-  ['https://picsum.photos/seed/remains-013/1500/1000?grayscale', 'SAMPLE IMAGE / 013', 'PHOTOGRAPHY', '2026'],
-  ['https://picsum.photos/seed/remains-014/1500/1000?grayscale', 'SAMPLE IMAGE / 014', 'PHOTOGRAPHY', '2026'],
-  ['https://picsum.photos/seed/remains-015/1500/1000?grayscale', 'SAMPLE IMAGE / 015', 'PHOTOGRAPHY', '2026'],
-  ['https://picsum.photos/seed/remains-016/1500/1000?grayscale', 'SAMPLE IMAGE / 016', 'PHOTOGRAPHY', '2026'],
-];
-
-function asRecord(value: unknown) {
-  return value && typeof value === 'object' && !Array.isArray(value)
-    ? value as Record<string, unknown>
-    : {};
-}
-
-function readImageCandidate(value: unknown): string | undefined {
-  if (typeof value === 'string' && value.trim()) {
-    return value.trim();
-  }
-
-  if (Array.isArray(value)) {
-    for (const item of value) {
-      const found = readImageCandidate(item);
-
-      if (found) {
-        return found;
-      }
-    }
-  }
-
-  const record = asRecord(value);
-  const src = record.src ?? record.url ?? record.href ?? record.image;
-
-  return typeof src === 'string' && src.trim()
-    ? src.trim()
-    : undefined;
-}
-
-function resolvePortfolioImage(src: string) {
-  if (/^(https?:)?\/\//i.test(src) || /^(data|blob):/i.test(src)) {
-    return src;
-  }
-
-  if (src.startsWith('/')) {
-    return (basePath || '') + src;
-  }
-
-  return src;
-}
-
-function makePortfolioVisual(
-  src: string,
-  title: string,
-  type: string,
-  year: string,
-  alt: string,
-  index: number,
-): PortfolioVisual {
-  const full = resolvePortfolioImage(src);
-
-  return {
-    src: full,
-    full,
-    title,
-    type,
-    year,
-    alt,
-    className: portfolioVisualLayouts[index % portfolioVisualLayouts.length],
-    sequence: String(index + 1).padStart(3, '0'),
-    displayIndex: String(index + 1).padStart(2, '0'),
-  };
-}
-
-function getProjectVisual(project: (typeof projects)[number], index: number) {
-  const data = project.data as Record<string, unknown>;
-
-  const image = readImageCandidate(
-    data.visualImage ??
-      data.portfolioImage ??
-      data.coverImage ??
-      data.cover ??
-      data.image ??
-      data.thumbnail ??
-      data.heroImage ??
-      data.ogImage,
-  );
-
-  if (!image) {
-    return undefined;
-  }
-
-  const title = String(data.visualTitle ?? data.title ?? project.id).trim();
-
-  const type = String(
-    data.visualType ?? data.type ?? data.category ?? 'PHOTOGRAPHY',
-  ).trim().toUpperCase();
-
-  const yearSource = data.visualYear ?? data.year ?? data.date;
-
-  const year =
-    yearSource instanceof Date
-      ? String(yearSource.getFullYear())
-      : String(yearSource ?? '').slice(0, 4);
-
-  return makePortfolioVisual(
-    image,
-    title,
-    type,
-    /^\d{4}$/.test(year) ? year : '----',
-    String(data.imageAlt ?? data.alt ?? title),
-    index,
-  );
-}
-
-const postedPortfolioVisuals: PortfolioVisual[] = [];
-
-for (const project of projects) {
-  const data = project.data as Record<string, unknown>;
-  const gallery = data.galleryImages;
-
-  if (Array.isArray(gallery)) {
-    for (const item of gallery) {
-      if (!item || typeof item !== 'object') continue;
-
-      const photo = item as Record<string, unknown>;
-      const src = readImageCandidate(photo.src);
-      if (!src) continue;
-
-      const title = String(photo.title || data.title || project.id);
-      const alt = String(photo.alt || title);
-      const date = data.date;
-      const year =
-        date instanceof Date
-          ? String(date.getFullYear())
-          : String(date ?? '2026').slice(0, 4);
-
-      postedPortfolioVisuals.push(
-        makePortfolioVisual(
-          src,
-          title,
-          'PHOTOGRAPHY',
-          year,
-          alt,
-          postedPortfolioVisuals.length,
-        ),
-      );
-    }
-  }
-
-  if (!Array.isArray(gallery) || gallery.length === 0) {
-    const visual = getProjectVisual(project, postedPortfolioVisuals.length);
-
-    if (visual) {
-      postedPortfolioVisuals.push(visual);
-    }
-  }
-}
-
-const samplePortfolioVisuals = fallbackPortfolioVisuals.map(
-  ([src, title, type, year], index) =>
-    makePortfolioVisual(
-      src,
-      title,
-      type,
-      year,
-      'Temporary portfolio sample',
-      postedPortfolioVisuals.length + index,
-    ),
+const photographyProject = projectEntries.find(
+  (project) => project.id.toLowerCase() === 'photography',
 );
 
-const allPortfolioVisuals = [
-  ...postedPortfolioVisuals,
-  ...samplePortfolioVisuals,
-];
+const photographyData = photographyProject?.data as
+  | Record<string, unknown>
+  | undefined;
 
-const portfolioVisuals = allPortfolioVisuals.slice(0, 16);
-// PORTFOLIO BLOCKS V1 START
-// The JSON order determines the order of galleries and independent texts.
-type PortfolioGalleryBlock = {
-  kind: 'gallery';
-  start?: number;
-  count?: number;
-  label?: string;
-  images?: Array<{
-    src: string;
-    title?: string;
-    type?: string;
-    year?: string;
-    alt?: string;
-  }>;
-};
-
-type PortfolioTextBlock = {
-  kind: 'text';
-  index?: string;
-  year?: string;
-  kicker?: string;
-  title: string;
-  paragraphs: string[];
-  status?: string;
-};
-
-type PortfolioBlock = PortfolioGalleryBlock | PortfolioTextBlock;
-const portfolioBlocks = portfolioBlocksData as PortfolioBlock[];
-
-function getPortfolioBlockVisuals(block: PortfolioGalleryBlock): PortfolioVisual[] {
-  const start = Math.max(0, Math.trunc(block.start ?? 0));
-  const count = Math.max(0, Math.trunc(block.count ?? 0));
-  const existing = allPortfolioVisuals.slice(start, start + count);
-  const added = (block.images ?? []).map((image, index) =>
-    makePortfolioVisual(
-      image.src,
-      image.title ?? `IMAGE / ${String(start + count + index + 1).padStart(3, '0')}`,
-      image.type ?? 'PHOTOGRAPHY',
-      image.year ?? '----',
-      image.alt ?? image.title ?? 'Portfolio photograph',
-      start + count + index,
-    ),
-  );
-  return [...existing, ...added];
-}
-// PORTFOLIO BLOCKS V1 END
-// PORTFOLIO VISUAL AUTO END
 ---
 
 <BlogArticle
@@ -370,91 +122,13 @@ function getPortfolioBlockVisuals(block: PortfolioGalleryBlock): PortfolioVisual
        PORTFOLIO
        ===================================================== -->
 
-  <section
-    class="portfolio-section"
-    aria-labelledby="portfolio-title"
+  <TinaIsland
+    name="portfolio-gallery"
+    wrapper={{ tag: 'div' }}
+    primary
   >
-    <header class="portfolio-section-header">
-
-      <div>
-        <p class="portfolio-section-kicker">
-          SELECTED WORK / VISUAL ARCHIVE
-        </p>
-
-        <h2 id="portfolio-title">
-          PHOTOGRAPHIC REMAINS
-        </h2>
-      </div>
-
-      <span class="portfolio-index">
-        001 - {String(portfolioVisuals.length).padStart(3, '0')}
-      </span>
-
-    </header>
-    <!-- PORTFOLIO BLOCKS V1: editable order in src/data/portfolio-blocks.json -->
-    {portfolioBlocks.map((block, blockIndex) =>
-      block.kind === 'gallery' ? (
-        <div
-          class="portfolio-gallery-block"
-          aria-label={block.label ?? `Photo group ${blockIndex + 1}`}
-        >
-          {block.label && (
-            <p class="portfolio-gallery-label">{block.label}</p>
-          )}
-          <div class="portfolio-grid">
-            {getPortfolioBlockVisuals(block).map((visual, index) => (
-              <article class:list={['visual-card', visual.className]}>
-                <a
-                  class="visual-link visual-lightbox-trigger"
-                  href={visual.full}
-                  data-full={visual.full}
-                  data-title={visual.title}
-                  aria-label={'Open ' + visual.title}
-                >
-                  <figure class="visual-image">
-                    <img
-                      src={visual.src}
-                      alt={visual.alt}
-                      loading={index === 0 && blockIndex === 0 ? 'eager' : 'lazy'}
-                    />
-                    <span class="visual-overlay">VIEW / {visual.sequence}</span>
-                  </figure>
-                  <footer class="visual-meta">
-                    <div>
-                      <span class="visual-type">
-                        {visual.displayIndex} / {visual.type}
-                      </span>
-                      <h3>{visual.title}</h3>
-                    </div>
-                    <span class="visual-year">{visual.year}</span>
-                  </footer>
-                </a>
-              </article>
-            ))}
-          </div>
-        </div>
-      ) : (
-        <article class="text-remain portfolio-text-block">
-          <div class="text-remain-index">
-            <span>{block.index ?? 'TEXT'}</span>
-            <span>{block.year ?? ''}</span>
-          </div>
-          <div class="text-remain-body">
-            {block.kicker && (
-              <p class="text-remain-kicker">{block.kicker}</p>
-            )}
-            <h3>{block.title}</h3>
-            {block.paragraphs.map((paragraph) => (
-              <p class="text-remain-copy">{paragraph}</p>
-            ))}
-            {block.status && (
-              <span class="text-remain-status">{block.status}</span>
-            )}
-          </div>
-        </article>
-      ),
-    )}
-  </section>
+    <PortfolioGallery data={photographyData} />
+  </TinaIsland>
 
 
 
@@ -723,6 +397,10 @@ function getPortfolioBlockVisuals(block: PortfolioGalleryBlock): PortfolioVisual
       class="remains-lightbox-image"
       src=""
       alt=""
+      role="button"
+      tabindex="0"
+      aria-label="Toggle image enlargement"
+      aria-pressed="false"
     />
 
     <div class="remains-lightbox-info">
@@ -763,6 +441,25 @@ function getPortfolioBlockVisuals(block: PortfolioGalleryBlock): PortfolioVisual
     }
 
 
+    function setLightboxZoom(lightbox, zoomed) {
+      lightbox.classList.toggle('is-zoomed', zoomed);
+
+      const image =
+        lightbox.querySelector('.remains-lightbox-image');
+
+      if (image) {
+        image.setAttribute(
+          'aria-pressed',
+          zoomed ? 'true' : 'false'
+        );
+
+        image.setAttribute(
+          'aria-label',
+          zoomed ? 'Reduce image size' : 'Enlarge image'
+        );
+      }
+    }
+
     function openLightbox(trigger) {
 
       const lightbox = getLightbox();
@@ -792,6 +489,8 @@ function getPortfolioBlockVisuals(block: PortfolioGalleryBlock): PortfolioVisual
         return;
       }
 
+
+      setLightboxZoom(lightbox, false);
 
       image.src = full;
       image.alt = workTitle;
@@ -829,6 +528,7 @@ function getPortfolioBlockVisuals(block: PortfolioGalleryBlock): PortfolioVisual
         lightbox.querySelector('.remains-lightbox-image');
 
 
+      setLightboxZoom(lightbox, false);
       lightbox.classList.remove('is-open');
 
       lightbox.setAttribute(
@@ -869,13 +569,68 @@ function getPortfolioBlockVisuals(block: PortfolioGalleryBlock): PortfolioVisual
 
         if (trigger) {
 
+          /*
+           * TINA QUICK EDIT PRIORITY
+           * Let TinaCMS handle registered editable fields.
+           * Keep normal lightbox behavior outside quick edit.
+           */
+          const tinaFieldElement = target.closest(
+            '[data-tina-field], [data-tina-field-overlay]'
+          );
+
+          const tinaQuickEditEnabled =
+            window.parent !== window &&
+            document.body.classList.contains(
+              '__tina-quick-editing-enabled'
+            );
+
+          const hasTinaField =
+            tinaFieldElement &&
+            (
+              tinaFieldElement.getAttribute('data-tina-field') ||
+              tinaFieldElement.getAttribute('data-tina-field-overlay')
+            );
+
+          if (tinaQuickEditEnabled && hasTinaField) {
+            event.preventDefault();
+            return;
+          }
+
           event.preventDefault();
+          event.stopPropagation();
 
           openLightbox(trigger);
 
           return;
         }
 
+
+        /*
+         * LIGHTBOX IMAGE ZOOM
+         */
+
+        const zoomImage =
+          target.closest('.remains-lightbox-image');
+
+        if (zoomImage) {
+          const lightbox = getLightbox();
+
+          if (
+            lightbox &&
+            lightbox.classList.contains('is-open') &&
+            lightbox.contains(zoomImage)
+          ) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            setLightboxZoom(
+              lightbox,
+              !lightbox.classList.contains('is-zoomed')
+            );
+
+            return;
+          }
+        }
 
         /*
          * CLOSE BUTTON
@@ -908,7 +663,8 @@ function getPortfolioBlockVisuals(block: PortfolioGalleryBlock): PortfolioVisual
 
         }
 
-      }
+      },
+      true
     );
 
 
@@ -918,6 +674,26 @@ function getPortfolioBlockVisuals(block: PortfolioGalleryBlock): PortfolioVisual
 
         if (event.key === 'Escape') {
           closeLightbox();
+          return;
+        }
+
+        const lightbox = getLightbox();
+        const target = event.target;
+
+        if (
+          lightbox &&
+          lightbox.classList.contains('is-open') &&
+          target instanceof Element &&
+          target.matches('.remains-lightbox-image') &&
+          lightbox.contains(target) &&
+          (event.key === 'Enter' || event.key === ' ')
+        ) {
+          event.preventDefault();
+
+          setLightboxZoom(
+            lightbox,
+            !lightbox.classList.contains('is-zoomed')
+          );
         }
 
       }
@@ -2525,7 +2301,7 @@ body:has(.portfolio-section) .article-header-archive .archive-note {
     "Maple Mono",
     monospace;
 
-  font-size: .54rem;
+  font-size: .80rem;
   font-weight: 700;
 
   letter-spacing: .14em;
@@ -2539,7 +2315,7 @@ body:has(.portfolio-section) .article-header-archive .archive-note {
     "Maple Mono",
     monospace;
 
-  font-size: .58rem;
+  font-size: .80rem;
 
   letter-spacing: .08em;
 }
@@ -2899,7 +2675,7 @@ body.blog-detail-page:has(.portfolio-section) .portfolio-grid .visual-meta > div
   min-width: 0 !important;
 }
 body.blog-detail-page:has(.portfolio-section) .portfolio-grid .visual-type {
-  font-size: .55rem !important;
+  font-size: .75rem !important;
   line-height: 1.3 !important;
   overflow-wrap: anywhere !important;
 }
@@ -2910,7 +2686,7 @@ body.blog-detail-page:has(.portfolio-section) .portfolio-grid .visual-meta h3 {
 }
 body.blog-detail-page:has(.portfolio-section) .portfolio-grid .visual-year {
   flex: none !important;
-  font-size: .55rem !important;
+  font-size: .90rem !important;
 }
 body.blog-detail-page:has(.portfolio-section) .portfolio-grid .visual-overlay {
   top: 10px !important;
@@ -2999,6 +2775,95 @@ body.blog-detail-page:has(.portfolio-section) .portfolio-grid .visual-link:focus
   letter-spacing: .12em;
 }
 /* PORTFOLIO BLOCK SEQUENCE V1 END */
+
+/* PORTFOLIO INTERACTION FIX START */
+
+body.blog-detail-page:has(.portfolio-section)
+.portfolio-grid .visual-image::after {
+  z-index: 4;
+  box-sizing: border-box;
+  border: 1px solid transparent !important;
+  border-radius: inherit !important;
+  pointer-events: none;
+  transition: border-color 220ms ease;
+}
+
+body.blog-detail-page:has(.portfolio-section)
+.portfolio-grid .visual-link:hover .visual-image::after,
+body.blog-detail-page:has(.portfolio-section)
+.portfolio-grid .visual-link:focus-visible .visual-image::after {
+  border-color: #b44718 !important;
+}
+
+body.blog-detail-page:has(.portfolio-section)
+.portfolio-grid .visual-card:hover .visual-image,
+body.blog-detail-page:has(.portfolio-section)
+.portfolio-grid .visual-link:hover .visual-image,
+body.blog-detail-page:has(.portfolio-section)
+.portfolio-grid .visual-card:focus-within .visual-image {
+  border-color: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* PORTFOLIO INTERACTION FIX END */
+
+
+/* REMAINS LIGHTBOX ZOOM START */
+
+.remains-lightbox-image {
+  cursor: zoom-in;
+}
+
+.remains-lightbox-image:focus-visible {
+  outline: 1px solid #b7ff00;
+  outline-offset: 4px;
+}
+
+.remains-lightbox.is-zoomed {
+  padding: 8px;
+  background: #000;
+}
+
+.remains-lightbox.is-zoomed .remains-lightbox-stage {
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
+}
+
+.remains-lightbox.is-zoomed .remains-lightbox-image {
+  width: auto;
+  height: auto;
+  max-width: calc(100vw - 16px);
+  max-height: calc(100vh - 16px);
+  max-height: calc(100dvh - 16px);
+  object-fit: contain;
+  cursor: zoom-out;
+  box-shadow: none;
+}
+
+.remains-lightbox.is-zoomed .remains-lightbox-info {
+  display: none;
+}
+
+.remains-lightbox.is-zoomed .remains-lightbox-close {
+  z-index: 10;
+}
+
+@media (max-width: 760px) {
+  .remains-lightbox.is-zoomed {
+    padding: 4px;
+  }
+
+  .remains-lightbox.is-zoomed .remains-lightbox-image {
+    max-width: calc(100vw - 8px);
+    max-height: calc(100vh - 8px);
+    max-height: calc(100dvh - 8px);
+  }
+}
+
+/* REMAINS LIGHTBOX ZOOM END */
+
 </style>
 
 

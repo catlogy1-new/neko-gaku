@@ -133,6 +133,54 @@ export default defineConfig({
     },
       {
         name: "pulse",
+        ui: {
+          router: async ({ document }) => {
+            const relativePath = document._sys.relativePath;
+            if (!/^[a-zA-Z0-9_-]+\.mdx$/.test(relativePath)) return undefined;
+
+            const marker = '/tina-island/pulse-body?' +
+              new URLSearchParams({ path: relativePath }).toString();
+
+            const pending = ['/vibe/'];
+            const visited = new Set<string>();
+
+            try {
+              while (pending.length > 0 && visited.size < 100) {
+                const route = pending.shift()!;
+                if (visited.has(route)) continue;
+                visited.add(route);
+
+                const response = await fetch(route, { cache: 'no-store' });
+                if (!response.ok) continue;
+
+                const html = await response.text();
+                const page = new DOMParser().parseFromString(html, 'text/html');
+
+                const found = Array.from(
+                  page.querySelectorAll('[data-tina-island]')
+                ).some(
+                  element => element.getAttribute('data-tina-island') === marker
+                );
+
+                if (found) return route;
+
+                for (const link of Array.from(page.querySelectorAll('a[href]'))) {
+                  const href = link.getAttribute('href') ?? '';
+                  if (/^\/vibe\/page\/\d+\/?$/.test(href)) {
+                    const next = href.replace(/\/$/, '') + '/';
+                    if (!visited.has(next) && !pending.includes(next)) {
+                      pending.push(next);
+                    }
+                  }
+                }
+              }
+            } catch {
+              return undefined;
+            }
+
+            return undefined;
+          },
+        },
         label: "Pulse",
         path: "src/content/vibe",
         format: "mdx",
@@ -212,9 +260,55 @@ export default defineConfig({
         path: "src/content/media",
         format: "mdx",
         ui: {
+          router: async ({ document }) => {
+            const relativePath = document._sys.relativePath;
+            if (!/^[a-zA-Z0-9_-]+\.mdx$/.test(relativePath)) return undefined;
+
+            const marker = '/tina-island/media-card?' +
+              new URLSearchParams({ path: relativePath }).toString();
+
+            const pending = ['/media/'];
+            const visited = new Set<string>();
+
+            try {
+              while (pending.length > 0 && visited.size < 100) {
+                const route = pending.shift()!;
+                if (visited.has(route)) continue;
+                visited.add(route);
+
+                const response = await fetch(route, { cache: 'no-store' });
+                if (!response.ok) continue;
+
+                const html = await response.text();
+                const page = new DOMParser().parseFromString(html, 'text/html');
+
+                const found = Array.from(
+                  page.querySelectorAll('[data-tina-island]')
+                ).some(
+                  element => element.getAttribute('data-tina-island') === marker
+                );
+
+                if (found) return route;
+
+                for (const link of Array.from(page.querySelectorAll('a[href]'))) {
+                  const href = link.getAttribute('href') ?? '';
+                  if (/^\/media\/(books|films|music)\/\d+\/?$/.test(href)) {
+                    const next = href.replace(/\/$/, '') + '/';
+                    if (!visited.has(next) && !pending.includes(next)) {
+                      pending.push(next);
+                    }
+                  }
+                }
+              }
+            } catch {
+              return undefined;
+            }
+
+            return undefined;
+          },
           allowedActions: {
-            create: false,
-            delete: false,
+            create: true,
+            delete: true,
             createNestedFolder: false,
           },
         },
@@ -305,6 +399,48 @@ export default defineConfig({
           label: 'Portfolio',
           path: 'src/content/projects',
           format: 'md',
+
+          ui: {
+            router: async ({ document }) => {
+              const relativePath = document._sys.relativePath;
+
+              if (relativePath !== 'Photography.md') {
+                return undefined;
+              }
+
+              const route = '/projects/';
+
+              try {
+                const response = await fetch(route, {
+                  cache: 'no-store',
+                });
+
+                if (!response.ok) {
+                  return undefined;
+                }
+
+                const html = await response.text();
+
+                const page = new DOMParser().parseFromString(
+                  html,
+                  'text/html',
+                );
+
+                const marker = '/tina-island/portfolio-gallery';
+
+                const hasPortfolioIsland = Array.from(
+                  page.querySelectorAll('[data-tina-island]'),
+                ).some(
+                  (element) =>
+                    element.getAttribute('data-tina-island') === marker,
+                );
+
+                return hasPortfolioIsland ? route : undefined;
+              } catch {
+                return undefined;
+              }
+            },
+          },
 
           fields: [
             {
@@ -548,6 +684,46 @@ export default defineConfig({
           include: "*",
         },
         ui: {
+          router: async ({ document }) => {
+            const relativePath = document._sys.relativePath;
+            const match = /^([a-zA-Z0-9_-]+)\.md$/.exec(relativePath);
+
+            if (!match) {
+              return undefined;
+            }
+
+            const slug = match[1];
+            const route = `/blog/${slug}/`;
+
+            try {
+              const response = await fetch(route, {
+                cache: "no-store",
+              });
+
+              if (!response.ok) {
+                return undefined;
+              }
+
+              const html = await response.text();
+              const page = new DOMParser().parseFromString(
+                html,
+                "text/html",
+              );
+
+              const marker = `/tina-island/blog-body?slug=${slug}`;
+
+              const hasBlogIsland = Array.from(
+                page.querySelectorAll("[data-tina-island]"),
+              ).some(
+                (element) =>
+                  element.getAttribute("data-tina-island") === marker,
+              );
+
+              return hasBlogIsland ? route : undefined;
+            } catch {
+              return undefined;
+            }
+          },
           allowedActions: {
             create: false,
             delete: true,

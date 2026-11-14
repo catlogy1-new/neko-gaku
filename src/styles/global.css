@@ -1,4 +1,4 @@
-﻿@import './fonts.css';
+@import './fonts.css';
 @import 'katex/dist/katex.min.css';
 /* Cyber dark theme overrides */
 :root {
@@ -42,12 +42,12 @@ body {
   --paper-theme-color: #050505;
 }
 /* =========================================================
-   NAVFOLIO 驕ｯ・ｶ郢晢ｽｻCYBER HEADER + HERO TUNING
+   NAVFOLIO 鬩包ｽｯ繝ｻ・ｶ驛｢譎｢・ｽ・ｻCYBER HEADER + HERO TUNING
    ========================================================= */
 
 /* HERO OVERRIDES DISABLED
 /* ---------------------------------------------------------
-   HERO 驕ｯ・ｶ郢晢ｽｻslightly larger / further left
+   HERO 鬩包ｽｯ繝ｻ・ｶ驛｢譎｢・ｽ・ｻslightly larger / further left
    --------------------------------------------------------- */
 
 .hero-copy {
@@ -57,7 +57,7 @@ body {
 
 
 /* ---------------------------------------------------------
-   HEADER 驕ｯ・ｶ郢晢ｽｻtypography
+   HEADER 鬩包ｽｯ繝ｻ・ｶ驛｢譎｢・ｽ・ｻtypography
    --------------------------------------------------------- */
 
 .blog-top-nav .nav-link {
@@ -87,7 +87,7 @@ body {
 
 
 /* ---------------------------------------------------------
-   BRAND 驕ｯ・ｶ郢晢ｽｻnavfolio
+   BRAND 鬩包ｽｯ繝ｻ・ｶ驛｢譎｢・ｽ・ｻnavfolio
    --------------------------------------------------------- */
 
 .blog-top-nav .brand {
@@ -122,7 +122,7 @@ body {
 
 
 /* ---------------------------------------------------------
-   SEARCH 驕ｯ・ｶ郢晢ｽｻNavigation Matrix visual language
+   SEARCH 鬩包ｽｯ繝ｻ・ｶ驛｢譎｢・ｽ・ｻNavigation Matrix visual language
    --------------------------------------------------------- */
 
 .blog-top-nav .nav-actions button,
@@ -179,7 +179,7 @@ body {
 }
 
 
-/* Search icon itself 驕ｯ・ｶ郢晢ｽｻorange signal glow */
+/* Search icon itself 鬩包ｽｯ繝ｻ・ｶ驛｢譎｢・ｽ・ｻorange signal glow */
 .blog-top-nav .nav-actions button:hover svg,
 .blog-top-nav .nav-actions [role='button']:hover svg {
   color: #ff5a1f !important;
@@ -203,7 +203,7 @@ body {
 
 
 /* ---------------------------------------------------------
-   MOBILE 驕ｯ・ｶ郢晢ｽｻdon't push oversized hero off screen
+   MOBILE 鬩包ｽｯ繝ｻ・ｶ驛｢譎｢・ｽ・ｻdon't push oversized hero off screen
    --------------------------------------------------------- */
 
 @media (max-width: 820px) {
@@ -218,13 +218,13 @@ body {
 
 
 /* =========================================================
-   NAVFOLIO 驕ｯ・ｶ郢晢ｽｻHERO WIDTH + HEADER TYPE FINAL TUNING
+   NAVFOLIO 鬩包ｽｯ繝ｻ・ｶ驛｢譎｢・ｽ・ｻHERO WIDTH + HEADER TYPE FINAL TUNING
    ========================================================= */
 
 
 /* ---------------------------------------------------------
    HERO
-   髯晢ｽｾ繝ｻ・ｦ髯句ｹ｢・ｽ・ｴ驛｢・ｧ髮区ｩｸ・ｽ・ｺ郢晢ｽｻ繝ｻ・｡驍ｵ・ｺ繝ｻ・ｦJUGEMENT驛｢・ｧ髮区ｧｭ繝ｻ驛｢・ｧ陝ｲ・ｨ隨倥・・ｸ・ｲ遶丞､ｲ・ｼ繝ｻ・ｹ・ｧ陝ｲ・ｨ遶頑･｢譽斐・・ｧ驍ｵ・ｺ鬮ｦ・ｪ繝ｻ・･
+   鬮ｯ譎｢・ｽ・ｾ郢晢ｽｻ繝ｻ・ｦ鬮ｯ蜿･・ｹ・｢繝ｻ・ｽ繝ｻ・ｴ鬩幢ｽ｢繝ｻ・ｧ鬮ｮ蛹ｺ・ｩ・ｸ繝ｻ・ｽ繝ｻ・ｺ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・｡鬩搾ｽｵ繝ｻ・ｺ郢晢ｽｻ繝ｻ・ｦJUGEMENT鬩幢ｽ｢繝ｻ・ｧ鬮ｮ蛹ｺ・ｧ・ｭ郢晢ｽｻ鬩幢ｽ｢繝ｻ・ｧ髯晢ｽｲ繝ｻ・ｨ髫ｨ蛟･繝ｻ繝ｻ・ｸ繝ｻ・ｲ驕ｶ荳橸ｽ､・ｲ繝ｻ・ｼ郢晢ｽｻ繝ｻ・ｹ繝ｻ・ｧ髯晢ｽｲ繝ｻ・ｨ驕ｶ鬆托ｽ･・｢隴ｽ譁舌・繝ｻ・ｧ鬩搾ｽｵ繝ｻ・ｺ鬯ｮ・ｦ繝ｻ・ｪ郢晢ｽｻ繝ｻ・･
    --------------------------------------------------------- */
 
 
@@ -238,7 +238,7 @@ body {
 */
 /* ---------------------------------------------------------
    HEADER NAVIGATION
-   鬩肴得・ｽ・ｰ驍ｵ・ｺ郢晢ｽｻ郢晢ｽｻ鬨ｾ・ｶ繝ｻ・ｴ鬩搾ｽｱ陞溘ｇ鬟ｭ驛｢譎｢・ｽ・ｻ驛｢・ｧ繝ｻ・ｰ驛｢譎｢・ｽ・ｬ驛｢譎｢・ｽ・ｼ
+   鬯ｩ閧ｴ蠕励・・ｽ繝ｻ・ｰ鬩搾ｽｵ繝ｻ・ｺ驛｢譎｢・ｽ・ｻ驛｢譎｢・ｽ・ｻ鬯ｨ・ｾ繝ｻ・ｶ郢晢ｽｻ繝ｻ・ｴ鬯ｩ謳ｾ・ｽ・ｱ髯樊ｺ假ｽ・ｬ滂ｽｭ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ鬩幢ｽ｢繝ｻ・ｧ郢晢ｽｻ繝ｻ・ｰ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｬ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｼ
    --------------------------------------------------------- */
 
 .blog-top-nav .nav-link {
@@ -270,8 +270,8 @@ body {
 
 /* ---------------------------------------------------------
    LEFT BRAND
-   驛｢譎・ｽｼ譁青ｰ驛｢譎｢・ｽ・ｳ驛｢譎冗樟隨・ｽ｡驍ｵ・ｺ陞滂ｽｧ繝ｻ・､騾包ｽｻ陝ｲ・ｩ
-   雎ｼ・ｶ繝ｻ・ｲ驛｢譎｢・ｽ・ｻ鬩搾ｽｱ髯ゅ慈ver驍ｵ・ｺ繝ｻ・ｯ髴托ｽｴ繝ｻ・ｾ髯懶ｽｨ繝ｻ・ｨ驍ｵ・ｺ繝ｻ・ｮ髣皮甥・｢髮｣・ｽ・ｧ陋滂ｽ･繝ｻ蟶昴￠繝ｻ・ｭ髫ｰ謔ｶ繝ｻ   --------------------------------------------------------- */
+   鬩幢ｽ｢隴弱・・ｽ・ｼ隴・搨・ｰ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｳ鬩幢ｽ｢隴主・讓滄圷繝ｻ・ｽ・｡鬩搾ｽｵ繝ｻ・ｺ髯樊ｻゑｽｽ・ｧ郢晢ｽｻ繝ｻ・､鬨ｾ蛹・ｽｽ・ｻ髯晢ｽｲ繝ｻ・ｩ
+   髮趣ｽｼ繝ｻ・ｶ郢晢ｽｻ繝ｻ・ｲ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ鬯ｩ謳ｾ・ｽ・ｱ鬮ｯ繧・・ver鬩搾ｽｵ繝ｻ・ｺ郢晢ｽｻ繝ｻ・ｯ鬮ｴ謇假ｽｽ・ｴ郢晢ｽｻ繝ｻ・ｾ鬮ｯ諛ｶ・ｽ・ｨ郢晢ｽｻ繝ｻ・ｨ鬩搾ｽｵ繝ｻ・ｺ郢晢ｽｻ繝ｻ・ｮ鬮｣逧ｮ逕･繝ｻ・｢鬮ｮ・｣繝ｻ・ｽ繝ｻ・ｧ髯区ｻゑｽｽ・･郢晢ｽｻ陝ｶ譏ｴ・郢晢ｽｻ繝ｻ・ｭ鬮ｫ・ｰ隰費ｽｶ郢晢ｽｻ   --------------------------------------------------------- */
 
 .blog-top-nav .brand {
 
@@ -311,15 +311,15 @@ body {
 
 
 /* =========================================================
-   HERO TITLE 驕ｯ・ｶ郢晢ｽｻFIT CORRECTION
-   JUGEMENT驛｢・ｧ髮区ｧｭ繝ｻ驛｢・ｧ陝ｲ・ｨ隨倥・・ｸ・ｲ遶擾ｽｫ隶捺ｺｯ闊峨・・ｨ驍ｵ・ｺ繝ｻ・ｮ鬮ｴ謇假ｽｽ・ｫ髯ｷ迚呻ｽｸ蜷ｶ繝ｻ鬩搾ｽｯ繝ｻ・ｭ髫ｰ謔ｶ繝ｻ   ========================================================= */
+   HERO TITLE 鬩包ｽｯ繝ｻ・ｶ驛｢譎｢・ｽ・ｻFIT CORRECTION
+   JUGEMENT鬩幢ｽ｢繝ｻ・ｧ鬮ｮ蛹ｺ・ｧ・ｭ郢晢ｽｻ鬩幢ｽ｢繝ｻ・ｧ髯晢ｽｲ繝ｻ・ｨ髫ｨ蛟･繝ｻ繝ｻ・ｸ繝ｻ・ｲ驕ｶ謫ｾ・ｽ・ｫ髫ｶ謐ｺ・ｺ・ｯ髣雁ｳｨ繝ｻ繝ｻ・ｨ鬩搾ｽｵ繝ｻ・ｺ郢晢ｽｻ繝ｻ・ｮ鬯ｮ・ｴ隰・∞・ｽ・ｽ繝ｻ・ｫ鬮ｯ・ｷ霑壼遜・ｽ・ｸ陷ｷ・ｶ郢晢ｽｻ鬯ｩ謳ｾ・ｽ・ｯ郢晢ｽｻ繝ｻ・ｭ鬮ｫ・ｰ隰費ｽｶ郢晢ｽｻ   ========================================================= */
 
 
 
 
 /* =========================================================
-   HERO TITLE 驕ｯ・ｶ郢晢ｽｻCLIPPING FIX
-   3髫ｹ・ｿ繝ｻ・ｵ驍ｵ・ｺ繝ｻ・ｮ驍ｵ・ｺ繝ｻ・ｾ驍ｵ・ｺ繝ｻ・ｾ驍ｵ・ｲ遶乗刋萓｡鬩包ｽｶ繝ｻ・ｯ驛｢・ｧ髮区ｧｭ繝ｻ驛｢・ｧ陝ｲ・ｨ隨ｳ迢暦ｽｸ・ｺ繝ｻ・ｪ驍ｵ・ｺ郢晢ｽｻ   ========================================================= */
+   HERO TITLE 鬩包ｽｯ繝ｻ・ｶ驛｢譎｢・ｽ・ｻCLIPPING FIX
+   3鬮ｫ・ｹ繝ｻ・ｿ郢晢ｽｻ繝ｻ・ｵ鬩搾ｽｵ繝ｻ・ｺ郢晢ｽｻ繝ｻ・ｮ鬩搾ｽｵ繝ｻ・ｺ郢晢ｽｻ繝ｻ・ｾ鬩搾ｽｵ繝ｻ・ｺ郢晢ｽｻ繝ｻ・ｾ鬩搾ｽｵ繝ｻ・ｲ驕ｶ荵怜・關難ｽ｡鬯ｩ蛹・ｽｽ・ｶ郢晢ｽｻ繝ｻ・ｯ鬩幢ｽ｢繝ｻ・ｧ鬮ｮ蛹ｺ・ｧ・ｭ郢晢ｽｻ鬩幢ｽ｢繝ｻ・ｧ髯晢ｽｲ繝ｻ・ｨ髫ｨ・ｳ霑｢證ｦ・ｽ・ｸ繝ｻ・ｺ郢晢ｽｻ繝ｻ・ｪ鬩搾ｽｵ繝ｻ・ｺ驛｢譎｢・ｽ・ｻ   ========================================================= */
 
 .hero-copy {
   overflow: visible !important;
@@ -341,26 +341,26 @@ body {
    3 lines / large title / matrix further right
    ========================================================= */
 
-/* 髯ｷ闌ｨ・ｽ・ｨ髣厄ｽｴ霓｣蛛・ｽｽ・ｹ郢晢ｽｻ繝ｻ螳壽ｰ｣闔会ｽ｣繝ｻ・ｰ髯溷ｼｱ繝ｻ繝ｻ・｡驛｢・ｧ郢晢ｽｻ*/
+/* 鬮ｯ・ｷ髣鯉ｽｨ繝ｻ・ｽ繝ｻ・ｨ鬮｣蜴・ｽｽ・ｴ髴難ｽ｣陋帙・・ｽ・ｽ繝ｻ・ｹ驛｢譎｢・ｽ・ｻ郢晢ｽｻ陞ｳ螢ｽ・ｰ・｣髣比ｼ夲ｽｽ・｣郢晢ｽｻ繝ｻ・ｰ鬮ｯ貅ｷ・ｼ・ｱ郢晢ｽｻ郢晢ｽｻ繝ｻ・｡鬩幢ｽ｢繝ｻ・ｧ驛｢譎｢・ｽ・ｻ*/
 
 
-/* 髯晢ｽｾ繝ｻ・ｦ髯句ｹ｢・ｽ・ｴ
-   髣比ｼ夲ｽｽ・･髯ｷ鮃ｹ莠らｹ晢ｽｻ -72px 驍ｵ・ｺ繝ｻ・ｯ驛｢・ｧ郢晢ｽｻ繝ｻ鬘費ｽｸ・ｺ陷ｷ・ｶ驍・・・ｸ・ｺ繝ｻ・ｪ驍ｵ・ｺ繝ｻ・ｮ驍ｵ・ｺ繝ｻ・ｧ髫ｰ魃会ｽｽ・ｻ驍ｵ・ｺ郢晢ｽｻ*/
+/* 鬮ｯ譎｢・ｽ・ｾ郢晢ｽｻ繝ｻ・ｦ鬮ｯ蜿･・ｹ・｢繝ｻ・ｽ繝ｻ・ｴ
+   鬮｣豈費ｽｼ螟ｲ・ｽ・ｽ繝ｻ・･鬮ｯ・ｷ魄・ｽｹ闔繧会ｽｹ譎｢・ｽ・ｻ -72px 鬩搾ｽｵ繝ｻ・ｺ郢晢ｽｻ繝ｻ・ｯ鬩幢ｽ｢繝ｻ・ｧ驛｢譎｢・ｽ・ｻ郢晢ｽｻ鬯倩ｲｻ・ｽ・ｸ繝ｻ・ｺ髯ｷ・ｷ繝ｻ・ｶ鬩阪・繝ｻ繝ｻ・ｸ繝ｻ・ｺ郢晢ｽｻ繝ｻ・ｪ鬩搾ｽｵ繝ｻ・ｺ郢晢ｽｻ繝ｻ・ｮ鬩搾ｽｵ繝ｻ・ｺ郢晢ｽｻ繝ｻ・ｧ鬮ｫ・ｰ鬲・ｼ夲ｽｽ・ｽ繝ｻ・ｻ鬩搾ｽｵ繝ｻ・ｺ驛｢譎｢・ｽ・ｻ*/
 .hero-copy {
   min-width: 0 !important;
   overflow: visible !important;
 }
 
 
-/* 驛｢・ｧ繝ｻ・ｿ驛｢・ｧ繝ｻ・､驛｢譎冗樟・取刮・ｸ・ｺ繝ｻ・ｯ3髫ｹ・ｿ繝ｻ・ｵ驍ｵ・ｺ繝ｻ・ｮ驍ｵ・ｺ繝ｻ・ｾ驍ｵ・ｺ繝ｻ・ｾ驍ｵ・ｲ郢晢ｽｻ   髣碑・・ｿ・ｫ郢晢ｽｻ鬮ｴ謇假ｽｽ・ｫ髯ｷ迚呻ｽｸ蜻ｻ・ｽ蝣､・ｸ・ｺ繝ｻ・ｻ驍ｵ・ｺ繝ｻ・ｼ鬩搾ｽｯ繝ｻ・ｭ髫ｰ謔ｶ繝ｻ*/
+/* 鬩幢ｽ｢繝ｻ・ｧ郢晢ｽｻ繝ｻ・ｿ鬩幢ｽ｢繝ｻ・ｧ郢晢ｽｻ繝ｻ・､鬩幢ｽ｢隴主・讓溘・蜿門旭繝ｻ・ｸ繝ｻ・ｺ郢晢ｽｻ繝ｻ・ｯ3鬮ｫ・ｹ繝ｻ・ｿ郢晢ｽｻ繝ｻ・ｵ鬩搾ｽｵ繝ｻ・ｺ郢晢ｽｻ繝ｻ・ｮ鬩搾ｽｵ繝ｻ・ｺ郢晢ｽｻ繝ｻ・ｾ鬩搾ｽｵ繝ｻ・ｺ郢晢ｽｻ繝ｻ・ｾ鬩搾ｽｵ繝ｻ・ｲ驛｢譎｢・ｽ・ｻ   鬮｣遒代・繝ｻ・ｿ繝ｻ・ｫ驛｢譎｢・ｽ・ｻ鬯ｮ・ｴ隰・∞・ｽ・ｽ繝ｻ・ｫ鬮ｯ・ｷ霑壼遜・ｽ・ｸ陷ｻ・ｻ繝ｻ・ｽ陜｣・､繝ｻ・ｸ繝ｻ・ｺ郢晢ｽｻ繝ｻ・ｻ鬩搾ｽｵ繝ｻ・ｺ郢晢ｽｻ繝ｻ・ｼ鬯ｩ謳ｾ・ｽ・ｯ郢晢ｽｻ繝ｻ・ｭ鬮ｫ・ｰ隰費ｽｶ郢晢ｽｻ*/
 
 
 
-/* 髫ｶ髮｣・ｽ・ｪ髫ｴ繝ｻ・ｽ・ｹ髯ｷ・ｷ闔会ｽ｣郢晢ｽｻ髯具ｽｻ郢晢ｽｻ繝ｻ閾･・ｸ・ｺ繝ｻ・ｪ驍ｵ・ｺ郢晢ｽｻ*/
+/* 鬮ｫ・ｶ鬮ｮ・｣繝ｻ・ｽ繝ｻ・ｪ鬮ｫ・ｴ郢晢ｽｻ繝ｻ・ｽ繝ｻ・ｹ鬮ｯ・ｷ繝ｻ・ｷ髣比ｼ夲ｽｽ・｣驛｢譎｢・ｽ・ｻ鬮ｯ蜈ｷ・ｽ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ髢ｾ・･繝ｻ・ｸ繝ｻ・ｺ郢晢ｽｻ繝ｻ・ｪ鬩搾ｽｵ繝ｻ・ｺ驛｢譎｢・ｽ・ｻ*/
 
 
 
-/* 髯ｷ・ｿ繝ｻ・ｳ驍ｵ・ｺ繝ｻ・ｮNavigation Matrix驛｢・ｧ髮区ｨ贋ｾ｡鬩包ｽｶ繝ｻ・ｯ驍ｵ・ｺ繝ｻ・ｸ */
+/* 鬮ｯ・ｷ繝ｻ・ｿ郢晢ｽｻ繝ｻ・ｳ鬩搾ｽｵ繝ｻ・ｺ郢晢ｽｻ繝ｻ・ｮNavigation Matrix鬩幢ｽ｢繝ｻ・ｧ鬮ｮ蛹ｺ・ｨ雍具ｽｾ・｡鬯ｩ蛹・ｽｽ・ｶ郢晢ｽｻ繝ｻ・ｯ鬩搾ｽｵ繝ｻ・ｺ郢晢ｽｻ繝ｻ・ｸ */
 .dot-visual {
   width: 350px !important;
 
@@ -369,7 +369,7 @@ body {
 }
 
 
-/* 驛｢譎擾ｽｳ・ｨ郢晢ｽ｣驛｢譎冗樟郢晢ｽｱ驛｢譎樔ｺゑｾ取辨譏弱・・ｪ髣厄ｽｴ郢晢ｽｻ*/
+/* 鬩幢ｽ｢隴取得・ｽ・ｳ繝ｻ・ｨ驛｢譎｢・ｽ・｣鬩幢ｽ｢隴主・讓滄Δ譎｢・ｽ・ｱ鬩幢ｽ｢隴取ｨ費ｽｺ繧托ｽｾ蜿冶ｾｨ隴丞ｼｱ繝ｻ繝ｻ・ｪ鬮｣蜴・ｽｽ・ｴ驛｢譎｢・ｽ・ｻ*/
 .dot-stage {
   width: 350px !important;
   max-width: 350px !important;
@@ -377,13 +377,13 @@ body {
 
 
 /* ---------------------------------------------------------
-   1100px髣比ｼ夲ｽｽ・･髣包ｽｳ闕ｵ譏ｶ蜻ｳ驍ｵ・ｺ陞滂ｽｧ繝ｻ・ｰ闔会ｽ｣繝ｻ・ｰ鬩搾ｽｵ繝ｻ・ｮ驛｢・ｧ遶丞､ｲ・ｽ繝ｻ
+   1100px鬮｣豈費ｽｼ螟ｲ・ｽ・ｽ繝ｻ・･鬮｣蛹・ｽｽ・ｳ髣包ｽｵ隴擾ｽｶ陷ｻ・ｳ鬩搾ｽｵ繝ｻ・ｺ髯樊ｻゑｽｽ・ｧ郢晢ｽｻ繝ｻ・ｰ髣比ｼ夲ｽｽ・｣郢晢ｽｻ繝ｻ・ｰ鬯ｩ謳ｾ・ｽ・ｵ郢晢ｽｻ繝ｻ・ｮ鬩幢ｽ｢繝ｻ・ｧ驕ｶ荳橸ｽ､・ｲ繝ｻ・ｽ郢晢ｽｻ
    --------------------------------------------------------- */
 
 
 
 
-/* Mobile驍ｵ・ｺ繝ｻ・ｯ髣碑・・ｿ・ｫ遶擾ｽｪ驍ｵ・ｺ繝ｻ・ｧ鬯ｨ・ｾ陞｢・ｹ繝ｻ莨√＠繝ｻ・ｦ鬩包ｽｨ鬮ｦ・ｪ遶擾ｽｩ */
+/* Mobile鬩搾ｽｵ繝ｻ・ｺ郢晢ｽｻ繝ｻ・ｯ鬮｣遒代・繝ｻ・ｿ繝ｻ・ｫ驕ｶ謫ｾ・ｽ・ｪ鬩搾ｽｵ繝ｻ・ｺ郢晢ｽｻ繝ｻ・ｧ鬯ｯ・ｨ繝ｻ・ｾ髯橸ｽ｢繝ｻ・ｹ郢晢ｽｻ闔ｨ竏夲ｼ郢晢ｽｻ繝ｻ・ｦ鬯ｩ蛹・ｽｽ・ｨ鬯ｮ・ｦ繝ｻ・ｪ驕ｶ謫ｾ・ｽ・ｩ */
 @media (max-width: 820px) {
 
 
@@ -405,7 +405,7 @@ body {
 
 
 /* =========================================================
-   HEADER TYPOGRAPHY 驕ｯ・ｶ郢晢ｽｻSIZE UP ONLY
+   HEADER TYPOGRAPHY 鬩包ｽｯ繝ｻ・ｶ驛｢譎｢・ｽ・ｻSIZE UP ONLY
    ========================================================= */
 
 /* navfolio */
@@ -427,10 +427,10 @@ body {
 
 
 /* =========================================================
-   HEADER TYPOGRAPHY 驕ｯ・ｶ郢晢ｽｻLARGE BALANCE
+   HEADER TYPOGRAPHY 鬩包ｽｯ繝ｻ・ｶ驛｢譎｢・ｽ・ｻLARGE BALANCE
    ========================================================= */
 
-/* 髯晢ｽｾ繝ｻ・ｦ髣包ｽｳ郢晢ｽｻnavfolio */
+/* 鬮ｯ譎｢・ｽ・ｾ郢晢ｽｻ繝ｻ・ｦ鬮｣蛹・ｽｽ・ｳ驛｢譎｢・ｽ・ｻnavfolio */
 .blog-top-nav .brand {
 }
 
@@ -438,7 +438,7 @@ body {
 .blog-top-nav .nav-link {
 }
 
-/* 驛｢譎渉・･郢晢ｽ｣驛｢謨鳴驛｢譎｢・ｽ・ｼ髯ｷ闌ｨ・ｽ・ｨ髣厄ｽｴ髦ｮ蜷ｮ繝ｻ驛｢・ｧ郢ｧ繝ｻ・ｽ・ｰ闔会ｽ｣繝ｻ・ｰ驍ｵ・ｺ繝ｻ・ｰ驍ｵ・ｺ陞滂ｽｧ闔牙・諠ｺ繝ｻ・ｸ驛｢・ｧ陷代・・ｽ・ｸ陟托ｽｱ遶擾ｽｴ驛｢・ｧ郢晢ｽｻ*/
+/* 鬩幢ｽ｢隴取ｸ可繝ｻ・･驛｢譎｢・ｽ・｣鬩幢ｽ｢隰ｨ魑ｴﾂ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｼ鬮ｯ・ｷ髣鯉ｽｨ繝ｻ・ｽ繝ｻ・ｨ鬮｣蜴・ｽｽ・ｴ鬮ｦ・ｮ陷ｷ・ｮ郢晢ｽｻ鬩幢ｽ｢繝ｻ・ｧ驛｢・ｧ郢晢ｽｻ繝ｻ・ｽ繝ｻ・ｰ髣比ｼ夲ｽｽ・｣郢晢ｽｻ繝ｻ・ｰ鬩搾ｽｵ繝ｻ・ｺ郢晢ｽｻ繝ｻ・ｰ鬩搾ｽｵ繝ｻ・ｺ髯樊ｻゑｽｽ・ｧ髣皮甥繝ｻ隲・ｺ郢晢ｽｻ繝ｻ・ｸ鬩幢ｽ｢繝ｻ・ｧ髯ｷ莉｣繝ｻ繝ｻ・ｽ繝ｻ・ｸ髯滓汚・ｽ・ｱ驕ｶ謫ｾ・ｽ・ｴ鬩幢ｽ｢繝ｻ・ｧ驛｢譎｢・ｽ・ｻ*/
 .blog-top-nav {
   min-height: 76px !important;
 }
@@ -458,7 +458,7 @@ body {
 
 
 /* =========================================================
-   NAVIGATION MATRIX 驕ｯ・ｶ郢晢ｽｻTEXT SIZE UP
+   NAVIGATION MATRIX 鬩包ｽｯ繝ｻ・ｶ驛｢譎｢・ｽ・ｻTEXT SIZE UP
    ========================================================= */
 
 /* NAVIGATION MATRIX */
@@ -476,7 +476,7 @@ body {
   font-size: 0.80rem !important;
 }
 
-/* ENTER 驕ｶ鄙ｫ繝ｻ*/
+/* ENTER 鬩包ｽｶ驗呻ｽｫ郢晢ｽｻ*/
 .dot-link-copy small {
   font-size: 0.64rem !important;
 }
@@ -491,24 +491,24 @@ body {
 
 
 /* =========================================================
-   TOP HERO 遯ｶ繝ｻFULL WIDTH FINAL LAYOUT
+   TOP HERO 驕ｯ・ｶ郢晢ｽｻFULL WIDTH FINAL LAYOUT
    ========================================================= */
 
 @media (min-width: 1101px) {
 
-  /* 騾包ｽｻ鬮ｱ・｢郢ｧ蛛ｵ竓・ｸｺ・ｼ郢晁ｼ釆晁濤繝ｻ縲定抄・ｿ騾包ｽｨ */
+  /* 鬨ｾ蛹・ｽｽ・ｻ鬯ｮ・ｱ繝ｻ・｢驛｢・ｧ陋幢ｽｵ遶薙・・ｸ・ｺ繝ｻ・ｼ驛｢譎・ｽｼ驥・凵豼､郢晢ｽｻ邵ｲ螳壽割繝ｻ・ｿ鬨ｾ蛹・ｽｽ・ｨ */
 
-  /* 郢ｧ・ｿ郢ｧ・､郢晏現ﾎ晉ｹｧ蝣､笏碁・・竊楢淦・ｦ陷ｿ・ｳ驕假ｽｻ陷崎ｼ費ｼ邵ｺ・ｪ邵ｺ繝ｻ*/
+  /* 驛｢・ｧ繝ｻ・ｿ驛｢・ｧ繝ｻ・､驛｢譎冗樟・取刮・ｹ・ｧ陜｣・､隨冗｢・繝ｻ繝ｻ遶頑･｢豺ｦ繝ｻ・ｦ髯ｷ・ｿ繝ｻ・ｳ鬩募∞・ｽ・ｻ髯ｷ蟠趣ｽｼ雋ｻ・ｼ・ｰ驍ｵ・ｺ繝ｻ・ｪ驍ｵ・ｺ郢晢ｽｻ*/
   .hero-copy {
     min-width: 0 !important;
     overflow: visible !important;
   }
 
-  /* 郢ｧ・ｿ郢ｧ・､郢晏現ﾎ晉ｸｺ・ｮ郢晄ｧｭ縺帷ｹｧ・ｯ邵ｺ・ｧ陝ｾ・ｦ陷ｿ・ｳ郢ｧ雋槭・郢ｧ蟲ｨ竊醍ｸｺ繝ｻ*/
+  /* 驛｢・ｧ繝ｻ・ｿ驛｢・ｧ繝ｻ・､驛｢譎冗樟・取刮・ｸ・ｺ繝ｻ・ｮ驛｢譎・ｽｧ・ｭ邵ｺ蟶ｷ・ｹ・ｧ繝ｻ・ｯ驍ｵ・ｺ繝ｻ・ｧ髯晢ｽｾ繝ｻ・ｦ髯ｷ・ｿ繝ｻ・ｳ驛｢・ｧ髮区ｧｭ繝ｻ驛｢・ｧ陝ｲ・ｨ遶企・・ｸ・ｺ郢晢ｽｻ*/
   .hero-title,
   
 
-  /* Matrix邵ｺ・ｯ陷ｿ・ｳ郢ｧ・ｫ郢晢ｽｩ郢晢｣ｰ邵ｺ・ｮ陷ｿ・ｳ驕ｶ・ｯ邵ｺ・ｸ */
+  /* Matrix驍ｵ・ｺ繝ｻ・ｯ髯ｷ・ｿ繝ｻ・ｳ驛｢・ｧ繝ｻ・ｫ驛｢譎｢・ｽ・ｩ驛｢譎｢・｣・ｰ驍ｵ・ｺ繝ｻ・ｮ髯ｷ・ｿ繝ｻ・ｳ鬩包ｽｶ繝ｻ・ｯ驍ｵ・ｺ繝ｻ・ｸ */
   .dot-visual {
     width: 350px !important;
     max-width: 350px !important;
@@ -527,7 +527,7 @@ body {
 }
 
 
-/* HERO MICRO ALIGN 遯ｶ繝ｻCORE DOT */
+/* HERO MICRO ALIGN 驕ｯ・ｶ郢晢ｽｻCORE DOT */
 @media (min-width: 1101px) {
   .hero-copy {
   }
@@ -565,7 +565,7 @@ body {
 
 
 /* =========================================================
-   SEARCH ICON HOVER 窶・DARK ORANGE FORCE OVERRIDE
+   SEARCH ICON HOVER 遯ｶ繝ｻDARK ORANGE FORCE OVERRIDE
    ========================================================= */
 html body .blog-top-nav .nav-actions .site-search .site-search-trigger:hover,
 html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-visible {
@@ -587,7 +587,7 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
     drop-shadow(0 0 6px rgba(154, 85, 29, 0.10)) !important;
 }
 /* =========================================================
-   BLOG KINETIC CARD 窶・CLIENT ROUTER SAFE FINAL
+   BLOG KINETIC CARD 遯ｶ繝ｻCLIENT ROUTER SAFE FINAL
    ========================================================= */
 
 
@@ -627,7 +627,7 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
 }
 
 /* =========================================================
-   SERIES CARD 窶・CLIENT ROUTER SAFE
+   SERIES CARD 遯ｶ繝ｻCLIENT ROUTER SAFE
    ========================================================= */
 
 .series-card {
@@ -948,7 +948,7 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
   }
 }
 
-/* BLOG GROUP NAV POSITION 窶・ROUTER SAFE */
+/* BLOG GROUP NAV POSITION 遯ｶ繝ｻROUTER SAFE */
 
 .group-nav {
   border-bottom: 0 !important;
@@ -960,9 +960,9 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
   top: 14px !important;
 }
 
-/* BLOG GROUP NAV POSITION 窶・ROUTER SAFE END */
+/* BLOG GROUP NAV POSITION 遯ｶ繝ｻROUTER SAFE END */
 
-/* BLOG VISUAL FINAL 窶・ROUTER SAFE */
+/* BLOG VISUAL FINAL 遯ｶ繝ｻROUTER SAFE */
 
 
 /* =========================================================
@@ -1026,11 +1026,11 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
 
 
 /* =========================================================
-   BLOG CARD HOVER 窶・RIMBAUD DARK ORANGE
+   BLOG CARD HOVER 遯ｶ繝ｻRIMBAUD DARK ORANGE
    ========================================================= */
 
 
-/* YEAR WHEEL 窶・GLOBAL STABLE START */
+/* YEAR WHEEL 遯ｶ繝ｻGLOBAL STABLE START */
 
 
 /* =========================================================
@@ -1055,7 +1055,7 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
 /* =========================================================
    OUTER PANEL
 
-   螟門捉繝ｩ繧､繝縺ｯ謦､蜴ｻ縲・   繝吶・繧ｹ縺ｯ證励＞髱堤・濶ｲ縲・   蝗幃嚆縺縺醍洒縺・Λ繧､繝繝悶Λ繧ｱ繝・ヨ縲・   ========================================================= */
+   陞滄摩謐臥ｹ晢ｽｩ郢ｧ・､郢晢｣ｰ邵ｺ・ｯ隰ｦ・､陷ｴ・ｻ邵ｲ繝ｻ   郢晏生繝ｻ郢ｧ・ｹ邵ｺ・ｯ隴牙干・樣ｫｱ蝣､繝ｻ豼ｶ・ｲ邵ｲ繝ｻ   陜怜ｹ・嚀邵ｺ・ｰ邵ｺ驢肴ｴ堤ｸｺ繝ｻﾎ帷ｹｧ・､郢晢｣ｰ郢晄じﾎ帷ｹｧ・ｱ郢昴・繝ｨ邵ｲ繝ｻ   ========================================================= */
 
 .year-wheel-shell {
   position: relative !important;
@@ -1198,7 +1198,7 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
 
 
 /*
-  蜑阪・逍台ｼｼ隕∫ｴ繧ｳ繝ｼ繝翫・繝・じ繧､繝ｳ繧貞ｮ悟・蛛懈ｭ｢
+  陷鷹亂繝ｻ騾榊床・ｼ・ｼ髫補悪・ｴ・ｰ郢ｧ・ｳ郢晢ｽｼ郢晉ｿｫ繝ｻ郢昴・縺倡ｹｧ・､郢晢ｽｳ郢ｧ雋橸ｽｮ謔溘・陋帶㊧・ｭ・｢
 */
 .year-wheel-shell::before,
 .year-wheel-shell::after {
@@ -1209,7 +1209,7 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
 
 /* =========================================================
    YEAR / ARCHIVE
-   荳蝗槭ｊ螟ｧ縺阪￥
+   闕ｳﾂ陜玲ｧｭ・願棔・ｧ邵ｺ髦ｪ・･
    ========================================================= */
 
 .year-wheel-label {
@@ -1261,11 +1261,11 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
    right arrow:
    left = 280
 
-   wheel蜿ｳ遶ｯ竊池ight arrow髢・= 7px
+   wheel陷ｿ・ｳ驕ｶ・ｯ遶頑ｱight arrow鬮｢繝ｻ= 7px
 
-   蟾ｦ蛛ｴ繧ょ酔縺・px縺ｫ縺吶ｋ・・   85 - 7 - 38 = 40px
+   陝ｾ・ｦ陋幢ｽｴ郢ｧ繧・・邵ｺ繝ｻpx邵ｺ・ｫ邵ｺ蜷ｶ・九・繝ｻ   85 - 7 - 38 = 40px
 
-   縺薙ｌ縺ｧ螳悟・蟇ｾ遘ｰ縲・   ========================================================= */
+   邵ｺ阮呻ｽ檎ｸｺ・ｧ陞ｳ謔溘・陝・ｽｾ驕假ｽｰ邵ｲ繝ｻ   ========================================================= */
 
 .year-wheel-up,
 .year-wheel-down {
@@ -1491,7 +1491,7 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
 
 /* =========================================================
    ACTIVE YEAR
-   繝ｩ繧､繝医げ繝ｬ繝ｼ 竊・hover逋ｽ
+   郢晢ｽｩ郢ｧ・､郢晏現縺堤ｹ晢ｽｬ郢晢ｽｼ 遶翫・hover騾具ｽｽ
    ========================================================= */
 
 .year-wheel-track {
@@ -1680,7 +1680,7 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
 
 
 /* =========================================================
-   DIVIDER 窶・REMOVED
+   DIVIDER 遯ｶ繝ｻREMOVED
    ========================================================= */
 
 .year-wheel-layout::before {
@@ -1804,7 +1804,7 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
 }
 
 
-/* hatch 窶・removed */
+/* hatch 遯ｶ繝ｻremoved */
 
 .year-wheel-layout::after {
   display: none !important;
@@ -1812,7 +1812,7 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
 }
 
 
-/* LIVE FEED 窶・removed */
+/* LIVE FEED 遯ｶ繝ｻremoved */
 
 .year-wheel-meta > strong::after {
   display: none !important;
@@ -1820,20 +1820,20 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
 }
 
 
-/* YEAR WHEEL 窶・GLOBAL STABLE END */
+/* YEAR WHEEL 遯ｶ繝ｻGLOBAL STABLE END */
 
 
-/* YEAR WHEEL 窶・SAFE DETAIL FIX START */
+/* YEAR WHEEL 遯ｶ繝ｻSAFE DETAIL FIX START */
 
 
 /* =========================================================
    OUTER FRAME
 
-   蜈ｨ蝗幃嚆・・   讓ｪ 5mm
-   邵ｦ 5mm
-   螟ｪ縺・2px
+   陷茨ｽｨ陜怜ｹ・嚀繝ｻ繝ｻ   隶難ｽｪ 5mm
+   驍ｵ・ｦ 5mm
+   陞滂ｽｪ邵ｺ繝ｻ2px
 
-   蜈ｨ驛ｨ縺ｾ縺｣縺溘￥蜷後§蟇ｸ豕輔・   clip-path繧剃ｽｿ繧上↑縺・・   ========================================================= */
+   陷茨ｽｨ鬩幢ｽｨ邵ｺ・ｾ邵ｺ・｣邵ｺ貅假ｿ･陷ｷ蠕個ｧ陝・ｽｸ雎戊ｼ板繝ｻ   clip-path郢ｧ蜑・ｽｽ・ｿ郢ｧ荳岩・邵ｺ繝ｻﾂ繝ｻ   ========================================================= */
 
 .year-wheel-shell {
   border: 1px solid rgba(53,72,76,.72) !important;
@@ -1881,7 +1881,7 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
 
   background:
 
-    /* 笏・LEFT TOP */
+    /* 隨上・LEFT TOP */
     linear-gradient(#b7ff00,#b7ff00)
     left top / 5mm 2px no-repeat,
 
@@ -1889,7 +1889,7 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
     left top / 2px 5mm no-repeat,
 
 
-    /* 笏・RIGHT TOP */
+    /* 隨上・RIGHT TOP */
     linear-gradient(#b7ff00,#b7ff00)
     right top / 5mm 2px no-repeat,
 
@@ -1897,7 +1897,7 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
     right top / 2px 5mm no-repeat,
 
 
-    /* 笏・LEFT BOTTOM */
+    /* 隨上・LEFT BOTTOM */
     linear-gradient(#b7ff00,#b7ff00)
     left bottom / 5mm 2px no-repeat,
 
@@ -1905,7 +1905,7 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
     left bottom / 2px 5mm no-repeat,
 
 
-    /* 笏・RIGHT BOTTOM */
+    /* 隨上・RIGHT BOTTOM */
     linear-gradient(#b7ff00,#b7ff00)
     right bottom / 5mm 2px no-repeat,
 
@@ -1926,9 +1926,9 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
 
 
 /* =========================================================
-   ROULETTE 窶・SIZE / POSITION
+   ROULETTE 遯ｶ繝ｻSIZE / POSITION
 
-   莉翫∪縺ｧ188px縺縺｣縺滓悽菴薙ｒ230px縺ｸ縲・   蟆代＠蜿ｳ縺ｸ遘ｻ蜍輔・   ========================================================= */
+   闔臥ｿｫ竏ｪ邵ｺ・ｧ188px邵ｺ・ｰ邵ｺ・｣邵ｺ貊捺た闖ｴ阮呻ｽ・30px邵ｺ・ｸ邵ｲ繝ｻ   陝・ｻ｣・陷ｿ・ｳ邵ｺ・ｸ驕假ｽｻ陷崎ｼ板繝ｻ   ========================================================= */
 
 .year-wheel {
   left: 102px !important;
@@ -1937,7 +1937,7 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
 }
 
 
-/* 蟾ｦ蜿ｳ繝懊ち繝ｳ繧よ眠縺励＞繝ｫ繝ｼ繝ｬ繝・ヨ蟷・↓蜷医ｏ縺帙ｋ */
+/* 陝ｾ・ｦ陷ｿ・ｳ郢晄㈱縺｡郢晢ｽｳ郢ｧ繧育悛邵ｺ蜉ｱ・樒ｹ晢ｽｫ郢晢ｽｼ郢晢ｽｬ郢昴・繝ｨ陝ｷ繝ｻ竊楢惺蛹ｻ・冗ｸｺ蟶呻ｽ・*/
 
 .year-wheel-up {
   left: 50px !important;
@@ -1978,7 +1978,7 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
 }
 
 
-/* 荳贋ｸ九・蟷ｴ莉｣縺ｯ繝ｫ繝ｼ繝ｬ繝・ヨ陦ｨ遉ｺ縺縺・*/
+/* 闕ｳ雍具ｽｸ荵昴・陝ｷ・ｴ闔会ｽ｣邵ｺ・ｯ郢晢ｽｫ郢晢ｽｼ郢晢ｽｬ郢昴・繝ｨ髯ｦ・ｨ驕会ｽｺ邵ｺ・ｰ邵ｺ繝ｻ*/
 
 .year-wheel-ghost {
   color: #626d70 !important;
@@ -2001,8 +2001,8 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
 
 
 /* =========================================================
-   RAILS + DOTS 窶・CLEAN
-   轤ｹ縺ｨ邵ｦ邱壹ｒ蜷御ｸ隕∫ｴ縺ｧ謠冗判
+   RAILS + DOTS 遯ｶ繝ｻCLEAN
+   霓､・ｹ邵ｺ・ｨ驍ｵ・ｦ驍ｱ螢ｹ・定惺蠕｡・ｸﾂ髫補悪・ｴ・ｰ邵ｺ・ｧ隰蜀怜愛
    ========================================================= */
 
 .year-wheel-window::before,
@@ -2062,7 +2062,7 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
 /* =========================================================
    RIGHT HUD POSITION
 
-   繝ｫ繝ｼ繝ｬ繝・ヨ繧貞ｺ・￡縺溷・縺縺大承縺ｸ遘ｻ蜍輔・   ========================================================= */
+   郢晢ｽｫ郢晢ｽｼ郢晢ｽｬ郢昴・繝ｨ郢ｧ雋橸ｽｺ繝ｻ・｡邵ｺ貅ｷ繝ｻ邵ｺ・ｰ邵ｺ螟ｧ謇ｿ邵ｺ・ｸ驕假ｽｻ陷崎ｼ板繝ｻ   ========================================================= */
 
 .year-wheel-divider {
   left: 410px !important;
@@ -2077,13 +2077,13 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
 /* =========================================================
    HUD TELEMETRY
 
-   諢丞袖・・   螳溘ョ繝ｼ繧ｿ縺ｧ縺ｯ縺ｪ縺上碁壻ｿ｡迥ｶ諷九阪ｒ讓｡縺励◆隕冶ｦ夊｣・｣ｾ縲・
-   騾壼ｸｸ・・   髱吶°縺ｪ菫｡蜿ｷ陦ｨ遉ｺ
+   隲｢荳櫁｢悶・繝ｻ   陞ｳ貅倥Ι郢晢ｽｼ郢ｧ・ｿ邵ｺ・ｧ邵ｺ・ｯ邵ｺ・ｪ邵ｺ荳環遒・螢ｻ・ｿ・｡霑･・ｶ隲ｷ荵敖髦ｪ・定ｮ難ｽ｡邵ｺ蜉ｱ笳・囎蜀ｶ・ｦ螟奇ｽ｣繝ｻ・｣・ｾ邵ｲ繝ｻ
+   鬨ｾ螢ｼ・ｸ・ｸ繝ｻ繝ｻ   鬮ｱ蜷ｶﾂｰ邵ｺ・ｪ闖ｫ・｡陷ｿ・ｷ髯ｦ・ｨ驕会ｽｺ
 
-   HOVER・・   菫｡蜿ｷ繝ｩ繧､繝ｳ縺ｨ繧ｻ繝ｫ縺瑚ｵｷ蜍・   ========================================================= */
+   HOVER繝ｻ繝ｻ   闖ｫ・｡陷ｿ・ｷ郢晢ｽｩ郢ｧ・､郢晢ｽｳ邵ｺ・ｨ郢ｧ・ｻ郢晢ｽｫ邵ｺ迹夲ｽｵ・ｷ陷阪・   ========================================================= */
 
 
-/* 荳頑ｮｵ縺ｮ邏ｰ縺・壻ｿ｡繝ｩ繧､繝ｳ */
+/* 闕ｳ鬆托ｽｮ・ｵ邵ｺ・ｮ驍擾ｽｰ邵ｺ繝ｻﾂ螢ｻ・ｿ・｡郢晢ｽｩ郢ｧ・､郢晢ｽｳ */
 
 .year-wheel-meta::before {
   height: 1px !important;
@@ -2109,7 +2109,7 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
 }
 
 
-/* 荳区ｮｵ縺ｮ繝・・繧ｿ繧ｻ繝ｫ */
+/* 闕ｳ蛹ｺ・ｮ・ｵ邵ｺ・ｮ郢昴・繝ｻ郢ｧ・ｿ郢ｧ・ｻ郢晢ｽｫ */
 
 .year-wheel-meta::after {
   height: 8px !important;
@@ -2118,7 +2118,7 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
 
   background:
 
-    /* 1px縺ｮ繝・・繧ｿ襍ｰ譟ｻ邱・*/
+    /* 1px邵ｺ・ｮ郢昴・繝ｻ郢ｧ・ｿ隘搾ｽｰ隴滂ｽｻ驍ｱ繝ｻ*/
     linear-gradient(
       90deg,
       rgba(183,255,0,.28) 0%,
@@ -2127,7 +2127,7 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
     )
     0 0 / 100% 1px no-repeat,
 
-    /* 繧ｻ繝ｫ鄒､ */
+    /* 郢ｧ・ｻ郢晢ｽｫ驗抵ｽ､ */
     linear-gradient(
       90deg,
 
@@ -2165,7 +2165,7 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
 }
 
 
-/* 譁懃ｷ壹ョ繝ｼ繧ｿ繝弱う繧ｺ 窶・removed */
+/* 隴∵㏍・ｷ螢ｹ繝ｧ郢晢ｽｼ郢ｧ・ｿ郢晏ｼｱ縺・ｹｧ・ｺ 遯ｶ繝ｻremoved */
 
 .year-wheel-layout::after {
   display: none !important;
@@ -2223,7 +2223,7 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
 }
 
 
-/* HUD縺ｫ荵励▲縺溘→縺・LIVE FEED 繧りｵｷ蜍・*/
+/* HUD邵ｺ・ｫ闕ｵ蜉ｱ笆ｲ邵ｺ貅倪・邵ｺ繝ｻLIVE FEED 郢ｧ繧奇ｽｵ・ｷ陷阪・*/
 
 .year-wheel-meta:hover > strong::after {
   color: #b7ff00 !important;
@@ -2234,11 +2234,11 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
 }
 
 
-/* YEAR WHEEL 窶・SAFE DETAIL FIX END */
+/* YEAR WHEEL 遯ｶ繝ｻSAFE DETAIL FIX END */
 
 
 /* =========================================================
-   RIMBAUD 窶・CLEAN FINAL
+   RIMBAUD 遯ｶ繝ｻCLEAN FINAL
    ========================================================= */
 
 .archive-hero .archive-copy {
@@ -2391,7 +2391,7 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
   visibility: visible !important;
 }
 
-/* ORANGE LINE 窶・EXISTING COLOUR / GRADIENT */
+/* ORANGE LINE 遯ｶ繝ｻEXISTING COLOUR / GRADIENT */
 
 .archive-hero .archive-copy .rimbaud-neon-line {
   position: relative !important;
@@ -2510,7 +2510,7 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
 }
 
 
-/* RIMBAUD 窶・PAGE LOAD TRIGGER */
+/* RIMBAUD 遯ｶ繝ｻPAGE LOAD TRIGGER */
 
 .archive-hero .archive-copy
 .rimbaud-cyber-plate.rimbaud-running
@@ -2536,14 +2536,14 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
     forwards !important;
 }
 
-/* RIMBAUD 窶・PAGE LOAD TRIGGER END */
-/* RIMBAUD 窶・CLEAN FINAL END */
+/* RIMBAUD 遯ｶ繝ｻPAGE LOAD TRIGGER END */
+/* RIMBAUD 遯ｶ繝ｻCLEAN FINAL END */
 
 
 /* ARCHIVE HUD REFERENCE MATCH START */
 
 /*
-   蜿り・判蜒・縺ｮHUD繧貞ｷｦ蛛ｴ縺ｸ縺昴・縺ｾ縺ｾ遘ｻ讀阪☆繧九◆繧√・譛邨りｪｿ謨ｴ縲・   Year Wheel BOX縺昴・繧ゅ・縺ｫ縺ｯ隗ｦ繧後↑縺・・*/
+   陷ｿ繧環繝ｻ蛻､陷偵・邵ｺ・ｮHUD郢ｧ雋橸ｽｷ・ｦ陋幢ｽｴ邵ｺ・ｸ邵ｺ譏ｴ繝ｻ邵ｺ・ｾ邵ｺ・ｾ驕假ｽｻ隶髦ｪ笘・ｹｧ荵昶螺郢ｧ竏壹・隴崢驍ｨ繧奇ｽｪ・ｿ隰ｨ・ｴ邵ｲ繝ｻ   Year Wheel BOX邵ｺ譏ｴ繝ｻ郢ｧ繧・・邵ｺ・ｫ邵ｺ・ｯ髫暦ｽｦ郢ｧ蠕娯・邵ｺ繝ｻﾂ繝ｻ*/
 
 body .year-archive-stage .archive-left-hud {
   position: relative !important;
@@ -2628,7 +2628,7 @@ body .year-archive-stage .archive-hud-count {
 
 
 /* -----------------------------------------
-   譁・ｭ礼峩荳九・邏ｰ縺・ｰｴ蟷ｳ邱・   ----------------------------------------- */
+   隴√・・ｭ遉ｼ蟲ｩ闕ｳ荵昴・驍擾ｽｰ邵ｺ繝ｻ・ｰ・ｴ陝ｷ・ｳ驍ｱ繝ｻ   ----------------------------------------- */
 
 body .year-archive-stage .archive-left-hud .archive-hud-line {
   position: absolute !important;
@@ -2665,8 +2665,8 @@ body .year-archive-stage .archive-hud-line::after {
 
 
 /* -----------------------------------------
-   蜿り・判蜒上・繧ｻ繧ｰ繝｡繝ｳ繝医ヰ繝ｼ
-   邱・/ 繝ｩ繧､繝 / 髱堤・ / 髱堤・ / 髟ｷ縺・囓濶ｲ
+   陷ｿ繧環繝ｻ蛻､陷剃ｸ翫・郢ｧ・ｻ郢ｧ・ｰ郢晢ｽ｡郢晢ｽｳ郢晏現繝ｰ郢晢ｽｼ
+   驍ｱ繝ｻ/ 郢晢ｽｩ郢ｧ・､郢晢｣ｰ / 鬮ｱ蝣､繝ｻ / 鬮ｱ蝣､繝ｻ / 鬮滂ｽｷ邵ｺ繝ｻ蝗捺ｿｶ・ｲ
    ----------------------------------------- */
 
 body .year-archive-stage .archive-left-hud .archive-hud-spectrum {
@@ -2763,8 +2763,8 @@ body .year-archive-stage .archive-hud-spectrum i:nth-child(6) {
 
 
 /* -----------------------------------------
-   莉翫・逕ｻ髱｢縺ｫ蜃ｺ縺ｦ縺・ｋ菴呵ｨ医↑荳区ｮｵ繧ｻ繝ｫ
-   蜿り・判蜒上↓縺ｯ縺ｪ縺・・縺ｧ髱櫁｡ｨ遉ｺ
+   闔臥ｿｫ繝ｻ騾包ｽｻ鬮ｱ・｢邵ｺ・ｫ陷・ｽｺ邵ｺ・ｦ邵ｺ繝ｻ・玖抄蜻ｵ・ｨ蛹ｻ竊題叉蛹ｺ・ｮ・ｵ郢ｧ・ｻ郢晢ｽｫ
+   陷ｿ繧環繝ｻ蛻､陷剃ｸ岩・邵ｺ・ｯ邵ｺ・ｪ邵ｺ繝ｻ繝ｻ邵ｺ・ｧ鬮ｱ讚・ｽ｡・ｨ驕会ｽｺ
    ----------------------------------------- */
 
 body .year-archive-stage .archive-left-hud .archive-hud-data {
@@ -2773,7 +2773,7 @@ body .year-archive-stage .archive-left-hud .archive-hud-data {
 
 
 /* -----------------------------------------
-   蜿り・判蜒丞承荳九・譁懃ｷ・   繝舌・逶ｴ荳九∝承蟇・○
+   陷ｿ繧環繝ｻ蛻､陷剃ｸ樊価闕ｳ荵昴・隴∵㏍・ｷ繝ｻ   郢晁・繝ｻ騾ｶ・ｴ闕ｳ荵敖竏晄価陝・・笳・
    ----------------------------------------- */
 
 body .year-archive-stage .archive-left-hud .archive-hud-diagonal {
@@ -2825,8 +2825,8 @@ body .year-archive-stage .archive-left-hud .archive-hud-diagonal {
 
 
 /* -----------------------------------------
-   蜿り・判蜒丞承遶ｯ LIVE FEED
-   SIGNAL / ARCHIVE 縺ｮ譁・ｭ苓・菴薙・CSS縺ｧ髫縺・   ----------------------------------------- */
+   陷ｿ繧環繝ｻ蛻､陷剃ｸ樊価驕ｶ・ｯ LIVE FEED
+   SIGNAL / ARCHIVE 邵ｺ・ｮ隴√・・ｭ闍薙・闖ｴ阮吶・CSS邵ｺ・ｧ鬮ｫ・ｰ邵ｺ繝ｻ   ----------------------------------------- */
 
 body .year-archive-stage .archive-left-hud .archive-hud-status {
   position: absolute !important;
@@ -2870,7 +2870,7 @@ body .year-archive-stage .archive-hud-status::after {
 }
 
 
-/* 譌ｧhover蜍穂ｽ懊〒蠖｢縺悟､峨ｏ繧峨↑縺・ｈ縺・崋螳・*/
+/* 隴鯉ｽｧhover陷咲ｩゑｽｽ諛翫定厄ｽ｢邵ｺ謔滂ｽ､蟲ｨ・冗ｹｧ蟲ｨ竊醍ｸｺ繝ｻ・育ｸｺ繝ｻ蟠玖楜繝ｻ*/
 
 body .year-archive-stage .archive-left-hud:hover .archive-hud-line,
 body .year-archive-stage .archive-left-hud:hover .archive-hud-diagonal,
@@ -2895,7 +2895,7 @@ body .year-archive-stage .archive-left-hud .archive-hud-status {
 
 
 /* =========================================================
-   LEFT HUD SIGNAL DOT 窶・BLINK
+   LEFT HUD SIGNAL DOT 遯ｶ繝ｻBLINK
    ========================================================= */
 
 body .year-archive-stage .archive-hud-readout::before {
@@ -2992,7 +2992,7 @@ body .year-archive-stage .archive-left-hud:hover .archive-hud-diagonal {
 
 /* =========================================================
    YEAR WHEEL ACTIVE YEAR
-   hover荳ｭ繧ら區縺ｮ縺ｾ縺ｾ
+   hover闕ｳ・ｭ郢ｧ繧牙項邵ｺ・ｮ邵ｺ・ｾ邵ｺ・ｾ
    ========================================================= */
 
 body:has(.archive-left-hud:hover)
@@ -3005,7 +3005,7 @@ body:has(.archive-left-hud:hover)
 
 /* =========================================================
    YEAR WHEEL BOX
-   螟匁棧繝阪が繝ｳ縺ｯ迴ｾ迥ｶ邯ｭ謖・   ========================================================= */
+   陞溷戟譽ｧ郢晞亂縺檎ｹ晢ｽｳ邵ｺ・ｯ霑ｴ・ｾ霑･・ｶ驍ｯ・ｭ隰悶・   ========================================================= */
 
 .year-wheel-shell {
   border-color:
@@ -3042,7 +3042,7 @@ body:has(.archive-left-hud:hover)
 
 /* YEAR WHEEL FRAME LOCK START */
 
-/* 蛻晄悄迥ｶ諷九・蜈・・證励＞譫 */
+/* 陋ｻ譎・ｄ霑･・ｶ隲ｷ荵昴・陷医・繝ｻ隴牙干・櫁ｭｫ・ｰ */
 body .year-wheel-shell {
   border-color:
     rgba(53,72,76,.72) !important;
@@ -3051,7 +3051,7 @@ body .year-wheel-shell {
     none !important;
 }
 
-/* 蟾ｦHUD繧剃ｸ蠎ｦhover縺励◆蠕後□縺大崋螳・*/
+/* 陝ｾ・ｦHUD郢ｧ蜑・ｽｸﾂ陟趣ｽｦhover邵ｺ蜉ｱ笳・募ｾ娯味邵ｺ螟ｧ蟠玖楜繝ｻ*/
 body .year-wheel-shell.is-hud-activated {
   border-color:
     rgba(183,255,0,.44) !important;
@@ -3066,7 +3066,7 @@ body .year-wheel-shell.is-hud-activated::before {
     drop-shadow(0 0 2px rgba(183,255,0,.34)) !important;
 }
 
-/* 蟷ｴ蜿ｷ縺ｯ蟶ｸ縺ｫ逋ｽ */
+/* 陝ｷ・ｴ陷ｿ・ｷ邵ｺ・ｯ陝ｶ・ｸ邵ｺ・ｫ騾具ｽｽ */
 body .year-wheel-shell .year-wheel-option.is-active,
 body .year-wheel-shell.is-hud-activated .year-wheel-option.is-active,
 body:has(.archive-left-hud:hover) .year-wheel-option.is-active {
@@ -3082,8 +3082,8 @@ body:has(.archive-left-hud:hover) .year-wheel-option.is-active {
 
 /* =========================================================
    ARCHIVE ARTICLE CARD
-   騾壼ｸｸ譎ゑｼ・   蟾ｦ = 證励＞繝ｩ繧､繝
-   荳贋ｸ句承 = 證励＞繧ｪ繝ｬ繝ｳ繧ｸ
+   鬨ｾ螢ｼ・ｸ・ｸ隴弱ｑ・ｼ繝ｻ   陝ｾ・ｦ = 隴牙干・樒ｹ晢ｽｩ郢ｧ・､郢晢｣ｰ
+   闕ｳ雍具ｽｸ蜿･謇ｿ = 隴牙干・樒ｹｧ・ｪ郢晢ｽｬ郢晢ｽｳ郢ｧ・ｸ
    ========================================================= */
 
 .archive-list > li {
@@ -3106,7 +3106,7 @@ body:has(.archive-left-hud:hover) .year-wheel-option.is-active {
 }
 
 
-/* 騾壼ｸｸ譎ゅ・蟾ｦ繝阪が繝ｳ繧貞ｰ代＠縺縺醍峡遶九＆縺帙ｋ */
+/* 鬨ｾ螢ｼ・ｸ・ｸ隴弱ｅ繝ｻ陝ｾ・ｦ郢晞亂縺檎ｹ晢ｽｳ郢ｧ雋橸ｽｰ莉｣・邵ｺ・ｰ邵ｺ驢榊ｳ｡驕ｶ荵晢ｼ・ｸｺ蟶呻ｽ・*/
 
 .archive-list > li::before {
   position: absolute !important;
@@ -3138,8 +3138,8 @@ body:has(.archive-left-hud:hover) .year-wheel-option.is-active {
 
 /* =========================================================
    CARD HOVER
-   蟾ｦ = 譏弱ｋ縺・Λ繧､繝
-   縺昴・莉・= 譏弱ｋ縺・が繝ｬ繝ｳ繧ｸ
+   陝ｾ・ｦ = 隴丞ｼｱ・狗ｸｺ繝ｻﾎ帷ｹｧ・､郢晢｣ｰ
+   邵ｺ譏ｴ繝ｻ闔峨・= 隴丞ｼｱ・狗ｸｺ繝ｻ縺檎ｹ晢ｽｬ郢晢ｽｳ郢ｧ・ｸ
    ========================================================= */
 
 .archive-list > li:hover,
@@ -3170,7 +3170,7 @@ body:has(.archive-left-hud:hover) .year-wheel-option.is-active {
 
 /* =========================================================
    TAGS
-   繧ｪ繝ｬ繝ｳ繧ｸ譫繧貞ｮ悟・縺ｫ謗帝勁
+   郢ｧ・ｪ郢晢ｽｬ郢晢ｽｳ郢ｧ・ｸ隴ｫ・ｰ郢ｧ雋橸ｽｮ謔溘・邵ｺ・ｫ隰怜ｸ晏求
    ========================================================= */
 
 .archive-list a[href^="/tags/"],
@@ -3234,7 +3234,7 @@ body:has(.archive-left-hud:hover) .year-wheel-option.is-active {
 
 /* =========================================================
    ARTICLES COUNT
-   hover譎ゅｂ繝ｩ繧､繝蝗ｺ螳・   ========================================================= */
+   hover隴弱ｅ・らｹ晢ｽｩ郢ｧ・､郢晢｣ｰ陜暦ｽｺ陞ｳ繝ｻ   ========================================================= */
 
 body .year-archive-stage .archive-hud-count {
   color: #b7ff00 !important;
@@ -3254,7 +3254,7 @@ body .year-archive-stage .archive-left-hud:hover .archive-hud-count {
 
 /* =========================================================
    LIVE FEED
-   繧､繧ｨ繝ｭ繝ｼ蛹也ｦ∵ｭ｢ + 蟾ｦ縺ｸ遘ｻ蜍・   ========================================================= */
+   郢ｧ・､郢ｧ・ｨ郢晢ｽｭ郢晢ｽｼ陋ｹ荵滂ｽｦ竏ｵ・ｭ・｢ + 陝ｾ・ｦ邵ｺ・ｸ驕假ｽｻ陷阪・   ========================================================= */
 
 body .year-archive-stage .archive-left-hud .archive-hud-status::after {
   color: #b7ff00 !important;
@@ -3273,7 +3273,7 @@ body .year-archive-stage .archive-left-hud:hover .archive-hud-status::after {
 
 
 /*
-   LIVE FEED繧貞承遶ｯ縺九ｉ蟆代＠蟾ｦ縺ｸ縲・   譁懃ｷ壹ヶ繝ｭ繝・け縺ｨ縺ｮ縺ｾ縺ｨ縺ｾ繧翫ｒ蠑ｷ縺上☆繧九・*/
+   LIVE FEED郢ｧ雋樊価驕ｶ・ｯ邵ｺ荵晢ｽ芽氣莉｣・陝ｾ・ｦ邵ｺ・ｸ邵ｲ繝ｻ   隴∵㏍・ｷ螢ｹ繝ｶ郢晢ｽｭ郢昴・縺醍ｸｺ・ｨ邵ｺ・ｮ邵ｺ・ｾ邵ｺ・ｨ邵ｺ・ｾ郢ｧ鄙ｫ・定托ｽｷ邵ｺ荳岩・郢ｧ荵敖繝ｻ*/
 
 body .year-archive-stage .archive-left-hud .archive-hud-status {
   right: 7% !important;
@@ -3282,7 +3282,7 @@ body .year-archive-stage .archive-left-hud .archive-hud-status {
 
 /* =========================================================
    SIGNAL DOT
-   繝ｩ繧､繝蝗ｺ螳・+ 蟆代＠螟ｧ縺阪￥
+   郢晢ｽｩ郢ｧ・､郢晢｣ｰ陜暦ｽｺ陞ｳ繝ｻ+ 陝・ｻ｣・陞滂ｽｧ邵ｺ髦ｪ・･
    ========================================================= */
 
 body .year-archive-stage .archive-hud-readout::before {
@@ -3329,7 +3329,7 @@ body .year-archive-stage .archive-hud-readout::before {
 
 
 /* =========================================================
-   hover譎ゅ・濶ｲ螟画鋤繧呈椛豁｢
+   hover隴弱ｅ繝ｻ豼ｶ・ｲ陞溽判驪､郢ｧ蜻域､幄ｱ・ｽ｢
    ========================================================= */
 
 body .year-archive-stage .archive-left-hud:hover .archive-hud-readout::before {
@@ -3347,6 +3347,237 @@ body .year-archive-stage .archive-left-hud:hover .archive-hud-status::after {
 /* ARCHIVE HUD LIME FIX END */
 
 
-/* Kinetic Studio蝙具ｼ壹ち繧､繝医Ν縺ｯ逋ｽ縺ｮ縺ｾ縺ｾ */
+/* Kinetic Studio陜吝・・ｼ螢ｹ縺｡郢ｧ・､郢晏現ﾎ晉ｸｺ・ｯ騾具ｽｽ邵ｺ・ｮ邵ｺ・ｾ邵ｺ・ｾ */
 
 
+
+/* PORTFOLIO FULL WIDTH 窶・GLOBAL FIX */
+
+/* Keep the same centered outer shell as Blog / NEXUS */
+body:has(.portfolio-section) .blog-layout {
+  display: block !important;
+  width: 100% !important;
+  max-width: 1180px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+body:has(.portfolio-section) .article-column {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* Portfolio itself uses the available shell width */
+body:has(.portfolio-section) .article-header-archive,
+body:has(.portfolio-section) .article-content {
+  width: 100% !important;
+  max-width: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* PORTFOLIO FULL WIDTH 窶・GLOBAL FIX END */
+
+
+/* NEXUS YEAR WHEEL HOVER UNIFIED START */
+
+
+/*
+   左HUDの is-hud-activated は
+   YEAR BOXの見た目には影響させない。
+
+   通常:
+     frame = dark
+     active year = gray/white
+
+   YEAR BOX内をhover:
+     frame = lime
+     active year = lime
+*/
+
+
+/* ---------- NORMAL ---------- */
+
+body .year-wheel-shell,
+body .year-wheel-shell.is-hud-activated {
+
+  border-color:
+    rgba(53,72,76,.72) !important;
+
+  box-shadow:
+    none !important;
+}
+
+
+body .year-wheel-shell .year-wheel-option.is-active,
+body .year-wheel-shell.is-hud-activated .year-wheel-option.is-active {
+
+  color:
+    #d9dedb !important;
+
+  text-shadow:
+    none !important;
+}
+
+
+/* ---------- WHOLE BOX HOVER ---------- */
+
+body .year-wheel-shell:hover,
+body .year-wheel-shell.is-hud-activated:hover {
+
+  border-color:
+    rgba(183,255,0,.44) !important;
+
+  box-shadow:
+    0 0 2px rgba(183,255,0,.22),
+    0 0 8px rgba(183,255,0,.07) !important;
+}
+
+
+/* 中央の西暦もBOX全体hoverで同時にライム */
+
+body .year-wheel-shell:hover .year-wheel-option.is-active,
+body .year-wheel-shell.is-hud-activated:hover .year-wheel-option.is-active {
+
+  color:
+    #b7ff00 !important;
+
+  text-shadow:
+    0 0 5px rgba(183,255,0,.36),
+    0 0 13px rgba(183,255,0,.16) !important;
+}
+
+
+/* NEXUS YEAR WHEEL HOVER UNIFIED END */
+
+
+/* BLOG TITLE UNDERLINE = FOOTER GRADIENT START */
+:where(
+  article header,
+  .post-header,
+  .article-header,
+  .page-header,
+  .entry-header,
+  .blog-post-header
+) hr:first-of-type {
+  border: 0 !important;
+  height: 1px !important;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255, 92, 32, 0) 0%,
+      rgba(255, 92, 32, 0.88) 16%,
+      rgba(255, 92, 32, 1) 50%,
+      rgba(255, 92, 32, 0.88) 84%,
+      rgba(255, 92, 32, 0) 100%
+    ) !important;
+
+  box-shadow:
+    0 0 8px rgba(255, 92, 32, 0.20),
+    0 0 18px rgba(255, 92, 32, 0.08) !important;
+
+  background-repeat: no-repeat !important;
+}
+
+/* BLOG TITLE UNDERLINE = FOOTER GRADIENT END */
+
+
+/* NEXUS MOBILE CLEAN FIX START */
+
+@media (max-width: 720px) {
+  html,
+  body {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: clip !important;
+  }
+
+  .archive-hero .archive-copy {
+    display: none !important;
+  }
+
+  .archive-hero {
+    gap: 0 !important;
+  }
+}
+
+/* NEXUS MOBILE CLEAN FIX END */
+
+
+/* NEXUS_MEDIA_REVIEW_GRAY_V1 */
+
+/* Back to media shelf */
+body.media-review-page .media-review-back {
+    background: #1c201e !important;
+    color: #d1d5d0 !important;
+    border: 1px solid #444a46 !important;
+    border-radius: 9px !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+
+    transition:
+        background 180ms ease,
+        color 180ms ease,
+        border-color 180ms ease,
+        transform 180ms ease,
+        box-shadow 180ms ease !important;
+}
+
+body.media-review-page .media-review-back:hover,
+body.media-review-page .media-review-back:focus-visible {
+    background: #303632 !important;
+    color: #f0f2ee !important;
+    border-color: #929a92 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 16px rgba(0,0,0,.28) !important;
+    text-shadow: none !important;
+}
+
+body.media-review-page .media-review-back:active {
+    transform: translateY(0) !important;
+}
+
+/* Review article text */
+body.media-review-page .media-review-content,
+body.media-review-page .media-review-content p,
+body.media-review-page .media-review-content li {
+    color: #c8ccc8 !important;
+}
+
+body.media-review-page .media-review-content blockquote {
+    color: #afb6af !important;
+}
+
+/* NEXUS_MEDIA_REVIEW_GRAY_V1 END */
+
+/* NEXUS_MEDIA_REVIEW_MOBILE_STACK_V1 */
+
+@media (max-width: 560px) {
+
+    body.media-review-page .media-review-header {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 24px !important;
+        align-items: start !important;
+    }
+
+    body.media-review-page .media-review-cover {
+        width: min(62vw, 230px) !important;
+        max-width: 100% !important;
+        justify-self: center !important;
+        margin: 0 auto !important;
+    }
+
+    body.media-review-page .media-review-intro {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    body.media-review-page .media-review-intro h1 {
+        overflow-wrap: anywhere;
+    }
+
+}
+
+/* NEXUS_MEDIA_REVIEW_MOBILE_STACK_V1 END */

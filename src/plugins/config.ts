@@ -42,6 +42,31 @@ function createPageModuleRoutesIntegration(
         for (const module of modules) {
           if (module.routes?.length) {
             for (const route of module.routes) {
+          // PULSE_LOCAL_ROUTE_V1: use the local copy instead of changing node_modules.
+          if (
+            module.id === 'vibe' &&
+            route.entrypoint.pathname.replace(/\\/g, '/').endsWith('/routes/vibe.astro')
+          ) {
+            injectRoute({
+              pattern: getModuleRoutePattern(route, module.route),
+              entrypoint: new URL('../modules/pulse-vibe/routes/vibe.astro', import.meta.url),
+              prerender: true,
+            });
+            injectRoute({
+              pattern: `${module.route}/page/[page]`,
+              entrypoint: new URL('../modules/pulse-vibe/routes/vibe-page.astro', import.meta.url),
+              prerender: true,
+            });
+            continue;
+          }
+              // MEDIA INDEX ROUTE OVERRIDE
+              // Keep the local Media index; preserve review detail routes.
+              if (
+                module.id === 'media' &&
+                route.entrypoint.pathname.replace(/\\/g, '/').endsWith('/routes/media.astro')
+              ) {
+                continue;
+              }
               injectRoute({
                 pattern: getModuleRoutePattern(route, module.route),
                 entrypoint: route.entrypoint,

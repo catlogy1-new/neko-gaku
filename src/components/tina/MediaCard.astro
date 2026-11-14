@@ -1,0 +1,62 @@
+---
+import MediaShelf from '../media/MediaShelf.astro';
+import type { MediaShelfItem } from '../media/MediaShelf.astro';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  data?: Record<string, any>;
+}
+
+const { data } = Astro.props;
+const relativePath = data?._sys?.relativePath ?? '';
+const slug = relativePath.replace(/\.(mdx|md)$/i, '');
+
+const localCovers = import.meta.glob<ImageMetadata>(
+  '/src/content/media/**/*.{jpg,jpeg,png,webp,avif,gif}',
+  { eager: true, import: 'default' }
+);
+
+function resolveCover(value: unknown): MediaShelfItem['cover'] {
+  if (typeof value !== 'string' || !value.trim()) {
+    return undefined;
+  }
+
+  const rawCover = value.trim();
+
+  // Recover relative content images rewritten by TinaCloud.
+  const tinaRelativeCover = rawCover.match(
+    /^https:\/\/assets\.tina\.io\/[0-9a-f-]{36}\.\/(.+)$/i
+  );
+
+  const cover = tinaRelativeCover
+    ? `./${tinaRelativeCover[1]}`
+    : rawCover;
+
+  if (/^(https?:|data:|blob:)/i.test(cover)) {
+    return cover;
+  }
+
+  if (cover.startsWith('/')) {
+    return localCovers[cover] ?? cover;
+  }
+
+  const relative = cover.replace(/^\.\//, '');
+  return localCovers[`/src/content/media/${relative}`];
+}
+
+const item: MediaShelfItem | undefined = data ? {
+  id: slug ? `media-${slug}` : undefined,
+  title: data.title ?? '',
+  creator: data.creator ?? '',
+  type: data.type ?? 'book',
+  cover: resolveCover(data.cover),
+  coverAspect: data.coverAspect || undefined,
+  rating: data.rating ?? undefined,
+  href: data.externalUrl || undefined,
+  reviewHref: data.review && slug ? `/media/${slug}/` : undefined,
+  reviewLabel: data.review ? 'READ REVIEW' : undefined,
+  note: data.description || undefined,
+  tinaData: data,
+} : undefined;
+---
+{item && <MediaShelf items={[item]} columns={4} cardOnly />}

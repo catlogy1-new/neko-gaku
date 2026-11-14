@@ -31,7 +31,7 @@ describe('navfolio plugin config', () => {
     const astro = getAstroPluginConfig(config);
 
     expect(astro.integrations).toContainEqual(integration);
-    expect(astro.integrations.some((item) => item.name === '@navfolio/page-modules')).toBe(true);
+    expect(astro.integrations.flat().some((item) => item && item.name === '@navfolio/page-modules')).toBe(true);
     expect(astro.remarkPlugins).toEqual([remarkPlugin]);
     expect(astro.rehypePlugins).toEqual([rehypePlugin]);
   });

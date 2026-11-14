@@ -1,0 +1,143 @@
+---
+import TinaMarkdown from '@tinacms/astro/TinaMarkdown.astro';
+import { tinaField } from '@tinacms/astro/tina-field';
+import {
+  FormattedDate,
+  SmartImage,
+  getI18n,
+  getSiteConfig,
+} from 'virtual:navfolio/page-runtime';
+import { getVibeImageLayout } from '../../modules/pulse-vibe/routes/lib/vibe-image-layout';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  entry?: any;
+  Content?: any;
+  data?: Record<string, any>;
+}
+
+const { entry, Content, data } = Astro.props;
+const i18n = getI18n(await getSiteConfig());
+
+const localImages = import.meta.glob<ImageMetadata>(
+  '/src/content/vibe/**/*.{jpg,jpeg,png,webp,avif,gif}',
+  { eager: true, import: 'default' }
+);
+
+function resolveImage(value: unknown) {
+  if (typeof value !== 'string') return value;
+
+  const rewritten = value.match(
+    /^https:\/\/assets\.tina\.io\/[0-9a-f-]{36}\.\/(.+)$/i
+  );
+
+  const image = rewritten ? `./${rewritten[1]}` : value;
+
+  if (/^(https?:|data:|blob:)/i.test(image)) return image;
+
+  if (image.startsWith('/')) {
+    return localImages[image] ?? image;
+  }
+
+  return localImages[
+    `/src/content/vibe/${image.replace(/^\.\//, '')}`
+  ];
+}
+
+const entryId = entry?.id ??
+  (data?._sys?.relativePath ?? '').replace(/\.(mdx|md)$/i, '');
+
+const entryData = data ? {
+  ...data,
+  date: new Date(data.date),
+  tags: data.tags ?? [],
+  images: (data.images ?? []).map(resolveImage).filter(Boolean),
+} : entry.data;
+
+const imageLayout = getVibeImageLayout(entryData.images.length);
+---
+                <div
+                  class="vibe-headbox"
+                  style="display:inline-flex;flex-direction:column;align-items:flex-start;width:fit-content;margin:0 0 .8rem;padding:.46rem .62rem .52rem;background:rgba(17,19,21,.72)!important;border-top:1px solid rgba(111,33,6,.78)!important;border-right:1px solid rgba(111,33,6,.78)!important;border-bottom:1px solid rgba(111,33,6,.78)!important;border-left:2px solid #b7ff00!important;border-radius:8px!important;box-shadow:none!important;transition:none!important;"
+                >
+                  <div class="vibe-meta" style="display:flex;width:100%;padding:0;background:none;border:0;">
+                    {entryData.mood && <span data-tina-field={data ? tinaField(data, 'mood') : undefined}>{entryData.mood}</span>}
+                    {entryData.location && <span data-tina-field={data ? tinaField(data, 'location') : undefined}>{entryData.location}</span>}
+                    <span data-tina-field={data ? tinaField(data, 'date') : undefined}><FormattedDate date={entryData.date} /></span>
+                    {entryData.tags.length > 0 && (
+                      <span class="vibe-tags" data-tina-field={data ? tinaField(data, 'tags') : undefined}>
+                        {entryData.tags.map((tag) => (
+                          <span class="vibe-tag">#{tag}</span>
+                        ))}
+                      </span>
+                    )}
+                  </div>
+
+                  {entryData.title && (
+                    <h2
+                      class="vibe-heading" data-tina-field={data ? tinaField(data, 'title') : undefined}
+                      style="display:block;width:100%;margin:.48rem 0 0;padding:0;color:#fff!important;-webkit-text-fill-color:#fff!important;background:none;border:0;font-size:clamp(1.55rem,2vw,1.95rem);font-weight:600;line-height:1.12;transition:none!important;"
+                    >
+                      {entryData.title}
+                    </h2>
+                  )}
+                </div>
+
+                {entryData.images.length > 0 && (
+                  <div
+                    class:list={['vibe-images', imageLayout.isCollapsible && 'is-collapsible']}
+                    style={`--vibe-image-columns: ${imageLayout.columns};`}
+                    data-vibe-image-group
+                    data-tina-field={data ? tinaField(data, 'images') : undefined}
+                    data-zoomable-gallery
+                    data-vibe-image-count={imageLayout.count}
+                    data-vibe-image-columns={imageLayout.columns}
+                    aria-label={i18n.t('vibe.images', { title: entryData.title ?? entryId })}
+                  >
+                    {entryData.images.map((image, imageIndex) => (
+                      <figure
+                        class:list={[
+                          'vibe-image',
+                          imageLayout.isCollapsible &&
+                            imageIndex >= imageLayout.visibleCount &&
+                            'is-extra',
+                        ]}
+                        data-zoomable-image
+                        role="button"
+                        tabindex="0"
+                        aria-label={i18n.t('vibe.image', {
+                          title: entryData.title ?? entryId,
+                          index: imageIndex + 1,
+                        })}
+                      >
+                        <SmartImage
+                          src={image}
+                          alt=""
+                          widths={[360, 520, 720]}
+                          sizes="(max-width: 720px) 100vw, 420px"
+                          data-zoomable-image-target
+                        />
+                      </figure>
+                    ))}
+                    {imageLayout.isCollapsible && (
+                      <button
+                        class="vibe-image-toggle"
+                        type="button"
+                        aria-expanded="false"
+                        data-vibe-image-toggle
+                        data-expand-label={`展开 ${imageLayout.hiddenCount} 张`}
+                        data-collapse-label="收起图片"
+                      >
+                        展开 {imageLayout.hiddenCount} 张
+                      </button>
+                    )}
+                  </div>
+                )}
+
+                <div class="vibe-body" style="font-size:1.05rem;line-height:1.6;">
+                  <div data-tina-field={data ? tinaField(data, 'body') : undefined}>
+                    {data ? (
+                      data.body && <TinaMarkdown content={data.body} />
+                    ) : Content ? <Content /> : null}
+                  </div>
+                </div>

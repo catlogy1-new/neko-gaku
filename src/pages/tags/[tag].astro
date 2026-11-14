@@ -56,15 +56,139 @@ const ui = getUiText(siteConfig);
 
       @media (max-width: 720px) {
         main {
-          padding-top: 88px;
+          padding-top: 34px;
         }
       }
     </style>
-  </head>
+
+<!-- NEXUS TAG BACK HOVER START -->
+
+<style is:global>
+
+  /*
+     TAG DETAIL ONLY
+
+     NORMAL:
+       current gray
+
+     HOVER:
+       border -> lime
+       arrow/text -> lime
+       very soft neon
+  */
+
+  main[data-pagefind-body] > a:first-child,
+  main[data-pagefind-body] > :first-child a {
+    transition:
+      color 180ms ease,
+      border-color 180ms ease,
+      box-shadow 180ms ease !important;
+  }
+
+
+  main[data-pagefind-body] > a:first-child:hover,
+  main[data-pagefind-body] > a:first-child:focus-visible,
+  main[data-pagefind-body] > :first-child a:hover,
+  main[data-pagefind-body] > :first-child a:focus-visible {
+
+    color:
+      #b7ff00 !important;
+
+    border-color:
+      rgba(183, 255, 0, 0.58) !important;
+
+    box-shadow:
+      0 0 5px rgba(183, 255, 0, 0.14),
+      0 0 12px rgba(183, 255, 0, 0.055) !important;
+  }
+
+
+  /* Lucide等のSVG矢印も確実にライム */
+
+  main[data-pagefind-body] > a:first-child:hover svg,
+  main[data-pagefind-body] > a:first-child:focus-visible svg,
+  main[data-pagefind-body] > :first-child a:hover svg,
+  main[data-pagefind-body] > :first-child a:focus-visible svg {
+
+    color:
+      #b7ff00 !important;
+
+    stroke:
+      #b7ff00 !important;
+  }
+
+</style>
+
+<!-- NEXUS TAG BACK HOVER END -->
+
+
+
+<!-- NEXUS TAG DETAIL FIX START -->
+
+<style is:global>
+
+  /* ================================================
+     BACK
+     hard refreshでも常に有効
+     ================================================ */
+
+  .tag-detail-page .tag-detail-back a {
+    transition:
+      color 180ms ease,
+      border-color 180ms ease,
+      box-shadow 180ms ease !important;
+  }
+
+  .tag-detail-page .tag-detail-back a:hover,
+  .tag-detail-page .tag-detail-back a:focus-visible {
+    color: #b7ff00 !important;
+    border-color: #b7ff00 !important;
+
+    box-shadow:
+      0 0 4px rgba(183,255,0,.28),
+      0 0 12px rgba(183,255,0,.10) !important;
+  }
+
+  .tag-detail-page .tag-detail-back a:hover svg,
+  .tag-detail-page .tag-detail-back a:focus-visible svg {
+    color: #b7ff00 !important;
+    stroke: #b7ff00 !important;
+
+    filter:
+      drop-shadow(0 0 3px rgba(183,255,0,.34)) !important;
+  }
+
+
+  /* ================================================
+     ORANGE DIVIDER -> BLOG CARDS
+
+     BlogArchive が直接出している section に
+     内側余白を EXACT 1cm。
+
+     WIDTHは一切変更しない。
+     ================================================ */
+
+  .tag-detail-page > .archive-hero {
+    margin-bottom: 0 !important;
+  }
+
+  .tag-detail-page > section {
+    margin-top: 0 !important;
+    padding-top: 1cm !important;
+  }
+
+</style>
+
+<!-- NEXUS TAG DETAIL FIX END -->
+
+
+</head>
   <body>
     <BlogTopNav />
-    <main data-pagefind-body>
-      <BackLink href="/blog/" label={ui.groups.back} />
+    <main class="tag-detail-page" data-pagefind-body>
+      <div class="tag-detail-back">
+<BackLink href="/blog/" label={ui.groups.back} />
+</div>
       <BlogArchive
         page={page}
         headerKicker={ui.groups.tag}
@@ -76,3 +200,14 @@ const ui = getUiText(siteConfig);
     <Footer />
   </body>
 </html>
+
+<style is:global>
+/* =========================================================
+   TAG DETAIL 窶・RIMBAUD POSITION FIX
+   /tags/[tag]/ only
+   ========================================================= */
+
+.archive-hero .archive-copy {
+  top: 1cm !important;
+}
+</style>

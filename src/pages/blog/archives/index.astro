@@ -474,7 +474,7 @@ function formatMonthDay(date: Date) {
       @media (max-width: 720px) {
 
         main {
-          padding-top: 88px;
+          padding-top: 34px;
         }
 
 
@@ -1264,6 +1264,299 @@ function formatMonthDay(date: Date) {
       }
 
       /* NEXUS ARCHIVE HUD POSITION FIX END */
+
+/* YEAR WHEEL — HOVER LIME */
+.year-wheel-option {
+  position: relative !important;
+  z-index: 20 !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+.year-wheel-option:hover,
+.year-wheel-option.is-active:hover,
+.year-wheel-option:focus-visible {
+  color: #b7ff00 !important;
+}
+
+/* NEXUS YEARS MOBILE FIX V3 START */
+@media (max-width: 720px) {
+
+  /* Close the gap beneath Series / Tags / Years */
+  main :global(.group-nav) {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  main .year-stack {
+    margin-top: 0 !important;
+    gap: 12px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  main .year-stack .year-archive-stage {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    align-items: start !important;
+    gap: 12px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 0 12px !important;
+    padding: 0 !important;
+  }
+
+  /* Compact the telemetry HUD */
+  main .year-stack .year-archive-stage .archive-left-hud {
+    position: relative !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 110px !important;
+    min-height: 110px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+
+  main .year-stack .year-archive-stage
+  .archive-left-hud .archive-hud-readout {
+    top: 5px !important;
+    left: 0 !important;
+    transform: none !important;
+  }
+
+  main .year-stack .year-archive-stage
+  .archive-left-hud .archive-hud-line {
+    top: 35px !important;
+    left: 0 !important;
+    right: auto !important;
+    width: 100% !important;
+    transform: none !important;
+  }
+
+  main .year-stack .year-archive-stage
+  .archive-left-hud .archive-hud-spectrum {
+    top: 51px !important;
+    left: 0 !important;
+    right: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    grid-template-columns:
+      18% 13% 22% 17% minmax(0, 1fr) !important;
+    gap: 6px !important;
+    transform: none !important;
+  }
+
+  main .year-stack .year-archive-stage
+  .archive-left-hud .archive-hud-diagonal {
+    top: 73px !important;
+    bottom: auto !important;
+    left: auto !important;
+    right: 4% !important;
+    width: 40% !important;
+    max-width: 140px !important;
+    transform: skewX(-18deg) !important;
+  }
+
+  main .year-stack .year-archive-stage
+  .archive-left-hud .archive-hud-status {
+    top: 96px !important;
+    bottom: auto !important;
+    left: auto !important;
+    right: 0 !important;
+    transform: none !important;
+  }
+
+  /* Year selector: fluid width, three real columns */
+  main .year-stack .year-wheel-shell {
+    position: relative !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: 184px !important;
+    min-height: 184px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    justify-self: stretch !important;
+    overflow: hidden !important;
+  }
+
+  main .year-stack .year-wheel-shell .year-wheel-label {
+    position: absolute !important;
+    top: 16px !important;
+    left: 18px !important;
+    margin: 0 !important;
+  }
+
+  main .year-stack .year-wheel-shell .year-wheel-layout {
+    position: relative !important;
+    box-sizing: border-box !important;
+    display: grid !important;
+    grid-template-columns:
+      38px minmax(0, 1fr) 38px !important;
+    grid-template-rows: 1fr !important;
+    align-items: center !important;
+    column-gap: 8px !important;
+    width: 100% !important;
+    height: 184px !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 34px 12px 4px !important;
+    transform: none !important;
+  }
+
+  /* Cancel the desktop's absolute wheel positioning */
+  main .year-stack .year-wheel-shell .year-wheel {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: 118px !important;
+    margin: 0 !important;
+    transform: none !important;
+  }
+
+  main .year-stack .year-wheel-shell .year-wheel-arrow {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    box-sizing: border-box !important;
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    transform: none !important;
+    align-self: center !important;
+  }
+
+  main .year-stack .year-wheel-shell .year-wheel-up {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    left: auto !important;
+  }
+
+  main .year-stack .year-wheel-shell .year-wheel-down {
+    grid-column: 3 !important;
+    grid-row: 1 !important;
+    left: auto !important;
+  }
+
+  main .year-stack .year-wheel-shell .year-wheel-window {
+    position: relative !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-width: 0 !important;
+  }
+
+  main .year-stack .year-wheel-shell .year-wheel-ghost {
+    left: 10px !important;
+    right: 10px !important;
+  }
+
+  main .year-stack .year-wheel-shell .year-wheel-meta {
+    display: none !important;
+  }
+  /* Article list: retain the improved mobile cards */
+  .year-group,
+  .archive-list {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-top: 0 !important;
+  }
+
+  .archive-list {
+    padding: 8px !important;
+  }
+
+  .archive-item {
+    display: block !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding: 0 12px 10px !important;
+  }
+
+  .archive-row {
+    display: grid !important;
+    grid-template-columns:
+      64px minmax(0,1fr) !important;
+    gap: 12px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .archive-date-stack {
+    width: 64px !important;
+    min-width: 0 !important;
+    max-width: 64px !important;
+  }
+
+  .archive-post-title {
+    min-width: 0 !important;
+    overflow: visible !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+    text-overflow: clip !important;
+    transform: none !important;
+  }
+
+  .archive-tags {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding: 0 0 2px 76px !important;
+    justify-content: flex-start !important;
+  }
+
+  .archive-tags a {
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+}
+/* NEXUS YEARS MOBILE FIX V3 END */
+
+/* NEXUS YEARS MOBILE DIVIDER V1 */
+@media (max-width: 720px) {
+  main .year-stack {
+    margin-top: 34px !important;
+    position: relative;
+  }
+
+  main .year-stack::before {
+    content: "";
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 1px;
+    margin-bottom: 16px;
+    background: linear-gradient(
+      90deg,
+      rgba(74, 139, 151, 0.72),
+      rgba(74, 139, 151, 0.28) 70%,
+      transparent
+    );
+    box-shadow: 0 0 5px rgba(74, 139, 151, 0.12);
+  }
+}
+/* NEXUS YEARS MOBILE DIVIDER V1 END */
 </style>
 </head>
 

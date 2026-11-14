@@ -4,156 +4,213 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 function withBase(href: string) {
-  if (href === '/') {
-    return `${basePath}/` || '/';
-  }
-
+  if (href === '/') return `${basePath}/` || '/';
   return `${basePath}${href.startsWith('/') ? href : `/${href}`}`;
 }
 ---
 
-<BaseLayout title="404 Not Found" description="这页暂时没有找到，可能已经迁移或还没有写下。">
-  <div class="publication-bg" aria-hidden="true"></div>
-  <main class="not-found-shell" aria-labelledby="not-found-title">
-    <section class="not-found-panel">
-      <p class="not-found-kicker">404 Not Found</p>
-      <h1 id="not-found-title">这页还没有落在纸上</h1>
-      <p class="not-found-copy">
-        也许链接换了位置，也许这只是一次走岔的小路。先回到熟悉的入口，继续慢慢翻。
+<BaseLayout
+  title="404 — Page Not Found"
+  description="The page you are looking for could not be found."
+>
+  <main class="nexus-404" aria-labelledby="error-title">
+    <section class="error-content">
+      <p class="error-code">ERROR <span>404</span></p>
+
+      <div class="error-rule" aria-hidden="true"></div>
+
+      <h1 id="error-title">
+        PAGE NOT<br />
+        <span>FOUND<span class="error-dot">.</span></span>
+      </h1>
+
+      <p class="error-description">
+        This page no longer exists, or the link may have changed.
+        Find your way back to NEXUS.
       </p>
-      <nav class="not-found-actions" aria-label="404 page links">
-        <a class="primary-link" href={withBase('/')}>回到首页</a>
-        <a href={withBase('/blog')}>去博客</a>
+
+      <nav class="error-actions" aria-label="Navigation">
+        <a class="error-primary" href={withBase('/')}>
+          BACK TO HOME <span aria-hidden="true">↗</span>
+        </a>
+        <a class="error-secondary" href={withBase('/blog')}>
+          EXPLORE BLOG <span aria-hidden="true">↗</span>
+        </a>
       </nav>
+
+      <p class="error-footer">NEXUS <span>—</span> LOST IN THE ARCHIVE</p>
     </section>
   </main>
 </BaseLayout>
 
 <style>
-  .not-found-shell {
-    display: grid;
-    min-height: calc(100vh - 56px);
-    place-items: center;
-    padding-top: 116px;
-    padding-bottom: 72px;
+  .nexus-404 {
+    box-sizing: border-box;
+    min-height: calc(100svh - 100px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 72px 28px 96px;
+    background: #050505;
+    color: #f5f5f5;
   }
 
-  .not-found-panel {
-    width: min(100%, 860px);
-    padding: clamp(22px, 5vw, 56px) clamp(6px, 3vw, 18px);
-    animation: not-found-in 420ms ease both;
+  .error-content {
+    width: min(100%, 800px);
+    margin-inline: auto;
   }
 
-  .not-found-kicker {
-    margin: 0 0 12px;
-    color: var(--paper-accent);
-    font-family: var(--font-ui-label);
-    font-size: 0.78rem;
+  .error-code {
+    margin: 0;
+    color: #a8ff21;
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 12px;
     font-weight: 700;
-    letter-spacing: 0.12em;
-    line-height: 1.2;
-    text-transform: uppercase;
+    letter-spacing: .24em;
+  }
+
+  .error-code span {
+    color: #f5f5f5;
+  }
+
+  .error-rule {
+    height: 1px;
+    margin: 22px 0 34px;
+    background: linear-gradient(90deg, #a8ff21, #303030 45%, #303030);
   }
 
   h1 {
-    max-width: 11em;
     margin: 0;
-    color: var(--paper-ink);
-    font-size: clamp(2.3rem, 7vw, 4.6rem);
-    line-height: 1.08;
+    max-width: none;
+    color: #f5f5f5;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: clamp(52px, 9vw, 110px);
+    font-weight: 800;
+    line-height: .98;
+    letter-spacing: -.065em;
   }
 
-  .not-found-copy {
-    max-width: 42rem;
-    margin: 24px 0 0;
-    color: var(--paper-ink-soft);
-    font-size: 1.04rem;
-    line-height: 1.86;
+  .error-dot {
+    color: #a8ff21;
   }
 
-  .not-found-actions {
+  .error-description {
+    max-width: 440px;
+    margin: 32px 0 0;
+    color: #a0a0a0;
+    font-size: clamp(14px, 1.5vw, 16px);
+    line-height: 1.8;
+  }
+
+  .error-actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 30px;
+    gap: 12px;
+    margin-top: 36px;
   }
 
-  .not-found-actions a {
+  .error-actions a {
+    box-sizing: border-box;
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    min-height: 42px;
-    padding: 8px 14px;
-    border: 1px solid var(--paper-line);
-    border-radius: 8px;
-    background: var(--paper-control);
-    color: var(--paper-ink);
-    font-family: var(--font-ui-label);
-    font-size: 0.88rem;
+    justify-content: space-between;
+    gap: 28px;
+    min-height: 48px;
+    padding: 12px 18px;
+    border: 1px solid #3c3c3c;
+    border-radius: 6px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
     font-weight: 700;
-    line-height: 1.2;
+    letter-spacing: .08em;
+    line-height: 1.3;
     text-decoration: none;
-    transition:
-      transform 180ms ease,
-      border-color 180ms ease,
-      background 180ms ease,
-      color 180ms ease;
+    transition: border-color .2s, background .2s, color .2s;
   }
 
-  .not-found-actions a:hover,
-  .not-found-actions a:focus-visible {
-    border-color: var(--paper-line-strong);
-    background: var(--paper-control-hover);
-    color: var(--paper-accent);
-    transform: translateY(-1px);
+  .error-actions .error-primary {
+    background: #a8ff21;
+    border-color: #a8ff21;
+    color: #090909;
   }
 
-  .not-found-actions a:focus-visible {
-    outline: 2px solid var(--paper-accent);
-    outline-offset: 3px;
+  .error-actions .error-secondary {
+    background: #111;
+    border-color: #383838;
+    color: #f5f5f5;
   }
 
-  .not-found-actions .primary-link {
-    border-color: color-mix(in srgb, var(--paper-accent) 24%, var(--paper-line));
+  .error-actions .error-primary:hover {
+    background: #c1ff69;
   }
 
-  @keyframes not-found-in {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
+  .error-actions .error-secondary:hover {
+    border-color: #a8ff21;
+    color: #a8ff21;
+  }
 
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  .error-actions a:focus-visible {
+    outline: 2px solid #a8ff21;
+    outline-offset: 4px;
+  }
+
+  .error-footer {
+    margin: 72px 0 0;
+    color: #686868;
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 10px;
+    letter-spacing: .15em;
+  }
+
+  .error-footer span {
+    color: #a8ff21;
   }
 
   @media (max-width: 720px) {
-    .not-found-shell {
-      min-height: 100vh;
-      padding-top: 92px;
-      padding-bottom: 42px;
+    .nexus-404 {
+      min-height: calc(100svh - 90px);
+      align-items: center;
+      padding: 72px 24px 88px;
     }
 
-    .not-found-panel {
-      padding: 24px 0;
+    .error-rule {
+      margin: 18px 0 28px;
     }
 
     h1 {
-      max-width: 8em;
-      font-size: 2.34rem;
+      font-size: clamp(45px, 11vw, 72px);
+      letter-spacing: -.06em;
     }
 
-    .not-found-copy {
-      margin-top: 18px;
-      font-size: 0.98rem;
+    .error-description {
+      margin-top: 26px;
+      max-width: 320px;
+      font-size: 14px;
+      line-height: 1.75;
     }
 
-    .not-found-actions {
+    .error-actions {
       display: grid;
       grid-template-columns: 1fr;
-      margin-top: 24px;
+      gap: 10px;
+      margin-top: 30px;
+    }
+
+    .error-actions a {
+      width: 100%;
+      min-height: 50px;
+    }
+
+    .error-footer {
+      margin-top: 58px;
+      font-size: 9px;
+      line-height: 1.8;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .error-actions a {
+      transition: none;
     }
   }
 </style>

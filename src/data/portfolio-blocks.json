@@ -1,0 +1,19 @@
+[
+  {
+    "kind": "gallery",
+    "start": 0,
+    "count": 16
+  },
+  {
+    "kind": "text",
+    "index": "05 / TEXT",
+    "year": "2026",
+    "kicker": "RESIDUAL NOTE / 005",
+    "title": "THE IMAGE AFTER REALITY",
+    "paragraphs": [
+      "A photograph does not preserve reality. It preserves only what remains after perception, language and signs have already passed through it.",
+      "What appears before us may once have been called a flower, a street, a body, or a light. By the time it becomes an image, however, the certainty of that name has already begun to decay."
+    ],
+    "status": "TEXT / FRAGMENT / UNRESOLVED"
+  }
+]

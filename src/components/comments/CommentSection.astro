@@ -1,4 +1,4 @@
----
+﻿---
 import { getSiteConfig } from '../../data/site';
 import { canRenderProvider, getCommentProvider, resolveCommentsConfig } from '../../utils/comments';
 import GiscusComment from './GiscusComment.astro';
@@ -22,7 +22,7 @@ const shouldRender = provider ? canRenderProvider(comments, provider) : false;
 {
   shouldRender && provider && (
     <section class="comment-section" aria-label="Comments" data-comment-path={pathname}>
-      <div class="comment-section-heading">
+<div class="comment-section-heading">
         <p>Comments</p>
         <span>Quiet notes for this article.</span>
       </div>

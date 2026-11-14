@@ -1,0 +1,1306 @@
+---
+---
+
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>You can't catch me</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+      color: #f2f2ee;
+    }
+
+    body {
+      font-family:
+        "Courier New",
+        "Noto Sans JP",
+        monospace;
+    }
+
+    #stage {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      background: #000;
+    }
+
+    /* ========================================================
+       最初の2行
+       ======================================================== */
+
+    #opening {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 16cm;
+      max-width: calc(100vw - 40px);
+      transform: translate(-50%, -50%);
+      z-index: 10;
+
+      font-size: clamp(18px, 1.55vw, 25px);
+      line-height: 1.8;
+      letter-spacing: 0.015em;
+    }
+
+    #opening p {
+      margin: 0 0 14px;
+      min-height: 1.8em;
+    }
+
+    #opening-ja {
+      font-family:
+        "Noto Sans JP",
+        sans-serif;
+    }
+
+    .cursor::after {
+      content: "▋";
+      margin-left: 2px;
+      animation: blink 0.72s steps(1) infinite;
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    /* ========================================================
+       スクロール世界
+       ======================================================== */
+
+    #stream {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transform: translateY(100vh);
+      pointer-events: none;
+    }
+
+    #stream.running {
+      opacity: 1;
+      animation: streamRise 28s linear forwards;
+    }
+
+    @keyframes streamRise {
+      /* 最初の意味が通る4画面はゆっくり */
+      0% {
+        transform: translateY(100vh);
+      }
+
+      18% {
+        transform: translateY(0vh);
+      }
+
+      36% {
+        transform: translateY(-100vh);
+      }
+
+      54% {
+        transform: translateY(-200vh);
+      }
+
+      70% {
+        transform: translateY(-300vh);
+      }
+
+      /* 'me'. 以降、一気に崩壊・加速 */
+      78% {
+        transform: translateY(-400vh);
+      }
+
+      85% {
+        transform: translateY(-500vh);
+      }
+
+      91% {
+        transform: translateY(-600vh);
+      }
+
+      100% {
+        transform: translateY(-720vh);
+      }
+    }
+
+    .panel {
+      position: relative;
+      height: 100vh;
+      width: 100%;
+      font-size: clamp(20px, 2vw, 30px);
+    }
+
+    .fragment {
+      position: absolute;
+      margin: 0;
+      white-space: nowrap;
+    }
+
+    /* ---------- 写真1〜4の文言 ---------- */
+
+    .p1 .a { left: 5%;  top: 17%; }
+    .p1 .b { left: 16%; top: 51%; }
+    .p1 .c { right: 12%; top: 31%; }
+    .p1 .d { left: 30%; top: 68%; }
+    .p1 .e { right: 16%; top: 84%; }
+
+    .p2 .a { left: 3%; top: 9%; }
+    .p2 .b { left: 32%; top: 23%; }
+    .p2 .c { right: 4%; top: 36%; }
+    .p2 .d { left: 6%; top: 57%; }
+    .p2 .e { right: 17%; top: 76%; }
+    .p2 .f { left: 25%; top: 88%; }
+
+    .p3 .a { left: 11%; top: 13%; }
+    .p3 .b { right: 11%; top: 20%; }
+    .p3 .c { left: 5%; top: 39%; }
+    .p3 .d { left: 26%; top: 58%; }
+    .p3 .e { right: 12%; top: 79%; }
+    .p3 .f { left: 31%; top: 91%; }
+
+    .p4 .a { left: 14%; top: 15%; }
+    .p4 .b { left: 67%; top: 7%; }
+    .p4 .c { left: 42%; top: 52%; }
+    .p4 .d { right: 8%; top: 79%; }
+
+    /* ========================================================
+       me の後：崩壊
+       ======================================================== */
+
+    .collapse {
+      font-size: clamp(17px, 1.8vw, 28px);
+    }
+
+    .collapse .fragment {
+      white-space: normal;
+    }
+
+    .c1 .a { left: 8%; top: 8%; transform: rotate(-3deg); }
+    .c1 .b { right: 19%; top: 18%; letter-spacing: .8em; }
+    .c1 .c { left: 24%; top: 43%; transform: rotate(8deg); }
+    .c1 .d { right: 5%; top: 58%; font-size: 3rem; }
+    .c1 .e { left: 42%; top: 78%; letter-spacing: -.15em; }
+
+    .c2 .a { left: 3%; top: 13%; font-size: .8em; }
+    .c2 .b { left: 71%; top: 6%; transform: rotate(12deg); }
+    .c2 .c { left: 13%; top: 49%; letter-spacing: 1.2em; }
+    .c2 .d { right: 21%; top: 61%; transform: rotate(-16deg); }
+    .c2 .e { left: 48%; top: 87%; font-size: 4rem; }
+
+    .c3 .a { left: 17%; top: 11%; transform: rotate(90deg); }
+    .c3 .b { right: 4%; top: 25%; font-size: 4.5rem; }
+    .c3 .c { left: 4%; top: 58%; letter-spacing: -.25em; }
+    .c3 .d { left: 57%; top: 70%; transform: rotate(-8deg); }
+    .c3 .e { right: 13%; top: 90%; letter-spacing: 2em; }
+
+    /* 大きな空白 */
+    .void {
+      height: 145vh;
+    }
+
+    .last-char {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-family: "Noto Sans JP", sans-serif;
+      font-size: clamp(26px, 3vw, 44px);
+    }
+
+    /* ========================================================
+       多言語 swarm
+       ======================================================== */
+
+    #swarm {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      opacity: 0;
+      background: #000;
+      z-index: 50;
+      pointer-events: none;
+    }
+
+    #swarm.active {
+      opacity: 1;
+    }
+
+    .swarm-word {
+      position: absolute;
+      white-space: nowrap;
+      line-height: .88;
+      color: #f4f4ef;
+
+      opacity: 0;
+      filter: blur(12px);
+
+      will-change:
+        transform,
+        opacity,
+        filter;
+    }
+
+    .swarm-word.vertical {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+    }
+
+    .swarm-left {
+      left: 0;
+
+      transform:
+        translateX(-125%)
+        rotate(var(--rotate))
+        scale(.08);
+
+      animation:
+        swarmLeft var(--speed)
+        cubic-bezier(.12,.82,.18,1)
+        forwards;
+    }
+
+    .swarm-right {
+      right: 0;
+
+      transform:
+        translateX(125%)
+        rotate(var(--rotate))
+        scale(.08);
+
+      animation:
+        swarmRight var(--speed)
+        cubic-bezier(.12,.82,.18,1)
+        forwards;
+    }
+
+    @keyframes swarmLeft {
+      0% {
+        opacity: 0;
+        filter: blur(14px);
+        transform:
+          translateX(-125%)
+          rotate(var(--rotate))
+          scale(.05);
+      }
+
+      22% {
+        opacity: .35;
+        filter: blur(7px);
+      }
+
+      58% {
+        opacity: 1;
+        filter: blur(0);
+        transform:
+          translateX(calc(var(--travel) * .72))
+          rotate(var(--rotate))
+          scale(1.18);
+      }
+
+      100% {
+        opacity: var(--opacity);
+        filter: blur(0);
+        transform:
+          translateX(var(--travel))
+          rotate(var(--rotate))
+          scale(1);
+      }
+    }
+
+    @keyframes swarmRight {
+      0% {
+        opacity: 0;
+        filter: blur(14px);
+        transform:
+          translateX(125%)
+          rotate(var(--rotate))
+          scale(.05);
+      }
+
+      22% {
+        opacity: .35;
+        filter: blur(7px);
+      }
+
+      58% {
+        opacity: 1;
+        filter: blur(0);
+        transform:
+          translateX(calc(var(--travel) * -.72))
+          rotate(var(--rotate))
+          scale(1.18);
+      }
+
+      100% {
+        opacity: var(--opacity);
+        filter: blur(0);
+        transform:
+          translateX(calc(var(--travel) * -1))
+          rotate(var(--rotate))
+          scale(1);
+      }
+    }
+
+    /* ========================================================
+       フラッシュ
+       ======================================================== */
+
+    #flash {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: #fff;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #flash.fire {
+      animation: flash 430ms ease-out forwards;
+    }
+
+    @keyframes flash {
+      0%   { opacity: 0; }
+      8%   { opacity: 1; }
+      72%  { opacity: 1; }
+      100% { opacity: 1; }
+    }
+
+    @media (max-width: 700px) {
+      #opening {
+        width: calc(100vw - 38px);
+        font-size: 17px;
+      }
+
+      .panel {
+        font-size: 19px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cursor::after {
+        animation: none;
+      }
+    }
+
+
+
+/* =========================================================
+   POST-ME LANGUAGE COLLAPSE
+   写真1〜4には一切作用しない
+   ========================================================= */
+
+#swarm {
+  display: none !important;
+}
+
+.decay {
+  position: relative;
+  height: 100vh;
+}
+
+/* 輸
+
+
+                         h
+*/
+
+.decay-1 .x1 {
+  left: 18%;
+  top: 16%;
+}
+
+.decay-1 .x2 {
+  left: 70%;
+  top: 63%;
+}
+
+
+/*
+
+                   田
+*/
+
+.decay-2 .x3 {
+  left: 43%;
+  top: 47%;
+}
+
+
+/*
+
+                                      か
+*/
+
+.decay-3 .x4 {
+  left: 76%;
+  top: 66%;
+}
+
+
+/*
+          t
+*/
+
+.decay-4 .x5 {
+  left: 16%;
+  top: 34%;
+}
+
+
+/*
+
+                           み
+*/
+
+.decay-5 .x6 {
+  left: 46%;
+  top: 52%;
+}
+
+
+/* =========================================================
+   SCROLL
+   写真1〜4は読める速度。
+   'me'.以降は少しずつ速くなる。
+   ========================================================= */
+
+#stream.running {
+  opacity: 1;
+  animation: restoredLanguageScroll 28s linear forwards !important;
+}
+
+@keyframes restoredLanguageScroll {
+
+  0% {
+    transform: translateY(100vh);
+  }
+
+  17% {
+    transform: translateY(0vh);
+  }
+
+  34% {
+    transform: translateY(-100vh);
+  }
+
+  50% {
+    transform: translateY(-200vh);
+  }
+
+  65% {
+    transform: translateY(-300vh);
+  }
+
+  /* 'me'. 以降 */
+
+  75% {
+    transform: translateY(-400vh);
+  }
+
+  83% {
+    transform: translateY(-500vh);
+  }
+
+  90% {
+    transform: translateY(-600vh);
+  }
+
+  96% {
+    transform: translateY(-700vh);
+  }
+
+  100% {
+    transform: translateY(-800vh);
+  }
+}
+
+/* CATCH-ME FINAL DECAY V3 */
+
+/* ---------------------------------------------------------
+   「言　語　とは」
+
+   言
+       語
+       とは
+
+   「とは」は語の真下。
+   --------------------------------------------------------- */
+
+.p1 .c {
+  left: 16% !important;
+  right: auto !important;
+  top: 61% !important;
+}
+
+
+/* ---------------------------------------------------------
+   'me'. の直後：3文字
+   左右いっぱいに振る。
+   まだ段落間隔は大きくしない。
+   --------------------------------------------------------- */
+
+.decay-pre {
+  position: relative;
+  width: 100%;
+}
+
+.decay-pre-1 {
+  height: 78vh;
+}
+
+.decay-pre-1 .pre-a {
+  left: 7%;
+  top: 13%;
+  transform: rotate(-17deg);
+}
+
+.decay-pre-1 .pre-b {
+  left: 84%;
+  top: 42%;
+  transform: rotate(21deg);
+}
+
+.decay-pre-1 .pre-c {
+  left: 39%;
+  top: 72%;
+  transform: rotate(-8deg);
+}
+
+
+/* ---------------------------------------------------------
+   次：2文字
+   ここから空白を増やす。
+   --------------------------------------------------------- */
+
+.decay-pre-2 {
+  height: 118vh;
+}
+
+.decay-pre-2 .pre-d {
+  left: 10%;
+  top: 16%;
+  transform: rotate(11deg);
+}
+
+.decay-pre-2 .pre-e {
+  left: 87%;
+  top: 72%;
+  transform: rotate(-19deg);
+}
+
+
+/* ---------------------------------------------------------
+   最終部
+
+   輸
+
+
+                                h
+
+
+
+                 田
+
+
+                                          か
+
+
+        t
+
+
+
+                         み
+
+   スマホ入力時の横幅ではなく、
+   PC画面全体へ大きく左右に振る。
+   --------------------------------------------------------- */
+
+.final-decay {
+  position: relative;
+  width: 100%;
+  height: 360vh;
+}
+
+.final-decay .final-1 {
+  left: 8%;
+  top: 5%;
+}
+
+.final-decay .final-2 {
+  left: 83%;
+  top: 19%;
+}
+
+.final-decay .final-3 {
+  left: 43%;
+  top: 36%;
+}
+
+.final-decay .final-4 {
+  left: 88%;
+  top: 53%;
+}
+
+.final-decay .final-5 {
+  left: 12%;
+  top: 69%;
+}
+
+.final-decay .final-6 {
+  left: 48%;
+  top: 86%;
+}
+
+
+/* ---------------------------------------------------------
+   スクロール速度は最初から最後まで一定。
+   途中加速なし。
+   --------------------------------------------------------- */
+
+#stream.running {
+  opacity: 1;
+  animation: languageDecayLinear 34s linear forwards !important;
+}
+
+@keyframes languageDecayLinear {
+  from {
+    transform: translateY(100vh);
+  }
+
+  to {
+    transform: translateY(-1020vh);
+  }
+}
+
+
+/* 最後の大量文字演出は使わない */
+#swarm {
+  display: none !important;
+}
+
+/* FINAL DECAY — SAME FONT SIZE AS ORIGINAL */
+.decay-pre,
+.final-decay {
+  font-size: clamp(20px, 2vw, 30px) !important;
+}
+
+.decay-pre .fragment,
+.final-decay .fragment {
+  font-size: 1em !important;
+}
+
+/* FINAL THREE GLYPHS — COMPACT + ROTATED */
+
+.final-decay {
+  height: 220vh !important;
+}
+
+.final-decay .final-4 {
+  left: 84% !important;
+  top: 14% !important;
+  transform: rotate(14deg) !important;
+}
+
+.final-decay .final-5 {
+  left: 9% !important;
+  top: 46% !important;
+  transform: rotate(-17deg) !important;
+}
+
+.final-decay .final-6 {
+  left: 58% !important;
+  top: 80% !important;
+  transform: rotate(11deg) !important;
+}
+
+/*
+  全体の流れる速度は一定。
+  文字を3つ消したぶんだけ総距離・総時間を短縮。
+*/
+#stream.running {
+  animation: languageDecayLinear 29s linear forwards !important;
+}
+
+@keyframes languageDecayLinear {
+  from {
+    transform: translateY(100vh);
+  }
+
+  to {
+    transform: translateY(-850vh);
+  }
+}
+
+/* FIX T SIZE */
+.final-decay .final-5 {
+  font-size: clamp(20px, 2vw, 30px) !important;
+}
+
+/* FIX T SIZE */
+.final-decay .final-5 {
+  font-size: clamp(20px, 2vw, 30px) !important;
+}
+
+/* KA -> MI SPACING FIX */
+
+.decay-pre-2 {
+  height: 95vh !important;
+}
+
+.decay-pre-2 .pre-e {
+  left: 87% !important;
+  top: 72% !important;
+}
+
+/* t削除後、みまでの空間を詰める */
+.final-decay {
+  height: 120vh !important;
+}
+
+.final-decay .final-6 {
+  left: 48% !important;
+  top: 55% !important;
+  transform: rotate(11deg) !important;
+  font-size: clamp(20px, 2vw, 30px) !important;
+}
+
+/*
+  スクロール速度はこれまでとほぼ同じ。
+  空白を削った分だけ全体の時間を短縮。
+*/
+#stream.running {
+  animation: languageDecayCompact 24.5s linear forwards !important;
+}
+
+@keyframes languageDecayCompact {
+  from {
+    transform: translateY(100vh);
+  }
+
+  to {
+    transform: translateY(-700vh);
+  }
+}
+</style>
+</head>
+
+<body>
+  <main id="stage">
+
+    <section id="opening">
+      <p id="opening-en"></p>
+      <p id="opening-ja"></p>
+    </section>
+
+    <section id="stream">
+
+      <!-- 写真1 -->
+      <div class="panel p1">
+        <span class="fragment a">言</span>
+        <span class="fragment b">語</span>
+        <span class="fragment c">とは</span>
+        <span class="fragment d">ただ　の</span>
+        <span class="fragment e">パズル</span>
+      </div>
+
+      <!-- 写真2 -->
+      <div class="panel p2">
+        <span class="fragment a">ゲーム</span>
+        <span class="fragment b">に過ぎ</span>
+        <span class="fragment c">ない</span>
+        <span class="fragment d">Language</span>
+        <span class="fragment e">is</span>
+        <span class="fragment f">merely a</span>
+      </div>
+
+      <!-- 写真3 -->
+      <div class="panel p3">
+        <span class="fragment a">puzzle</span>
+        <span class="fragment b">game</span>
+        <span class="fragment c">&lt;僕&gt;</span>
+        <span class="fragment d">など</span>
+        <span class="fragment e">ないんだ</span>
+        <span class="fragment f">There is</span>
+      </div>
+
+      <!-- 写真4 -->
+      <div class="panel p4">
+        <span class="fragment a">thing</span>
+        <span class="fragment b">no such</span>
+        <span class="fragment c">as a</span>
+        <span class="fragment d">'me'.</span>
+      </div>
+
+      <!-- 'me'. 以降：言語の解体 -->
+
+      <!-- まず3文字。まだ空白はそれほど大きくしない -->
+      <div class="decay-pre decay-pre-1">
+        <span class="fragment pre-a">※</span>
+        <span class="fragment pre-b">q</span>
+        <span class="fragment pre-c">ぬ</span>
+      </div>
+
+      <!-- 次は2文字。空白が増える -->
+      <div class="decay-pre decay-pre-2">
+        <span class="fragment pre-d">ゑ</span>
+        <span class="fragment pre-e">か</span>
+      </div>
+
+      <!-- 最後：指定された並び -->
+      <div class="final-decay">
+        <span class="fragment final-6">み</span>
+      </div>
+</section>
+    <section id="swarm" aria-hidden="true"></section>
+    <div id="flash"></div>
+
+  </main>
+
+  <script>
+    function requireElement(id: string): HTMLElement {
+      const element = document.getElementById(id);
+
+      if (!(element instanceof HTMLElement)) {
+        throw new Error(`Missing HTML element: ${id}`);
+      }
+
+      return element;
+    }
+
+    const opening = requireElement('opening');
+    const en = requireElement('opening-en');
+    const ja = requireElement('opening-ja');
+    const stream = requireElement('stream');
+    const swarm = requireElement('swarm');
+    const flash = requireElement('flash');
+
+    const lineEN =
+      'Being categorized, that is synonymous with death to me.';
+
+    const lineJA =
+      'カテゴライズされること、それは僕にとって死と同義だ。';
+
+    let index = 0;
+
+    en.classList.add('cursor');
+    ja.classList.add('cursor');
+
+    const typing = setInterval(() => {
+      index++;
+
+      en.textContent = lineEN.slice(0, index);
+      ja.textContent = lineJA.slice(0, index);
+
+      if (index >= Math.max(lineEN.length, lineJA.length)) {
+        clearInterval(typing);
+
+        en.textContent = lineEN;
+        ja.textContent = lineJA;
+
+        en.classList.remove('cursor');
+        ja.classList.remove('cursor');
+
+        setTimeout(beginStream, 1100);
+      }
+    }, 92);
+
+    let beginStream = function () {
+
+      opening.style.transition =
+        'transform 2.2s linear, opacity 1.4s ease';
+
+      opening.style.transform =
+        'translate(-50%, -170vh)';
+
+      opening.style.opacity = '0';
+
+      stream.classList.add('running');
+
+      /*
+        最後の「み」が流れ切る
+      */
+      setTimeout(() => {
+
+        opening.style.display = 'none';
+        stream.style.display = 'none';
+
+        /*
+          真っ暗な画面で一呼吸
+        */
+        setTimeout(() => {
+
+          flash.classList.add('fire');
+
+          /*
+            フラッシュしたらほぼ即Google
+          */
+          setTimeout(() => {
+            window.location.href =
+              'https://www.google.com/';
+          }, 160);
+
+        }, 600);
+
+      }, 28100);
+    }
+
+    const swarmA = [
+      '言語','language','langue','Sprache','lingua','idioma',
+      '语言','語言','언어','язык','لغة','שפה','भाषा','γλώσσα',
+      'dil','bahasa','język','língua','parole','mot','word',
+      'sign','zeichen','signe','私','僕','俺','我','I','me',
+      'moi','ich','yo','ego','je','أنا','나','मैं','я',
+      '名前','分類','category','identity','identité','identidad',
+      'identität','存在','absence','null','意味','無意味',
+      'meaning','nothing','nada','rien','нет','無','없음',
+      '誰','何','どこ','when','why','syntax','voice','body',
+      'death','生','死','記号','差異','difference','fragment',
+      '断片','error','404','∞','∴','∵','0','silence',
+      'noise','inside','outside','before','after','other',
+      'autre','ailleurs','空白','境界','境界線','subject',
+      'object','memory','忘却','trace','痕跡','echo','声',
+      '文字','文','文法','grammar','code','破片','void'
+    ];
+
+    const swarmB = [
+      'は','が','を','に','から','まで','そして','でも',
+      'ではない','かもしれない','/','//','///','...',
+      '?','!','::','—','≠','=','→','←','↯','×','+',
+      'without','inside','outside','under','over','against',
+      'sans','avec','oder','und','nicht','без','между',
+      'の外','の中','以前','以後','誰でもない',
+      '名前のない','分類不能','未定義','壊れた',
+      'lost','unknown','undefined','unwritten','elsewhere'
+    ];
+
+    function buildFragments(total: number) {
+
+      /*
+        意味を持たない固定文字列。
+        リロードしても同じ内容・同じ順番。
+        読解できる自然言語はここでは完全に捨てる。
+      */
+
+      const roots = [
+        'zrq','vla','qev','nrx','thæ','kru','xai','vø',
+        'mzk','qra','tze','nuv','vræ','xel','ghu','zai',
+        'qlø','rva','tzm','khæ','vru','xen','qzi','næl',
+
+        'ヌァ','ヴェク','ゾル','キュァ','レヌ','グァ','ツェ','ミュ',
+        'ヲァ','ネュ','ヴォ','ギェ','ルァ','ゼヌ','クェ','ヒュ',
+
+        'ぬぇ','ゐゃ','ほぬ','ゑら','ぎゅあ','ねを','ふぇぬ','るぁ',
+        'ぢょ','ゔぁ','へゅ','むぇ','をぬ','ゐろ','ぐぇ','ぬゃ',
+        'ぞゑ','ひょぬ','ゔぇ','らゐ','けゅ','ぬを','しゃゑ','みぁ',
+        'ゑぬ','ろゃ','びぇ','ふょ','ぬゐ','がぇ','ちゅゑ','ほゃ',
+        'あゑぬ','ぬらゐ','ゐゅえ','そぬぁ','へゑろ','むゃぬ','をぇ',
+        'ぬぬゑ','ゐらぬ','ほぇゃ','ゔぬゐ','ゃぬろ','ゑゑぬ'
+      ];
+
+      const fractures = [
+        '::','//','_','..','///','-','≠','∴',
+        '∆','⌁','⸮','⟟','∵','⋮','×','⌿',
+        '゠','〻','ヽ','ヾ','々','〽','ゝ','※'
+      ];
+
+      const tails = [
+        'x','q','zr','vv','kt','æ','ø','Ʌ',
+        'ʒ','ŋ','χ','ɸ','ɯ','ɬ','ʀ','ʁ',
+        'ヌ','ヶ','ヰ','ヱ','ゑ','ヿ','ヵ','ヽ'
+      ];
+
+      const result = [];
+
+      for (let i = 0; i < total; i++) {
+
+        const a =
+          roots[(i * 7 + 3) % roots.length];
+
+        const b =
+          roots[(i * 13 + 11) % roots.length];
+
+        const c =
+          fractures[(i * 5 + 2) % fractures.length];
+
+        const d =
+          tails[(i * 17 + 7) % tails.length];
+
+        const mode = i % 7;
+
+        let value;
+
+        if (mode === 0) {
+          value = `${a}${c}${b}${d}`;
+        }
+        else if (mode === 1) {
+          value = `${d}${a}${a}${c}${b}`;
+        }
+        else if (mode === 2) {
+          value = `${a}${d}${c}${c}${b}`;
+        }
+        else if (mode === 3) {
+          value = `${c}${a}${b}${d}${a}`;
+        }
+        else if (mode === 4) {
+          value = `${a}${c}${d}${b}${c}`;
+        }
+        else if (mode === 5) {
+          value = `${d}${c}${a}${b}${b}`;
+        }
+        else {
+          value = `${a}${b}${c}${d}${d}${a}`;
+        }
+
+        result.push(value);
+      }
+
+      return result;
+    }
+
+    function beginSwarm() {
+
+      swarm.classList.add('active');
+      swarm.innerHTML = '';
+
+      const fragments = buildFragments(900);
+
+      fragments.forEach((fragment, i) => {
+
+        const word = document.createElement('span');
+
+        word.className = 'swarm-word';
+        word.textContent = fragment;
+
+        /*
+          ランダムではなく固定計算。
+          毎回ほぼ同じ崩壊画面になる。
+        */
+
+        const x = ((i * 19 + (i % 7) * 13) % 106) - 3;
+        const y = ((i * 29 + (i % 11) * 17) % 104) - 2;
+
+        word.style.left = `${x}%`;
+        word.style.top  = `${y}%`;
+
+        /*
+          小さい本文文字から巨大文字まで。
+        */
+
+        const sizePattern = i % 17;
+
+        let size;
+
+        if (sizePattern < 8) {
+          size = 12 + ((i * 7) % 19);
+        }
+        else if (sizePattern < 13) {
+          size = 31 + ((i * 11) % 42);
+        }
+        else if (sizePattern < 16) {
+          size = 74 + ((i * 13) % 68);
+        }
+        else {
+          size = 165 + ((i * 17) % 120);
+        }
+
+        word.style.fontSize = `${size}px`;
+
+        /*
+          方向をバラバラにする。
+        */
+
+        const angles = [
+          -78, 43, -16, 91, 7,
+          -39, 67, -5, 128, -62,
+          22, -104, 51, 3, 76,
+          -27, 146, -48, 14
+        ];
+
+        const angle =
+          angles[i % angles.length];
+
+        /*
+          縦書きもかなり混ぜる。
+        */
+
+        if (i % 5 === 0 || i % 11 === 0) {
+          word.style.writingMode = 'vertical-rl';
+          word.style.textOrientation = 'mixed';
+        }
+
+        /*
+          一部は文字間隔まで壊す。
+        */
+
+        if (i % 9 === 0) {
+          word.style.letterSpacing = '-0.22em';
+        }
+
+        if (i % 13 === 0) {
+          word.style.letterSpacing = '0.7em';
+        }
+
+        word.style.fontWeight =
+          i % 6 === 0 ? '700' : '400';
+
+        word.style.lineHeight = '.78';
+
+        word.style.whiteSpace = 'nowrap';
+
+        word.style.zIndex =
+          String(1 + (i % 12));
+
+        word.style.opacity = '0';
+
+        word.style.filter = 'blur(12px)';
+
+        word.style.transform =
+          `rotate(${angle}deg) scale(.05)`;
+
+        /*
+          CSS側の古い左右移動を完全停止。
+        */
+
+        word.style.animation = 'none';
+
+        swarm.appendChild(word);
+
+        /*
+          「飛んでくる」のではなく
+          その場所から発生する。
+
+          文字同士は意図的に重なる。
+        */
+
+        const birth =
+          (i * 23) % 1450;
+
+        const duration =
+          380 + ((i * 31) % 520);
+
+        setTimeout(() => {
+
+          word.animate(
+            [
+              {
+                opacity: 0,
+                filter: 'blur(16px)',
+                transform:
+                  `rotate(${angle - 35}deg) scale(.02)`
+              },
+
+              {
+                opacity: .75,
+                filter: 'blur(3px)',
+                transform:
+                  `rotate(${angle + 8}deg) scale(1.28)`,
+                offset: .62
+              },
+
+              {
+                opacity:
+                  .38 + ((i % 7) / 10),
+
+                filter: 'blur(0px)',
+
+                transform:
+                  `rotate(${angle}deg) scale(1)`
+              }
+            ],
+            {
+              duration,
+              easing:
+                'cubic-bezier(.15,.85,.18,1)',
+              fill: 'forwards'
+            }
+          );
+
+        }, birth);
+
+      });
+
+      /*
+        長く見せない。
+        文字が急速に湧く
+        → 埋まる
+        → 即フラッシュ
+        → Google
+      */
+
+      setTimeout(() => {
+
+        flash.classList.add('fire');
+
+        setTimeout(() => {
+          window.location.href =
+            'https://www.google.com/';
+        }, 180);
+
+      }, 2600);
+    }
+
+    /* CATCH-ME BEGIN STREAM V3 */
+
+    beginStream = function () {
+
+      opening.style.transition =
+        'transform 2.2s linear, opacity 1.4s ease';
+
+      opening.style.transform =
+        'translate(-50%, -170vh)';
+
+      opening.style.opacity = '0';
+
+      stream.classList.add('running');
+
+      stream.addEventListener(
+        'animationend',
+        () => {
+
+          /*
+            この時点で「み」も完全に消えている。
+          */
+
+          opening.style.display = 'none';
+          stream.style.display = 'none';
+
+          /*
+            真っ黒のまま一呼吸。
+          */
+
+          setTimeout(() => {
+
+            flash.classList.add('fire');
+
+            /*
+              白フラッシュ直後にGoogle。
+            */
+
+            setTimeout(() => {
+
+              window.location.href =
+                'https://www.google.com/';
+
+            }, 160);
+
+          }, 250);
+
+        },
+        { once: true }
+      );
+    };
+</script>
+</body>
+</html>

@@ -1,4 +1,5 @@
-﻿---
+---
+import '../../../styles/pagination-mobile-local.css';
 import { getCollection } from 'astro:content';
 import BaseHead from '../../../components/BaseHead.astro';
 import Footer from '../../../components/Footer.astro';
@@ -7,6 +8,7 @@ import BlogTopNav from '../../../components/blog/BlogTopNav.astro';
 import GroupNav from '../../../components/blog/GroupNav.astro';
 import SeriesCard from '../../../components/blog/SeriesCard.astro';
 import '../../../styles/blog-series-card-local.css';
+import '../../../styles/series-pagination-local.css';
 import { getSiteConfig } from '../../../data/site';
 import { getAllSeries } from '../../../utils/content-groups';
 import { getUiText } from '../../../utils/ui-text';
@@ -17,6 +19,8 @@ const palette = theme.palette;
 const pageMeta = pages.blog;
 const series = getAllSeries(await getCollection('blog', ({ data }) => !data.draft));
 const ui = getUiText(siteConfig);
+const totalPages = Math.ceil(series.length / 3);
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
 <!doctype html>
@@ -40,7 +44,6 @@ const ui = getUiText(siteConfig);
       .series-list :global(.series-card) {
         min-width: 0;
       }
-
       .empty-note {
         max-width: 620px;
         margin: 0;
@@ -52,7 +55,7 @@ const ui = getUiText(siteConfig);
 
       @media (max-width: 720px) {
         main {
-          padding-top: 88px;
+          padding-top: 34px;
         }
 
         .series-list {
@@ -76,12 +79,59 @@ thoroughly corroded by signs.`}
       {
         series.length > 0 ? (
           <section class="series-list" aria-label={ui.groups.series}>
-            {series.map((item) => (
+            {series.slice(0, 3).map((item) => (
               <SeriesCard name={item.name} slug={item.slug} posts={item.posts} />
             ))}
           </section>
         ) : (
           <p class="empty-note">{ui.groups.emptySeries}</p>
+        )
+      }
+            {
+        totalPages > 1 && (
+          <nav class="archive-pagination" aria-label="Series pagination">
+            <a class="pagination-link disabled" aria-disabled="true">
+              Previous
+            </a>
+
+            <div class="pagination-pages pagination-pages-desktop">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((number) => (
+                <a
+                  class:list={['pagination-number', { current: number === 1 }]}
+                  href={number === 1
+                    ? `${basePath}/blog/series/`
+                    : `${basePath}/blog/series/${number}/`}
+                  aria-current={number === 1 ? 'page' : undefined}
+                >
+                  {number}
+                </a>
+              ))}
+            </div>
+        <div class="pagination-pages pagination-pages-mobile" aria-label="Mobile page navigation">
+          {Array.from(
+            { length: Math.min(3, totalPages) },
+            (_, i) =>
+              Math.max(
+                1,
+                Math.min(1 - 1, Math.max(1, totalPages - 2))
+              ) + i
+          ).map((number) => (
+            <a
+              class:list={['pagination-number', { current: number === 1 }]}
+              href={number === 1
+                ? `${basePath}/blog/series/`
+                : `${basePath}/blog/series/${number}/`}
+              aria-current={number === 1 ? 'page' : undefined}
+            >
+              {number}
+            </a>
+          ))}
+        </div>
+
+            <a class="pagination-link" href={`${basePath}/blog/series/2/`}>
+              Next
+            </a>
+          </nav>
         )
       }
     </main>

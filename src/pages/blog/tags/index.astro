@@ -1,4 +1,4 @@
-﻿---
+---
 import { getCollection } from 'astro:content';
 import BaseHead from '../../../components/BaseHead.astro';
 import Footer from '../../../components/Footer.astro';
@@ -33,28 +33,225 @@ const tagColors = [
   Slots intentionally leave a large exclusion zone around 50 / 50.
   The core must always read as the centre of the network.
 */
-const tagSlots = [
-  { x: 34, y: 15 },
-  { x: 64, y: 23 },
+/*
+  TAG SCATTER SYSTEM
 
-  { x: 17, y: 39 },
-  { x: 81, y: 40 },
+  - 同じタグはリロードしても同じ位置
+  - 中央の NEXUS CORE は避ける
+  - 完全な等間隔にはせず、少し重なる余地を残す
+  - タグ数が13を超えても同じ座標を再利用しない
+*/
 
-  { x: 18, y: 70 },
-  { x: 77, y: 70 },
+function seededTagValue(seed: number) {
+  const value =
+    Math.sin(seed * 12.9898 + 78.233) *
+    43758.5453123;
 
-  { x: 43, y: 86 },
+  return value - Math.floor(value);
+}
 
-  { x: 24, y: 21 },
-  { x: 75, y: 19 },
+function createTagSlots(count: number) {
+  const slots: Array<{ x: number; y: number }> = [];
 
-  { x: 11, y: 55 },
-  { x: 89, y: 56 },
+  for (let index = 0; index < count; index += 1) {
+    let selected:
+      | { x: number; y: number }
+      | undefined;
 
-  { x: 29, y: 84 },
-  { x: 70, y: 85 },
-];
+    let bestScore = -Infinity;
 
+    /*
+      NEXUS TAG SCATTER
+
+      画面全体に候補を1024個生成し、
+      既存カードと重ならない候補の中から
+      最も距離が取れる場所を選ぶ。
+
+      横方向 18%
+      縦方向 12%
+
+      の安全距離を確保する。
+    */
+    for (let attempt = 0; attempt < 1024; attempt += 1) {
+      const seed =
+        (index + 1) * 101 +
+        attempt * 37;
+
+      const x =
+        10 +
+        seededTagValue(seed) * 80;
+
+      const y =
+        10 +
+        seededTagValue(seed + 911) * 80;
+
+
+      /*
+        中央 NEXUS CORE を避ける。
+        少し余裕を持った楕円。
+      */
+      const coreX =
+        (x - 50) / 18;
+
+      const coreY =
+        (y - 50) / 22;
+
+      const insideCore =
+        coreX * coreX +
+        coreY * coreY <
+        1.15;
+
+      if (insideCore) {
+        continue;
+      }
+
+
+      /*
+        カード同士の重なりを禁止。
+        実際のカード幅・高さを考慮して
+        旧 9% / 8% より大幅に広げる。
+      */
+      const collision =
+        slots.some((slot) => {
+          const dx =
+            Math.abs(slot.x - x);
+
+          const dy =
+            Math.abs(slot.y - y);
+
+          return (
+            dx < 18 &&
+            dy < 12
+          );
+        });
+
+      if (collision) {
+        continue;
+      }
+
+
+      /*
+        他のカードから最も離れている候補を優先。
+        横と縦の比率をカード形状に合わせる。
+      */
+      let score = 100;
+
+      if (slots.length > 0) {
+        score = Math.min(
+          ...slots.map((slot) => {
+            const dx =
+              (slot.x - x) / 18;
+
+            const dy =
+              (slot.y - y) / 12;
+
+            return Math.sqrt(
+              dx * dx +
+              dy * dy
+            );
+          }),
+        );
+      }
+
+
+      /*
+        同点時にも毎回同じ結果になる程度の
+        ごく小さい deterministic jitter。
+      */
+      score +=
+        seededTagValue(seed + 1777) *
+        0.02;
+
+
+      if (score > bestScore) {
+        bestScore = score;
+
+        selected = {
+          x: Number(x.toFixed(2)),
+          y: Number(y.toFixed(2)),
+        };
+      }
+    }
+
+
+    /*
+      20個程度なら通常ここには来ない。
+      将来タグがかなり増えた場合だけ使うfallback。
+    */
+    if (!selected) {
+      let fallbackScore = -Infinity;
+
+      for (
+        let attempt = 0;
+        attempt < 1024;
+        attempt += 1
+      ) {
+        const seed =
+          (index + 1) * 1009 +
+          attempt * 53;
+
+        const x =
+          10 +
+          seededTagValue(seed) * 80;
+
+        const y =
+          10 +
+          seededTagValue(seed + 911) * 80;
+
+        const coreX =
+          (x - 50) / 18;
+
+        const coreY =
+          (y - 50) / 22;
+
+        if (
+          coreX * coreX +
+          coreY * coreY <
+          1.15
+        ) {
+          continue;
+        }
+
+        const score =
+          slots.length === 0
+            ? 100
+            : Math.min(
+                ...slots.map((slot) => {
+                  const dx =
+                    (slot.x - x) / 18;
+
+                  const dy =
+                    (slot.y - y) / 12;
+
+                  return Math.sqrt(
+                    dx * dx +
+                    dy * dy
+                  );
+                }),
+              );
+
+        if (score > fallbackScore) {
+          fallbackScore = score;
+
+          selected = {
+            x: Number(x.toFixed(2)),
+            y: Number(y.toFixed(2)),
+          };
+        }
+      }
+    }
+
+
+    slots.push(
+      selected ?? {
+        x: 50,
+        y: 10,
+      },
+    );
+  }
+
+  return slots;
+}
 const siteConfig = await getSiteConfig();
 const { site, theme, pages } = siteConfig;
 const palette = theme.palette;
@@ -80,8 +277,10 @@ function getTagWeight(count: number) {
   return (count - minCount) / countRange;
 }
 
+const tagSlots = createTagSlots(tags.length);
+
 const renderedTags = tags.map((tag, index) => {
-  const slot = tagSlots[index % tagSlots.length];
+  const slot = tagSlots[index];
 
   return {
     ...tag,
@@ -1073,7 +1272,7 @@ const renderedTags = tags.map((tag, index) => {
       @media (max-width: 820px) {
 
         main {
-          padding-top: 88px;
+          padding-top: 34px;
         }
 
 
@@ -1204,7 +1403,7 @@ const renderedTags = tags.map((tag, index) => {
         }
       }
     </style>
-  
+
 <style>
 /* =========================================================
    SIGNAL NETWORK — HEADER SIZE FIX
@@ -1259,6 +1458,133 @@ const renderedTags = tags.map((tag, index) => {
   transform: translateY(-38px) !important;
   margin-bottom: -38px !important;
 }
+</style>
+
+<!-- NEXUS TAG CARD TRANSPARENCY START -->
+
+<style is:global>
+
+  /*
+     通常時
+     ネットワーク線が少し透ける。
+  */
+  .signal-node {
+    background:
+      linear-gradient(
+        105deg,
+        color-mix(
+          in srgb,
+          var(--node-color) 10%,
+          transparent
+        ),
+        rgba(5, 5, 5, 0.68) 54%,
+        rgba(5, 5, 5, 0.58)
+      ) !important;
+
+    backdrop-filter:
+      blur(2px) !important;
+
+    -webkit-backdrop-filter:
+      blur(2px) !important;
+  }
+
+
+  /*
+     hover時も真っ黒にはしない。
+     色味だけ少し強くする。
+  */
+  .signal-node:hover,
+  .signal-node:focus-visible {
+    background:
+      linear-gradient(
+        105deg,
+        color-mix(
+          in srgb,
+          var(--node-color) 18%,
+          transparent
+        ),
+        rgba(5, 5, 5, 0.76) 54%,
+        rgba(5, 5, 5, 0.64)
+      ) !important;
+  }
+
+</style>
+
+<!-- NEXUS TAG CARD TRANSPARENCY END -->
+
+
+<!-- NEXUS TAG VIEW MORE V1 -->
+<style is:global>
+  .tag-mobile-viewmore {
+    display: none;
+  }
+
+  @media (max-width: 720px) {
+
+    .signal-network:not([data-tag-expanded="true"])
+    .network-field
+    .signal-node[data-tag-mobile-extra="true"] {
+      display: none !important;
+    }
+
+    .tag-mobile-viewmore:not([hidden]) {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+      padding: 24px 0 34px;
+      box-sizing: border-box;
+    }
+
+    .tag-mobile-viewmore-count {
+      color: #858b83;
+      font-family: monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.16em;
+      text-align: center;
+    }
+
+    .tag-mobile-viewmore-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: min(100%, 320px);
+      min-height: 54px;
+      padding: 14px 20px;
+      border: 1px solid rgba(183, 255, 0, 0.65);
+      border-radius: 3px;
+      background: linear-gradient(
+        105deg,
+        rgba(183, 255, 0, 0.07),
+        rgba(5, 5, 5, 0.94)
+      );
+      color: #b7ff00;
+      font-family: monospace;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      cursor: pointer;
+      box-sizing: border-box;
+      transition:
+        border-color 180ms ease,
+        background-color 180ms ease,
+        box-shadow 180ms ease;
+    }
+
+    .tag-mobile-viewmore-button:hover,
+    .tag-mobile-viewmore-button:focus-visible {
+      border-color: #b7ff00;
+      box-shadow: 0 0 20px rgba(183, 255, 0, 0.13);
+      outline-offset: 4px;
+    }
+
+    .tag-mobile-viewmore-arrow {
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+  }
 </style>
 </head>
 
@@ -1528,8 +1854,272 @@ thoroughly corroded by signs.`}
 
     <Footer />
 
-  </body>
+
+<!-- NEXUS TAG VIEW MORE V1 SCRIPT -->
+<script is:inline data-astro-rerun>
+  (() => {
+    const setupTagViewMore = () => {
+      const network = document.querySelector('.signal-network');
+      if (!network) return;
+
+      const field = network.querySelector('.network-field');
+      if (!field) return;
+
+      const nodes = Array.from(
+        field.querySelectorAll('.signal-node')
+      );
+
+      const initialCount = 8;
+
+      if (nodes.length <= initialCount) return;
+
+      nodes.forEach((node, index) => {
+        if (index >= initialCount) {
+          node.dataset.tagMobileExtra = 'true';
+        }
+      });
+
+      if (network.querySelector('.tag-mobile-viewmore')) {
+        return;
+      }
+
+      network.dataset.tagExpanded = 'false';
+
+      const control = document.createElement('div');
+      control.className = 'tag-mobile-viewmore';
+
+      const count = document.createElement('span');
+      count.className = 'tag-mobile-viewmore-count';
+
+      const button = document.createElement('button');
+      button.className = 'tag-mobile-viewmore-button';
+      button.type = 'button';
+      button.setAttribute('aria-expanded', 'false');
+
+      const label = document.createElement('span');
+      const arrow = document.createElement('span');
+      arrow.className = 'tag-mobile-viewmore-arrow';
+      arrow.setAttribute('aria-hidden', 'true');
+
+      button.append(label, arrow);
+      control.append(count, button);
+
+      if (!field.id) {
+        field.id = 'nexus-tag-network-field';
+      }
+
+      button.setAttribute('aria-controls', field.id);
+
+      const update = (expanded) => {
+        network.dataset.tagExpanded = String(expanded);
+        button.setAttribute('aria-expanded', String(expanded));
+
+        count.textContent = expanded
+          ? `SHOWING ALL ${nodes.length} NODES`
+          : `SHOWING ${initialCount} OF ${nodes.length} NODES`;
+
+        label.textContent = expanded
+          ? 'SHOW LESS'
+          : 'VIEW MORE';
+
+        arrow.textContent = expanded ? '↑' : '↓';
+      };
+
+      button.addEventListener('click', () => {
+        const wasExpanded =
+          network.dataset.tagExpanded === 'true';
+
+        update(!wasExpanded);
+
+        if (wasExpanded) {
+          const top =
+            field.getBoundingClientRect().top +
+            window.scrollY - 130;
+
+          window.scrollTo({
+            top: Math.max(0, top),
+            behavior: 'smooth'
+          });
+        }
+      });
+
+      update(false);
+
+      field.insertAdjacentElement('afterend', control);
+    };
+
+    if (!window.__nexusTagViewMoreReady) {
+      window.__nexusTagViewMoreReady = true;
+
+      document.addEventListener(
+        'astro:page-load',
+        setupTagViewMore
+      );
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener(
+        'DOMContentLoaded',
+        setupTagViewMore,
+        { once: true }
+      );
+    } else {
+      setupTagViewMore();
+    }
+  })();
+</script>
+</body>
 </html>
 
 
+<style is:global>
+/* NEXUS TAG MOBILE GRID V1 */
 
+@media (max-width: 720px) {
+
+  /* NODES / RECORDS / STATUS を横3列に */
+
+  .signal-network .network-metrics {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 0 !important;
+    width: 100% !important;
+    align-items: stretch !important;
+  }
+
+  .signal-network .network-metrics .metric {
+    min-width: 0 !important;
+    padding: 12px 8px !important;
+
+    border-top: 1px solid rgba(255,255,255,0.09) !important;
+    border-left: 0 !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+
+    gap: 9px !important;
+  }
+
+  .signal-network .network-metrics .metric + .metric {
+    border-left: 1px solid rgba(255,255,255,0.09) !important;
+  }
+
+  .signal-network .metric-label {
+    font-size: 0.62rem !important;
+    letter-spacing: 0.10em !important;
+    white-space: nowrap !important;
+  }
+
+  .signal-network .metric-value {
+    font-size: 0.95rem !important;
+    line-height: 1.2 !important;
+  }
+
+  .signal-network .metric-value.live {
+    font-size: 0.78rem !important;
+    white-space: nowrap !important;
+  }
+
+  /* タグ一覧を2列に */
+
+  .signal-network .network-field {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+
+    min-height: 0 !important;
+    height: auto !important;
+    padding: 22px 0 !important;
+
+    align-items: stretch !important;
+  }
+
+  /* タグBOX */
+
+  .signal-network .network-field .signal-node {
+    position: relative !important;
+
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+
+    grid-column: auto !important;
+    grid-row: auto !important;
+
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+
+    min-height: 92px !important;
+    height: auto !important;
+
+    padding: 14px 12px !important;
+    margin: 0 !important;
+
+    transform: none !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    gap: 9px !important;
+
+    box-sizing: border-box !important;
+  }
+
+  /* 長いタグ名の折り返し */
+
+  .signal-network .signal-node .signal-name {
+    display: block !important;
+
+    max-width: 100% !important;
+    min-width: 0 !important;
+
+    font-size: clamp(0.82rem, 3.1vw, 1.05rem) !important;
+    line-height: 1.2 !important;
+
+    overflow-wrap: anywhere !important;
+    word-break: normal !important;
+    white-space: normal !important;
+  }
+
+  .signal-network .signal-node .signal-count {
+    font-size: 0.64rem !important;
+    line-height: 1.4 !important;
+    letter-spacing: 0.08em !important;
+    white-space: normal !important;
+  }
+
+  /* 既存のホバー動作を維持 */
+
+  .signal-network .signal-node:hover,
+  .signal-network .signal-node:focus-visible {
+    transform: translateY(-2px) !important;
+  }
+}
+
+/* 特に狭いスマホの文字調整 */
+
+@media (max-width: 380px) {
+
+  .signal-network .network-field {
+    gap: 8px !important;
+  }
+
+  .signal-network .network-field .signal-node {
+    padding: 12px 10px !important;
+    min-height: 88px !important;
+  }
+
+  .signal-network .signal-node .signal-name {
+    font-size: 0.79rem !important;
+  }
+
+  .signal-network .metric-label {
+    font-size: 0.56rem !important;
+  }
+}
+</style>

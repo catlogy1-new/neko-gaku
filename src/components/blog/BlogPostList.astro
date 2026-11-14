@@ -54,6 +54,12 @@ function withBase(href: string) {
             ]}
             data-archive-post-href={postHref}
           >
+            {isStickyEntry(post) && (
+              <div class="nexus-pinned-strip">
+                <Icon name="pin" size={12} />
+                <span>PINNED ARTICLE</span>
+              </div>
+            )}
             <a
               class="nexus-journal-media"
               href={postHref}
@@ -821,5 +827,656 @@ function withBase(href: string) {
 }
 </style>
 
+<!-- NEXUS SAFE CARD PIN START -->
+
+<style is:global>
+  /* 既存sticky表示をカード右上のPINアイコンへ */
+  .nexus-journal-row .nexus-journal-pin {
+    position: absolute !important;
+    top: 16px !important;
+    right: 18px !important;
+    z-index: 30 !important;
+
+    display: grid !important;
+    place-items: center !important;
+
+    width: 32px !important;
+    height: 32px !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    border: 1px solid rgba(183, 255, 0, 0.22) !important;
+    border-radius: 5px !important;
+
+    background: rgba(5, 6, 5, 0.90) !important;
+
+    color: #b7ff00 !important;
+
+    /*
+      元の "Pinned" テキストだけ隠す。
+      SVGには下でサイズを再指定。
+    */
+    font-size: 0 !important;
+    line-height: 0 !important;
+    letter-spacing: 0 !important;
+
+    cursor: default !important;
+  }
+
+  .nexus-journal-row .nexus-journal-pin svg {
+    display: block !important;
+
+    width: 18px !important;
+    height: 18px !important;
+
+    font-size: initial !important;
+  }
+
+  html.nexus-blog-editor-mode
+  .nexus-journal-row
+  .nexus-journal-pin {
+    cursor: pointer !important;
+  }
+
+  html.nexus-blog-editor-mode
+  .nexus-journal-row
+  .nexus-journal-pin:hover {
+    border-color: rgba(183, 255, 0, 0.55) !important;
+    background: rgba(183, 255, 0, 0.055) !important;
+  }
+
+  .nexus-pin-admin-menu {
+    position: absolute !important;
+    top: 38px !important;
+    right: 0 !important;
+    z-index: 50 !important;
+
+    width: 174px !important;
+    padding: 6px !important;
+
+    border: 1px solid rgba(183, 255, 0, 0.18) !important;
+    border-radius: 6px !important;
+
+    background: rgba(8, 9, 8, 0.99) !important;
+
+    box-shadow:
+      0 14px 36px rgba(0, 0, 0, 0.44) !important;
+  }
+
+  .nexus-pin-admin-menu[hidden] {
+    display: none !important;
+  }
+
+  .nexus-pin-admin-menu button {
+    appearance: none !important;
+
+    display: block !important;
+    width: 100% !important;
+
+    padding: 9px 10px !important;
+
+    border: 0 !important;
+    border-radius: 4px !important;
+
+    background: transparent !important;
+
+    color: rgba(203, 206, 200, 0.80) !important;
+
+    font-family:
+      "Helvetica Neue",
+      Helvetica,
+      Arial,
+      sans-serif !important;
+
+    font-size: 0.78rem !important;
+    font-weight: 500 !important;
+    line-height: 1.25 !important;
+
+    text-align: left !important;
+    white-space: nowrap !important;
+
+    cursor: pointer !important;
+  }
+
+  .nexus-pin-admin-menu button:hover {
+    background: rgba(183, 255, 0, 0.055) !important;
+    color: #b7ff00 !important;
+  }
+</style>
+
+<script is:inline>
+(() => {
+
+  if (window.__nexusSafeBlogPinBound) {
+    return;
+  }
+
+  window.__nexusSafeBlogPinBound = true;
 
 
+  const isEditorMode = () => {
+
+    const params =
+      new URLSearchParams(
+        window.location.search
+      );
+
+    if (params.get('editor') === '1') {
+      return true;
+    }
+
+    try {
+
+      if (
+        window.self !== window.top &&
+        document.referrer.includes('/admin')
+      ) {
+        return true;
+      }
+
+    } catch (_) {
+      return true;
+    }
+
+    return false;
+  };
+
+
+  const closeMenus = () => {
+
+    document
+      .querySelectorAll(
+        '.nexus-pin-admin-menu'
+      )
+      .forEach((menu) => {
+        menu.hidden = true;
+      });
+  };
+
+
+  const initPins = () => {
+
+    const editorMode =
+      isEditorMode();
+
+    document.documentElement.classList.toggle(
+      'nexus-blog-editor-mode',
+      editorMode
+    );
+
+    document
+      .querySelectorAll(
+        '.nexus-journal-pin'
+      )
+      .forEach((pin) => {
+
+        if (!editorMode) {
+
+          pin.removeAttribute('role');
+          pin.removeAttribute('tabindex');
+
+          return;
+        }
+
+        pin.setAttribute(
+          'role',
+          'button'
+        );
+
+        pin.setAttribute(
+          'tabindex',
+          '0'
+        );
+
+        pin.setAttribute(
+          'aria-label',
+          'Pinned article'
+        );
+
+        if (
+          !pin.querySelector(
+            '.nexus-pin-admin-menu'
+          )
+        ) {
+
+          const menu =
+            document.createElement('span');
+
+          menu.className =
+            'nexus-pin-admin-menu';
+
+          menu.hidden = true;
+
+          const button =
+            document.createElement('button');
+
+          button.type =
+            'button';
+
+          button.textContent =
+            'Unpin from profile';
+
+          button.setAttribute(
+            'data-nexus-unpin',
+            ''
+          );
+
+          menu.appendChild(
+            button
+          );
+
+          pin.appendChild(
+            menu
+          );
+        }
+      });
+  };
+
+
+  /*
+    capture=true にして、
+    カード全体のクリック処理より先にPINを捕まえる
+  */
+  document.addEventListener(
+    'click',
+    (event) => {
+
+      if (!isEditorMode()) {
+        return;
+      }
+
+      const target =
+        event.target;
+
+      if (!(target instanceof Element)) {
+        return;
+      }
+
+      const unpin =
+        target.closest(
+          '[data-nexus-unpin]'
+        );
+
+      if (unpin) {
+
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+
+        /*
+          TinaCMS未接続なので今はUI確認のみ。
+          実際のsticky変更は後でCMSに接続する。
+        */
+
+        return;
+      }
+
+      const pin =
+        target.closest(
+          '.nexus-journal-pin'
+        );
+
+      if (pin) {
+
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+
+        const menu =
+          pin.querySelector(
+            '.nexus-pin-admin-menu'
+          );
+
+        if (!menu) {
+          return;
+        }
+
+        const opening =
+          menu.hidden;
+
+        closeMenus();
+
+        menu.hidden =
+          !opening;
+
+        return;
+      }
+
+      closeMenus();
+    },
+    true
+  );
+
+
+  document.addEventListener(
+    'keydown',
+    (event) => {
+
+      if (!isEditorMode()) {
+        return;
+      }
+
+      if (
+        event.key !== 'Enter' &&
+        event.key !== ' '
+      ) {
+        return;
+      }
+
+      const target =
+        event.target;
+
+      if (
+        !(target instanceof Element) ||
+        !target.matches(
+          '.nexus-journal-pin'
+        )
+      ) {
+        return;
+      }
+
+      event.preventDefault();
+
+      target.click();
+    }
+  );
+
+
+  initPins();
+
+  document.addEventListener(
+    'astro:page-load',
+    initPins
+  );
+
+})();
+</script>
+
+<!-- NEXUS SAFE CARD PIN END -->
+
+<!-- NEXUS PIN CENTER OVERRIDE START -->
+
+<style is:global>
+  .nexus-journal-row .nexus-journal-pin {
+    position: absolute !important;
+    width: 32px !important;
+    height: 32px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .nexus-journal-row .nexus-journal-pin > svg {
+    position: absolute !important;
+
+    left: 50% !important;
+    top: 50% !important;
+
+    width: 18px !important;
+    height: 18px !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    transform:
+      translate(-50%, -50%)
+      translateY(1px) !important;
+
+    pointer-events: none !important;
+  }
+</style>
+
+<!-- NEXUS PIN CENTER OVERRIDE END -->
+
+<!-- NEXUS BLOG PIN ACTION BRIDGE START -->
+
+<style is:global>
+  .nexus-blog-pin-toast {
+    position: fixed;
+    right: 22px;
+    bottom: 24px;
+    z-index: 99999;
+
+    max-width:
+      min(
+        360px,
+        calc(100vw - 32px)
+      );
+
+    padding:
+      11px 14px;
+
+    border:
+      1px solid
+      rgba(183, 255, 0, 0.28);
+
+    border-radius:
+      5px;
+
+    background:
+      rgba(8, 9, 8, 0.97);
+
+    color:
+      rgba(225, 228, 221, 0.94);
+
+    font-family:
+      "Helvetica Neue",
+      Helvetica,
+      Arial,
+      sans-serif;
+
+    font-size:
+      0.78rem;
+
+    font-weight:
+      500;
+
+    line-height:
+      1.45;
+
+    box-shadow:
+      0 12px 34px
+      rgba(0, 0, 0, 0.42);
+
+    opacity:
+      0;
+
+    transform:
+      translateY(8px);
+
+    pointer-events:
+      none;
+
+    transition:
+      opacity 160ms ease,
+      transform 160ms ease;
+  }
+
+  .nexus-blog-pin-toast.is-visible {
+    opacity:
+      1;
+
+    transform:
+      translateY(0);
+  }
+</style>
+
+<script is:inline>
+(() => {
+
+  if (
+    window.__nexusBlogPinActionBridge
+  ) {
+    return;
+  }
+
+  window.__nexusBlogPinActionBridge =
+    true;
+
+  let timer = null;
+
+
+  const showPending = () => {
+
+    let toast =
+      document.querySelector(
+        '.nexus-blog-pin-toast'
+      );
+
+    if (!toast) {
+
+      toast =
+        document.createElement(
+          'div'
+        );
+
+      toast.className =
+        'nexus-blog-pin-toast';
+
+      toast.setAttribute(
+        'role',
+        'status'
+      );
+
+      toast.textContent =
+        'Unpinning will be enabled when TinaCMS is connected.';
+
+      document.body.appendChild(
+        toast
+      );
+    }
+
+    toast.classList.add(
+      'is-visible'
+    );
+
+    if (timer) {
+      clearTimeout(
+        timer
+      );
+    }
+
+    timer =
+      setTimeout(() => {
+
+        toast.classList.remove(
+          'is-visible'
+        );
+
+      }, 2200);
+  };
+
+
+  /*
+   * window capture は、
+   * 既存のdocument側pin処理より先に動く。
+   */
+  window.addEventListener(
+    'click',
+    (event) => {
+
+      const target =
+        event.target;
+
+      if (
+        !(target instanceof Element)
+      ) {
+        return;
+      }
+
+      const unpin =
+        target.closest(
+          '[data-nexus-unpin]'
+        );
+
+      if (!unpin) {
+        return;
+      }
+
+      showPending();
+
+    },
+    true
+  );
+
+})();
+</script>
+
+<!-- NEXUS BLOG PIN ACTION BRIDGE END -->
+
+
+<!-- NEXUS PIN TRANSPARENT V1 -->
+<style is:global>
+@media (max-width: 720px) {
+
+  .nexus-journal-row .nexus-journal-pin {
+    background: transparent !important;
+    background-image: none !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .nexus-journal-row .nexus-journal-pin svg {
+    color: #b7ff00 !important;
+    stroke: #b7ff00 !important;
+    filter: drop-shadow(0 0 3px rgba(183,255,0,.35));
+  }
+
+}
+</style>
+<!-- NEXUS PIN TRANSPARENT V1 END -->
+
+
+<!-- NEXUS PINNED STRIP V2 -->
+<style is:global>
+  .nexus-pinned-strip {
+    display: none;
+  }
+
+  @media (max-width: 720px) {
+
+    .nexus-journal-row .nexus-pinned-strip {
+      display: flex !important;
+      position: relative !important;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 7px;
+      grid-column: 1 / -1;
+      width: 100%;
+      height: auto;
+      min-height: 14px;
+      margin: 0 0 8px !important;
+      padding: 0 2px !important;
+      color: #b5b8b0 !important;
+      font-family: 'Maple Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      line-height: 14px;
+      letter-spacing: 0.13em;
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+      order: -1;
+    }
+
+    .nexus-journal-row .nexus-pinned-strip svg {
+      width: 12px !important;
+      height: 12px !important;
+      flex: 0 0 12px;
+      color: #b5b8b0 !important;
+      stroke: currentColor !important;
+      filter: none !important;
+    }
+
+    .nexus-journal-row .nexus-pinned-strip span {
+      color: #b5b8b0 !important;
+    }
+
+    .nexus-journal-row .nexus-journal-pin {
+      display: none !important;
+    }
+  }
+</style>
+<!-- NEXUS PINNED STRIP V2 END -->

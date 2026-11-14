@@ -1,0 +1,355 @@
+---
+import portfolioBlocksData from '../../data/portfolio-blocks.json';
+import { tinaField } from '@tinacms/astro/tina-field';
+
+interface Props {
+  data?: Record<string, unknown>;
+}
+
+const { data: photographyData } = Astro.props;
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+type PortfolioVisual = {
+  src: string;
+  full: string;
+  title: string;
+  type: string;
+  year: string;
+  alt: string;
+  className: string;
+  sequence: string;
+  displayIndex: string;
+  tinaImageField?: string;
+  tinaTitleField?: string;
+};
+
+const portfolioVisualLayouts = [
+  'visual-card-main',
+  'visual-card-tall',
+  'visual-card-small',
+  'visual-card-fragment',
+  'visual-card-wide',
+  'visual-card-portrait',
+  'visual-card-extra-small',
+  'visual-card-extra-wide',
+];
+
+const fallbackPortfolioVisuals = [
+  ['/images/portfolio/remains-001.jpg', 'SAMPLE IMAGE / 001', 'PHOTOGRAPHY', '2026'],
+  ['/images/portfolio/remains-002.jpg', 'SAMPLE IMAGE / 002', 'PHOTOGRAPHY', '2026'],
+  ['/images/portfolio/remains-003.jpg', 'SAMPLE IMAGE / 003', 'PHOTOGRAPHY', '2026'],
+  ['/images/portfolio/remains-004.jpg', 'SAMPLE IMAGE / 004', 'PHOTOGRAPHY', '2026'],
+  ['/images/portfolio/remains-005.jpg', 'SAMPLE IMAGE / 005', 'PHOTOGRAPHY', '2026'],
+  ['/images/portfolio/remains-006.jpg', 'SAMPLE IMAGE / 006', 'PHOTOGRAPHY', '2026'],
+  ['/images/portfolio/remains-007.jpg', 'SAMPLE IMAGE / 007', 'PHOTOGRAPHY', '2026'],
+  ['/images/portfolio/remains-008.jpg', 'SAMPLE IMAGE / 008', 'PHOTOGRAPHY', '2026'],
+  ['/images/portfolio/remains-009.jpg', 'SAMPLE IMAGE / 009', 'PHOTOGRAPHY', '2026'],
+  ['/images/portfolio/remains-010.jpg', 'SAMPLE IMAGE / 010', 'PHOTOGRAPHY', '2026'],
+  ['/images/portfolio/remains-011.jpg', 'SAMPLE IMAGE / 011', 'PHOTOGRAPHY', '2026'],
+  ['/images/portfolio/remains-012.jpg', 'SAMPLE IMAGE / 012', 'PHOTOGRAPHY', '2026'],
+  ['/images/portfolio/remains-013.jpg', 'SAMPLE IMAGE / 013', 'PHOTOGRAPHY', '2026'],
+  ['/images/portfolio/remains-014.jpg', 'SAMPLE IMAGE / 014', 'PHOTOGRAPHY', '2026'],
+  ['/images/portfolio/remains-015.jpg', 'SAMPLE IMAGE / 015', 'PHOTOGRAPHY', '2026'],
+  ['/images/portfolio/remains-016.jpg', 'SAMPLE IMAGE / 016', 'PHOTOGRAPHY', '2026'],
+];
+
+function asRecord(value: unknown) {
+  return value && typeof value === 'object' && !Array.isArray(value)
+    ? value as Record<string, unknown>
+    : {};
+}
+
+function readImageCandidate(value: unknown): string | undefined {
+  if (typeof value === 'string' && value.trim()) {
+    return value.trim();
+  }
+
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      const found = readImageCandidate(item);
+
+      if (found) {
+        return found;
+      }
+    }
+  }
+
+  const record = asRecord(value);
+  const src = record.src ?? record.url ?? record.href ?? record.image;
+
+  return typeof src === 'string' && src.trim()
+    ? src.trim()
+    : undefined;
+}
+
+function resolvePortfolioImage(src: string) {
+  if (/^(https?:)?\/\//i.test(src) || /^(data|blob):/i.test(src)) {
+    return src;
+  }
+
+  if (src.startsWith('/')) {
+    return (basePath || '') + src;
+  }
+
+  return src;
+}
+
+function makePortfolioVisual(
+  src: string,
+  title: string,
+  type: string,
+  year: string,
+  alt: string,
+  index: number,
+): PortfolioVisual {
+  const full = resolvePortfolioImage(src);
+
+  return {
+    src: full,
+    full,
+    title,
+    type,
+    year,
+    alt,
+    className: portfolioVisualLayouts[index % portfolioVisualLayouts.length],
+    sequence: String(index + 1).padStart(3, '0'),
+    displayIndex: String(index + 1).padStart(2, '0'),
+  };
+}
+
+
+const gallery = photographyData?.galleryImages;
+const postedPortfolioVisuals: PortfolioVisual[] = [];
+
+if (Array.isArray(gallery)) {
+  for (const item of gallery) {
+    if (!item || typeof item !== 'object') continue;
+
+    const photo = item as Record<string, unknown>;
+    const src = readImageCandidate(photo.src);
+    if (!src) continue;
+
+    const title = String(photo.title || 'Photography');
+    const alt = String(photo.alt || title);
+    const date = photographyData?.date;
+    const year =
+      date instanceof Date
+        ? String(date.getFullYear())
+        : String(date ?? '2026').slice(0, 4);
+
+    postedPortfolioVisuals.push({
+      ...makePortfolioVisual(
+        src,
+        title,
+        'PHOTOGRAPHY',
+        year,
+        alt,
+        postedPortfolioVisuals.length,
+      ),
+      tinaImageField: tinaField(photo, 'src') || undefined,
+      tinaTitleField: tinaField(photo, 'title') || undefined,
+    });
+  }
+}
+
+const samplePortfolioVisuals = fallbackPortfolioVisuals.map(
+  ([src, title, type, year], index) =>
+    makePortfolioVisual(
+      src,
+      title,
+      type,
+      year,
+      'Temporary portfolio sample',
+      postedPortfolioVisuals.length + index,
+    ),
+);
+
+const allPortfolioVisuals = [
+  ...postedPortfolioVisuals,
+  ...samplePortfolioVisuals,
+];
+
+const portfolioVisuals = allPortfolioVisuals.slice(0, 16);
+// PORTFOLIO BLOCKS V1 START
+// The JSON order determines the order of galleries and independent texts.
+type PortfolioGalleryBlock = {
+  kind: 'gallery';
+  start?: number;
+  count?: number;
+  label?: string;
+  images?: Array<{
+    src: string;
+    title?: string;
+    type?: string;
+    year?: string;
+    alt?: string;
+  }>;
+};
+
+type PortfolioTextBlock = {
+  kind: 'text';
+  index?: string;
+  year?: string;
+  kicker?: string;
+  title: string;
+  paragraphs: string[];
+  status?: string;
+};
+
+type PortfolioBlock = PortfolioGalleryBlock | PortfolioTextBlock;
+const rawPhotographyNote = asRecord(photographyData?.photographyNote);
+
+const photographyNoteOverride: Partial<PortfolioTextBlock> = {};
+const photographyParagraphIndexes: number[] = [];
+
+function photographyNoteField(
+  property: string,
+  index?: number,
+): string | undefined {
+  return tinaField(rawPhotographyNote, property, index) || undefined;
+}
+
+for (const key of ['index', 'year', 'kicker', 'title', 'status'] as const) {
+  const value = rawPhotographyNote[key];
+
+  if (typeof value === 'string') {
+    photographyNoteOverride[key] = value;
+  }
+}
+
+if (Array.isArray(rawPhotographyNote.paragraphs)) {
+  const paragraphs: string[] = [];
+
+  rawPhotographyNote.paragraphs.forEach((paragraph, index) => {
+    if (typeof paragraph === 'string') {
+      paragraphs.push(paragraph);
+      photographyParagraphIndexes.push(index);
+    }
+  });
+
+  photographyNoteOverride.paragraphs = paragraphs;
+}
+
+const portfolioBlocks = (portfolioBlocksData as PortfolioBlock[]).map((block) => {
+  if (block.kind !== 'text' || !photographyNoteOverride) {
+    return block;
+  }
+
+  return {
+    ...block,
+    ...photographyNoteOverride,
+  };
+});
+
+function getPortfolioBlockVisuals(block: PortfolioGalleryBlock): PortfolioVisual[] {
+  const start = Math.max(0, Math.trunc(block.start ?? 0));
+  const count = Math.max(0, Math.trunc(block.count ?? 0));
+  const existing = allPortfolioVisuals.slice(start, start + count);
+  const added = (block.images ?? []).map((image, index) =>
+    makePortfolioVisual(
+      image.src,
+      image.title ?? `IMAGE / ${String(start + count + index + 1).padStart(3, '0')}`,
+      image.type ?? 'PHOTOGRAPHY',
+      image.year ?? '----',
+      image.alt ?? image.title ?? 'Portfolio photograph',
+      start + count + index,
+    ),
+  );
+  return [...existing, ...added];
+}
+
+---
+
+  <section
+    class="portfolio-section"
+    aria-labelledby="portfolio-title"
+  >
+    <header class="portfolio-section-header">
+
+      <div>
+        <p class="portfolio-section-kicker">
+          SELECTED WORK / VISUAL ARCHIVE
+        </p>
+
+        <h2 id="portfolio-title">
+          PHOTOGRAPHIC REMAINS
+        </h2>
+      </div>
+
+      <span class="portfolio-index">
+        001 - {String(portfolioVisuals.length).padStart(3, '0')}
+      </span>
+
+    </header>
+    <!-- PORTFOLIO BLOCKS V1: editable order in src/data/portfolio-blocks.json -->
+    {portfolioBlocks.map((block, blockIndex) =>
+      block.kind === 'gallery' ? (
+        <div
+          class="portfolio-gallery-block"
+          aria-label={block.label ?? `Photo group ${blockIndex + 1}`}
+        >
+          {block.label && (
+            <p class="portfolio-gallery-label">{block.label}</p>
+          )}
+          <div class="portfolio-grid">
+            {getPortfolioBlockVisuals(block).map((visual, index) => (
+              <article class:list={['visual-card', visual.className]}>
+                <a
+                  class="visual-link visual-lightbox-trigger"
+                  data-astro-reload
+                  href={visual.full}
+                  data-full={visual.full}
+                  data-title={visual.title}
+                  aria-label={'Open ' + visual.title}
+                >
+                  <figure class="visual-image">
+                    <img
+                      src={visual.src}
+                      alt={visual.alt}
+                      data-tina-field={visual.tinaImageField}
+                      loading={index === 0 && blockIndex === 0 ? 'eager' : 'lazy'}
+                    />
+                    <span class="visual-overlay">VIEW / {visual.sequence}</span>
+                  </figure>
+                  <footer class="visual-meta">
+                    <div>
+                      <span class="visual-type">
+                        {visual.displayIndex} / {visual.type}
+                      </span>
+                      <h3 data-tina-field={visual.tinaTitleField}>{visual.title}</h3>
+                    </div>
+                    <span class="visual-year">{visual.year}</span>
+                  </footer>
+                </a>
+              </article>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <article class="text-remain portfolio-text-block">
+          <div class="text-remain-index">
+            <span data-tina-field={photographyNoteField('index')}>{block.index ?? 'TEXT'}</span>
+            <span data-tina-field={photographyNoteField('year')}>{block.year ?? ''}</span>
+          </div>
+          <div class="text-remain-body">
+            {block.kicker && (
+              <p class="text-remain-kicker" data-tina-field={photographyNoteField('kicker')}>{block.kicker}</p>
+            )}
+            <h3 data-tina-field={photographyNoteField('title')}>{block.title}</h3>
+            {block.paragraphs.map((paragraph, paragraphIndex) => (
+              <p
+                class="text-remain-copy"
+                data-tina-field={photographyNoteField(
+                  'paragraphs',
+                  photographyParagraphIndexes[paragraphIndex],
+                )}
+              >{paragraph}</p>
+            ))}
+            {block.status && (
+              <span class="text-remain-status" data-tina-field={photographyNoteField('status')}>{block.status}</span>
+            )}
+          </div>
+        </article>
+      ),
+    )}
+  </section>

@@ -1,0 +1,440 @@
+﻿---
+import {
+  MessageCircle,
+  Rss,
+  Share,
+  MoreHorizontal
+} from 'lucide-astro';
+
+type ArticleTag = {
+  name: string;
+  slug: string;
+};
+
+interface Props {
+  tags?: ArticleTag[];
+}
+
+const { tags = [] } = Astro.props;
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<div class="nexus-article-end">
+
+  <div class="nexus-tags-area" data-tags-area hidden={tags.length === 0}>
+
+    <div
+      class="nexus-article-tags"
+      aria-label="Article tags"
+      data-tags
+    >
+    {
+      tags.map((tag) => (
+        <a
+          class="nexus-tag"
+          href={`${basePath}/tags/${tag.slug}/`}
+        >
+          #{tag.name}
+        </a>
+      ))
+    }
+  </div>
+
+    <button
+      class="nexus-tags-toggle"
+      type="button"
+      data-tags-toggle
+      hidden
+    >
+      すべてのタグを表示
+    </button>
+
+  </div>
+
+  <div class="nexus-article-actions" aria-label="Article actions">
+
+    <button
+      class="nexus-article-action"
+      type="button"
+      aria-label="Comments"
+      data-article-comments data-tooltip="Comments"
+    >
+      <MessageCircle size={20} strokeWidth={1.7} />
+    </button>
+
+    <button
+      class="nexus-article-action"
+      type="button"
+      aria-label="RSS Feed"
+      data-article-rss data-tooltip="RSS Feed"
+    >
+      <Rss size={20} strokeWidth={1.7} />
+    </button>
+
+    <button
+      class="nexus-article-action"
+      type="button"
+      aria-label="Share"
+      data-article-share data-tooltip="Share"
+    >
+      <Share size={20} strokeWidth={1.7} />
+    </button>
+
+    <button
+      class="nexus-article-action"
+      type="button"
+      aria-label="More"
+      data-article-more data-tooltip="More"
+    >
+      <MoreHorizontal size={21} strokeWidth={1.8} />
+    </button>
+
+  </div>
+
+</div>
+
+<script>
+  function initNexusTags() {
+    document.querySelectorAll<HTMLElement>('[data-tags-area]').forEach((area) => {
+      if (area.dataset.ready === 'true') return;
+
+      const tags = area.querySelector<HTMLElement>('[data-tags]');
+      const toggle = area.querySelector<HTMLButtonElement>('[data-tags-toggle]');
+
+      if (!tags || !toggle) return;
+
+      area.dataset.ready = 'true';
+
+      const measure = () => {
+        tags.classList.remove('is-collapsed');
+        tags.classList.remove('is-expanded');
+
+        toggle.hidden = true;
+
+        const items = Array.from(
+          tags.querySelectorAll<HTMLElement>('.nexus-tag')
+        );
+
+        if (!items.length) return;
+
+        const rows: number[] = [];
+
+        items.forEach((item) => {
+          const top = Math.round(item.offsetTop);
+
+          if (!rows.some((row) => Math.abs(row - top) <= 2)) {
+            rows.push(top);
+          }
+        });
+
+        if (rows.length > 2) {
+          tags.classList.add('is-collapsed');
+          toggle.hidden = false;
+          toggle.textContent = 'すべてのタグを表示';
+          toggle.dataset.expanded = 'false';
+        }
+      };
+
+      toggle.addEventListener('click', () => {
+        const expanded = toggle.dataset.expanded === 'true';
+
+        if (expanded) {
+          tags.classList.remove('is-expanded');
+          tags.classList.add('is-collapsed');
+
+          toggle.textContent = 'すべてのタグを表示';
+          toggle.dataset.expanded = 'false';
+        } else {
+          tags.classList.remove('is-collapsed');
+          tags.classList.add('is-expanded');
+
+          toggle.textContent = '閉じる';
+          toggle.dataset.expanded = 'true';
+        }
+      });
+
+      requestAnimationFrame(measure);
+    });
+  }
+
+  document.addEventListener('astro:page-load', initNexusTags);
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initNexusTags, { once: true });
+  } else {
+    initNexusTags();
+  }
+</script>
+
+<style>
+  .nexus-article-end {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 665px;
+
+    margin: 0 auto;
+
+    /* 本文からタグまで。現状の2cmから上へ */
+    padding-top: 1.2cm;
+  }
+
+  /* =====================================================
+     TAG AREA
+     ===================================================== */
+
+  .nexus-tags-area {
+    width: 100%;
+    margin: 0 0 34px;
+  }
+
+  .nexus-article-tags {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+
+    gap: 8px !important;
+
+    width: 100%;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .nexus-article-tags.is-collapsed {
+    /*
+     * タグ1行 ≒ 30px
+     * row-gap 8px
+     * 2行分だけ見せる
+     */
+    max-height: 68px;
+    overflow: hidden;
+  }
+
+  .nexus-article-tags.is-expanded {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .nexus-tag {
+    box-sizing: border-box;
+
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+
+    width: auto !important;
+    min-height: 30px;
+
+    margin: 0 !important;
+    padding: 5px 11px !important;
+
+    border: 1px solid rgba(205, 210, 208, 0.22) !important;
+    border-radius: 7px !important;
+
+    background: #171918 !important;
+    color: rgba(225, 228, 226, 0.78) !important;
+
+    font-family:
+      Inter,
+      "Noto Sans JP",
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif !important;
+
+    font-size: 13px !important;
+    font-style: normal !important;
+    font-weight: 500 !important;
+    line-height: 1 !important;
+    letter-spacing: 0 !important;
+
+    white-space: nowrap;
+  }
+
+  .nexus-tags-toggle {
+    appearance: none;
+
+    display: inline-block;
+
+    margin: 12px 0 0;
+    padding: 0;
+
+    border: 0;
+    border-bottom: 1px solid rgba(225, 228, 226, 0.72);
+
+    background: transparent;
+    color: rgba(225, 228, 226, 0.78);
+
+    font-family:
+      Inter,
+      "Noto Sans JP",
+      system-ui,
+      sans-serif;
+
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.5;
+
+    cursor: pointer;
+  }
+
+  .nexus-tags-toggle[hidden] {
+    display: none !important;
+  }
+
+  .nexus-tags-toggle:hover {
+    color: #eeeeeb;
+    border-bottom-color: #eeeeeb;
+  }
+
+  /* =====================================================
+     ACTIONS
+     ===================================================== */
+
+  .nexus-article-actions {
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+    gap: 17px;
+
+    width: 100%;
+
+    margin: 0;
+    padding: 0 2px 20px;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+  }
+
+  .nexus-article-action {
+    appearance: none;
+
+    display: inline-grid;
+    place-items: center;
+
+    width: 31px;
+    height: 31px;
+
+    padding: 0;
+
+    border: 0;
+    border-radius: 50%;
+
+    background: transparent;
+    color: rgba(225, 228, 226, 0.55);
+
+    cursor: pointer;
+  }
+
+  .nexus-article-action:hover {
+    color: rgba(238, 238, 235, 0.92);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  @media (max-width: 700px) {
+    .nexus-article-end {
+      padding-top: 1.2cm;
+    }
+
+    .nexus-article-tags {
+      gap: 7px !important;
+    }
+
+    .nexus-article-tags.is-collapsed {
+      max-height: 65px;
+    }
+
+    .nexus-tag {
+      min-height: 29px;
+      padding: 5px 10px !important;
+      font-size: 12px !important;
+    }
+
+    .nexus-tags-area {
+      margin-bottom: 30px;
+    }
+
+    .nexus-article-actions {
+      gap: 15px;
+      padding-bottom: 18px;
+    }
+  }
+</style>
+
+<style is:global>
+/* =========================================================
+   NEXUS ARTICLE ACTION TOOLTIPS
+   ========================================================= */
+
+.nexus-article-action {
+  position: relative;
+}
+
+.nexus-article-action[data-tooltip]::after {
+  content: attr(data-tooltip);
+
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 9px);
+
+  transform: translate(-50%, 4px);
+
+  padding: 6px 9px;
+
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 6px;
+
+  background: #171918;
+  color: rgba(245, 245, 242, 0.92);
+
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.32);
+
+  font-family:
+    Inter,
+    "Noto Sans JP",
+    system-ui,
+    sans-serif;
+
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+
+  white-space: nowrap;
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  z-index: 50;
+
+  transition:
+    opacity 120ms ease,
+    transform 120ms ease,
+    visibility 120ms ease;
+}
+
+.nexus-article-action[data-tooltip]:hover::after,
+.nexus-article-action[data-tooltip]:focus-visible::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}
+
+@media (hover: none) {
+  .nexus-article-action[data-tooltip]::after {
+    display: none;
+  }
+}
+</style>
+
+
+<style>
+  /* NEXUS REAL TAG LINKS */
+  .nexus-tag {
+    text-decoration: none !important;
+  }
+
+  .nexus-tags-area[hidden] {
+    display: none !important;
+  }
+</style>

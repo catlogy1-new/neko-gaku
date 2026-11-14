@@ -34,3 +34,19 @@ public/friend-circle.json
 node_modules
 .env
 tina/__generated__
+.env copy
+
+# Production safety
+.env.*
+.dev.vars
+.dev.vars.*
+.wrangler/
+*.bak
+*.bak-*
+*.before-*
+backup/
+backups/
+backup-*/
+nexus-backups/
+nexus-diagnostics/
+public/admin/

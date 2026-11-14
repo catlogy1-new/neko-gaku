@@ -1,4 +1,4 @@
----
+﻿---
 import type { CollectionEntry } from 'astro:content';
 import FormattedDate from '../FormattedDate.astro';
 import SmartImage from '../SmartImage.astro';
@@ -26,7 +26,18 @@ function withBase(href: string) {
 ---
 
 <aside class:list={['related-posts', 'blog-card', className]}>
-  <h2>{ui.article.moreFromSite(siteConfig.site.title)}</h2>
+  <h2
+  class="nexus-more-from-title"
+  aria-label="More from POUR EN FINIR AVEC LE JUGEMENT DE DIEU"
+>
+  <span class="nexus-more-from-prefix">More from</span>
+
+  <span class="nexus-more-from-main">
+    <span class="nexus-more-from-white">POUR EN FINIR</span>
+    <span class="nexus-more-from-outline">AVEC LE JUGEMENT</span>
+    <span class="nexus-more-from-lime">DE DIEU</span>
+  </span>
+</h2>
   <div class="related-list">
     {
       posts.map((post) => (

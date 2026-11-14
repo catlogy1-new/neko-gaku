@@ -1,0 +1,860 @@
+﻿<div class="nexus-action-layer" data-nexus-action-layer>
+
+  <!-- ===================================================
+       SHARE MENU
+       =================================================== -->
+
+  <div
+    class="nexus-popup nexus-share-popup"
+    data-share-popup
+    hidden
+  >
+    <button
+      type="button"
+      class="nexus-popup-item"
+      data-copy-link
+    >
+      <span class="nexus-share-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M10.6 13.4a1 1 0 0 1 0-1.4l4-4a3 3 0 1 1 4.2 4.2l-2.3 2.3a3 3 0 0 1-4.2 0 1 1 0 0 1 1.4-1.4 1 1 0 0 0 1.4 0l2.3-2.3a1 1 0 0 0-1.4-1.4l-4 4a1 1 0 0 1-1.4 0Z"/>
+          <path d="M13.4 10.6a1 1 0 0 1 0 1.4l-4 4a3 3 0 1 1-4.2-4.2l2.3-2.3a3 3 0 0 1 4.2 0 1 1 0 0 1-1.4 1.4 1 1 0 0 0-1.4 0l-2.3 2.3A1 1 0 0 0 8 14.6l4-4a1 1 0 0 1 1.4 0Z"/>
+        </svg>
+      </span>
+
+      <span data-copy-label>Copy link</span>
+    </button>
+
+    <div class="nexus-popup-divider"></div>
+
+
+    <!-- X -->
+    <a
+      class="nexus-popup-item"
+      data-share-x
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <span class="nexus-share-icon nexus-x-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3l-4.9-6.4L6.4 22H3.3l7.2-8.2L2.8 2h6.5l4.4 5.8L18.9 2Zm-1.1 17.9h1.7L8.4 4H6.6l11.2 15.9Z"/>
+        </svg>
+      </span>
+
+      <span>Share on X</span>
+    </a>
+
+
+    <!-- Bluesky -->
+    <a
+      class="nexus-popup-item"
+      data-share-bluesky
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <span class="nexus-share-icon nexus-bluesky-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 11.1c-.8-1.6-3-4.5-5-5.9-1.9-1.3-2.6-1.1-3.1-.9-.6.3-.7 1.1-.7 1.6 0 .5.3 4.3.5 4.9.7 2.2 3.1 2.9 5.2 2.6-3.7.6-7 2.1-2.7 6.8 4.7 4.8 6.4-1 6.9-2.6.5 1.6 1.8 7.3 6.7 2.6 4.2-4.1 1.1-6.2-2.6-6.8 2.1.3 4.5-.4 5.2-2.6.2-.6.5-4.4.5-4.9 0-.5-.1-1.3-.7-1.6-.5-.2-1.2-.4-3.1.9-2 1.4-4.2 4.3-5 5.9Z"/>
+        </svg>
+      </span>
+
+      <span>Share on Bluesky</span>
+    </a>
+
+
+    <!-- LINE -->
+    <a
+      class="nexus-popup-item"
+      data-share-line
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <span class="nexus-share-icon nexus-line-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M21 10.6c0-4.1-4-7.5-9-7.5s-9 3.4-9 7.5c0 3.7 3.2 6.8 7.5 7.4.3.1.7.2.8.5.1.3.1.8 0 1.1l-.2 1c-.1.3-.2 1.2 1 .7 1.2-.5 6.5-3.8 8.9-7.2 1.7-1.9 2-3.7 2-3.5ZM8.1 12.8H6.3a.4.4 0 0 1-.4-.4V8.8a.4.4 0 1 1 .8 0V12h1.4a.4.4 0 1 1 0 .8Zm1.4-.4a.4.4 0 1 1-.8 0V8.8a.4.4 0 1 1 .8 0v3.6Zm4.3 0a.4.4 0 0 1-.7.3l-1.8-2.4v2.1a.4.4 0 1 1-.8 0V8.8a.4.4 0 0 1 .7-.2L13 11V8.8a.4.4 0 1 1 .8 0v3.6Zm3-.1a.4.4 0 0 1-.4.4h-1.8a.4.4 0 0 1-.4-.4V8.9a.4.4 0 0 1 .4-.4h1.8a.4.4 0 1 1 0 .8H15v.9h1.4a.4.4 0 1 1 0 .8H15v.9h1.4a.4.4 0 0 1 .4.4Z"/>
+        </svg>
+      </span>
+
+      <span>Share on LINE</span>
+    </a>
+
+
+    <!-- Facebook -->
+    <a
+      class="nexus-popup-item"
+      data-share-facebook
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <span class="nexus-share-icon nexus-facebook-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M13.6 22v-9h3l.5-3.5h-3.5V7.2c0-1 .3-1.7 1.8-1.7h1.9V2.4c-.3 0-1.4-.1-2.7-.1-2.7 0-4.5 1.6-4.5 4.7v2.6H7v3.5h3.1v9h3.5Z"/>
+        </svg>
+      </span>
+
+      <span>Share on Facebook</span>
+    </a>
+
+
+    <!-- Threads -->
+    <a
+      class="nexus-popup-item"
+      data-share-threads
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <span class="nexus-share-icon nexus-threads-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12.2 2C6.4 2 3 6.2 3 12.1 3 18.1 6.4 22 12.3 22c5 0 8.3-2.8 8.7-7 .2-2.4-.7-4.3-2.6-5.4-.1-4.1-2.6-6.4-6.2-6.4-3.4 0-5.8 2-6.1 5.1h2.6c.3-1.7 1.5-2.7 3.5-2.7 2.1 0 3.4 1.2 3.6 3.3-.9-.2-1.9-.3-2.9-.3-3.5 0-5.7 1.8-5.7 4.7 0 2.6 2 4.4 4.8 4.4 2.9 0 5-1.6 5.8-4.4.6.6.8 1.5.7 2.5-.2 2.8-2.5 4.4-6.2 4.4-4.4 0-6.7-3-6.7-8 0-4.9 2.4-8 6.7-8 3.6 0 5.8 2 6.2 5.4h2.6C20.7 4.8 17.4 2 12.2 2Zm-.1 13.2c-1.4 0-2.3-.7-2.3-1.9 0-1.3 1.1-2.1 3.1-2.1 1.1 0 2 .1 2.8.4-.3 2.3-1.6 3.6-3.6 3.6Z"/>
+        </svg>
+      </span>
+
+      <span>Share on Threads</span>
+    </a>
+
+  </div>
+
+
+  <!-- ===================================================
+       MORE MENU
+       =================================================== -->
+
+  <div
+    class="nexus-popup nexus-more-popup"
+    data-more-popup
+    hidden
+  >
+    <button
+      type="button"
+      class="nexus-popup-item nexus-embed-menu-item"
+      data-open-embed
+    >
+      <span>Embed this article</span>
+    </button>
+  </div>
+
+
+  <!-- ===================================================
+       EMBED MODAL
+       =================================================== -->
+
+  <div
+    class="nexus-embed-overlay"
+    data-embed-overlay
+    hidden
+  >
+    <section
+      class="nexus-embed-box"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="nexus-embed-title"
+    >
+      <h2 id="nexus-embed-title">
+        Embed this article
+      </h2>
+
+      <p class="nexus-embed-description">
+        Copy and paste the code below into your website to display this article.
+      </p>
+
+      <textarea
+        class="nexus-embed-code"
+        data-embed-code
+        readonly
+        aria-label="Embed code"
+      ></textarea>
+
+      <button
+        type="button"
+        class="nexus-embed-copy"
+        data-copy-embed
+      >
+        Copy code
+      </button>
+
+      <button
+        type="button"
+        class="nexus-embed-close"
+        data-close-embed
+      >
+        Close
+      </button>
+    </section>
+  </div>
+
+</div>
+
+
+<script>
+  const initNexusActionMenus = () => {
+    const layer =
+      document.querySelector('[data-nexus-action-layer]');
+
+    if (!(layer instanceof HTMLElement) || layer.dataset.ready === 'true') return;
+
+    layer.dataset.ready = 'true';
+
+    const shareButton =
+      document.querySelector('[data-article-share]');
+
+    const moreButton =
+      document.querySelector('[data-article-more]');
+
+    const sharePopup =
+      layer.querySelector('[data-share-popup]');
+
+    const morePopup =
+      layer.querySelector('[data-more-popup]');
+
+    const embedOverlay =
+      layer.querySelector('[data-embed-overlay]');
+
+    const embedCode =
+      layer.querySelector('[data-embed-code]');
+
+    if (
+      !(shareButton instanceof HTMLElement) ||
+      !(moreButton instanceof HTMLElement) ||
+      !(sharePopup instanceof HTMLElement) ||
+      !(morePopup instanceof HTMLElement) ||
+      !(embedOverlay instanceof HTMLElement) ||
+      !(embedCode instanceof HTMLTextAreaElement)
+    ) {
+      return;
+    }
+
+
+    const placePopup = (popup: HTMLElement, button: HTMLElement) => {
+      popup.hidden = false;
+
+      const buttonRect =
+        button.getBoundingClientRect();
+
+      const popupRect =
+        popup.getBoundingClientRect();
+
+      let left =
+        buttonRect.left +
+        buttonRect.width / 2 -
+        popupRect.width / 2;
+
+      left = Math.max(
+        12,
+        Math.min(
+          left,
+          window.innerWidth -
+          popupRect.width -
+          12
+        )
+      );
+
+      const top =
+        buttonRect.top -
+        popupRect.height -
+        12;
+
+      popup.style.left =
+        `${left}px`;
+
+      popup.style.top =
+        `${Math.max(12, top)}px`;
+    };
+
+
+    const closeMenus = () => {
+      sharePopup.hidden = true;
+      morePopup.hidden = true;
+    };
+
+
+    shareButton.addEventListener(
+      'click',
+      (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const open =
+          !sharePopup.hidden;
+
+        closeMenus();
+
+        if (!open) {
+          refreshShareLinks();
+          placePopup(
+            sharePopup,
+            shareButton
+          );
+        }
+      }
+    );
+
+
+    moreButton.addEventListener(
+      'click',
+      (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const open =
+          !morePopup.hidden;
+
+        closeMenus();
+
+        if (!open) {
+          placePopup(
+            morePopup,
+            moreButton
+          );
+        }
+      }
+    );
+
+
+    /* =====================================================
+       SHARE LINKS
+       ===================================================== */
+
+    const x =
+      layer.querySelector('[data-share-x]');
+
+    const bluesky =
+      layer.querySelector('[data-share-bluesky]');
+
+    const line =
+      layer.querySelector('[data-share-line]');
+
+    const facebook =
+      layer.querySelector('[data-share-facebook]');
+
+    const threads =
+      layer.querySelector('[data-share-threads]');
+
+
+    const refreshShareLinks = () => {
+
+      const rawUrl =
+        window.location.href;
+
+      const rawTitle =
+        document.title;
+
+      const url =
+        encodeURIComponent(rawUrl);
+
+      const title =
+        encodeURIComponent(rawTitle);
+
+      const titleAndUrl =
+        encodeURIComponent(
+          `${rawTitle} ${rawUrl}`
+        );
+
+
+      if (x instanceof HTMLAnchorElement) {
+        x.href =
+          `https://twitter.com/intent/tweet?text=${title}&url=${url}`;
+      }
+
+      if (bluesky instanceof HTMLAnchorElement) {
+        bluesky.href =
+          `https://bsky.app/intent/compose?text=${titleAndUrl}`;
+      }
+
+      if (line instanceof HTMLAnchorElement) {
+        line.href =
+          `https://social-plugins.line.me/lineit/share?url=${url}`;
+      }
+
+      if (facebook instanceof HTMLAnchorElement) {
+        facebook.href =
+          `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+      }
+
+      if (threads instanceof HTMLAnchorElement) {
+        threads.href =
+          `https://www.threads.net/intent/post?text=${titleAndUrl}`;
+      }
+    };
+
+
+    /* =====================================================
+       COPY LINK
+       ===================================================== */
+
+    const copyLink =
+      layer.querySelector('[data-copy-link]');
+
+    const copyLabel =
+      layer.querySelector('[data-copy-label]');
+
+
+    copyLink?.addEventListener(
+      'click',
+      async () => {
+        try {
+          await navigator.clipboard.writeText(
+            window.location.href
+          );
+
+          if (copyLabel) {
+            copyLabel.textContent =
+              'Copied';
+
+            setTimeout(() => {
+              copyLabel.textContent =
+                'Copy link';
+            }, 1200);
+          }
+
+          sharePopup.hidden = true;
+        } catch {
+          window.prompt(
+            'Copy link:',
+            window.location.href
+          );
+        }
+      }
+    );
+
+
+    /* =====================================================
+       EMBED
+       ===================================================== */
+
+    const openEmbed =
+      layer.querySelector('[data-open-embed]');
+
+    const closeEmbed =
+      layer.querySelector('[data-close-embed]');
+
+    const copyEmbed =
+      layer.querySelector('[data-copy-embed]');
+
+
+    openEmbed?.addEventListener(
+      'click',
+      () => {
+        closeMenus();
+
+        const url =
+          window.location.href
+            .replace(/"/g, '&quot;');
+
+        const title =
+          document.title
+            .replace(/"/g, '&quot;');
+
+        embedCode.value =
+          `<iframe src="${url}" title="${title}" style="border:0;display:block;width:100%;max-width:640px;height:420px;" loading="lazy"></iframe>`;
+
+        embedOverlay.hidden = false;
+      }
+    );
+
+
+    closeEmbed?.addEventListener(
+      'click',
+      () => {
+        embedOverlay.hidden = true;
+      }
+    );
+
+
+    copyEmbed?.addEventListener(
+      'click',
+      async () => {
+        try {
+          await navigator.clipboard.writeText(
+            embedCode.value
+          );
+
+          copyEmbed.textContent =
+            'Copied';
+
+          setTimeout(() => {
+            copyEmbed.textContent =
+              'Copy code';
+          }, 1200);
+
+        } catch {
+          embedCode.select();
+        }
+      }
+    );
+
+
+    document.addEventListener(
+      'click',
+      (event) => {
+        const target = event.target;
+
+        if (!(target instanceof Node)) return;
+
+        if (
+          !sharePopup.contains(target) &&
+          !morePopup.contains(target) &&
+          !shareButton.contains(target) &&
+          !moreButton.contains(target)
+        ) {
+          closeMenus();
+        }
+      }
+    );
+
+
+    window.addEventListener(
+      'resize',
+      closeMenus
+    );
+  };
+
+
+  document.addEventListener(
+    'astro:page-load',
+    initNexusActionMenus
+  );
+
+
+  if (
+    document.readyState ===
+    'loading'
+  ) {
+    document.addEventListener(
+      'DOMContentLoaded',
+      initNexusActionMenus,
+      { once: true }
+    );
+  } else {
+    initNexusActionMenus();
+  }
+</script>
+
+
+<style>
+  .nexus-action-layer {
+    position: relative;
+    z-index: 500;
+  }
+
+
+  /* =====================================================
+     MEDIUM-LIKE POPUP
+     ===================================================== */
+
+  .nexus-popup {
+    position: fixed;
+    z-index: 1000;
+
+    width: 248px;
+
+    padding: 8px 0;
+
+    border:
+      1px solid rgba(255,255,255,.10);
+
+    border-radius: 4px;
+
+    background: #181a19;
+
+    box-shadow:
+      0 4px 18px rgba(0,0,0,.36);
+  }
+
+  .nexus-popup[hidden] {
+    display: none !important;
+  }
+
+
+  .nexus-popup-item {
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    width: 100%;
+    min-height: 47px;
+
+    margin: 0;
+    padding: 10px 17px;
+
+    border: 0;
+    border-radius: 0;
+
+    background: transparent;
+
+    color:
+      rgba(232,234,231,.76);
+
+    font-family:
+      Inter,
+      "Helvetica Neue",
+      Arial,
+      sans-serif;
+
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.2;
+
+    text-align: left;
+    text-decoration: none;
+
+    cursor: pointer;
+  }
+
+
+  .nexus-popup-item:hover {
+    background:
+      rgba(255,255,255,.045);
+
+    color:
+      rgba(255,255,255,.96);
+  }
+
+
+  .nexus-popup-divider {
+    height: 1px;
+
+    margin: 5px 0;
+
+    background:
+      rgba(255,255,255,.09);
+  }
+
+
+  /* =====================================================
+     MONOCHROME BRAND ICONS
+     ===================================================== */
+
+  .nexus-share-icon {
+    display: inline-grid;
+    place-items: center;
+
+    width: 21px;
+    height: 21px;
+
+    flex: 0 0 21px;
+
+    color:
+      rgba(232,234,231,.62);
+  }
+
+
+  .nexus-share-icon svg {
+    display: block;
+
+    width: 20px;
+    height: 20px;
+
+    fill: currentColor;
+  }
+
+
+  .nexus-popup-item:hover
+  .nexus-share-icon {
+    color:
+      rgba(255,255,255,.90);
+  }
+
+
+  /* =====================================================
+     MORE
+     ===================================================== */
+
+  .nexus-more-popup {
+    width: 190px;
+  }
+
+
+  .nexus-embed-menu-item {
+    justify-content: flex-start;
+  }
+
+
+  /* =====================================================
+     EMBED DIALOG
+     ===================================================== */
+
+  .nexus-embed-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1500;
+
+    display: grid;
+    place-items: center;
+
+    padding: 24px;
+
+    background:
+      rgba(0,0,0,.62);
+  }
+
+
+  .nexus-embed-overlay[hidden] {
+    display: none !important;
+  }
+
+
+  .nexus-embed-box {
+    box-sizing: border-box;
+
+    width:
+      min(620px,100%);
+
+    padding:
+      26px 24px 20px;
+
+    border:
+      1px solid rgba(255,255,255,.11);
+
+    border-radius: 7px;
+
+    background: #171918;
+
+    box-shadow:
+      0 22px 64px rgba(0,0,0,.55);
+  }
+
+
+  .nexus-embed-box h2 {
+    margin:
+      0 0 20px;
+
+    color: #eeeeeb;
+
+    font-family:
+      Inter,
+      "Helvetica Neue",
+      Arial,
+      sans-serif;
+
+    font-size: 1.05rem;
+    font-weight: 600;
+
+    text-align: center;
+  }
+
+
+  .nexus-embed-description {
+    margin:
+      0 0 17px;
+
+    color:
+      rgba(238,238,235,.72);
+
+    font-family:
+      Inter,
+      "Helvetica Neue",
+      Arial,
+      sans-serif;
+
+    font-size: .85rem;
+    line-height: 1.65;
+  }
+
+
+  .nexus-embed-code {
+    box-sizing: border-box;
+
+    display: block;
+
+    width: 100%;
+    min-height: 175px;
+
+    padding: 16px;
+
+    resize: none;
+
+    border:
+      1px solid rgba(255,255,255,.13);
+
+    border-radius: 5px;
+
+    background: #0b0d0c;
+
+    color:
+      rgba(238,238,235,.88);
+
+    font-family:
+      "Maple Mono",
+      Consolas,
+      monospace;
+
+    font-size: .78rem;
+    line-height: 1.65;
+  }
+
+
+  .nexus-embed-copy,
+  .nexus-embed-close {
+    border:
+      1px solid rgba(255,255,255,.13);
+
+    border-radius: 5px;
+
+    background:
+      rgba(255,255,255,.04);
+
+    color:
+      rgba(238,238,235,.80);
+
+    font-family:
+      Inter,
+      "Helvetica Neue",
+      Arial,
+      sans-serif;
+
+    cursor: pointer;
+  }
+
+
+  .nexus-embed-copy {
+    display: block;
+
+    margin:
+      12px 0 0 auto;
+
+    padding:
+      7px 11px;
+
+    font-size: .76rem;
+  }
+
+
+  .nexus-embed-close {
+    display: block;
+
+    margin:
+      20px auto 0;
+
+    padding:
+      8px 18px;
+
+    font-size: .8rem;
+  }
+
+
+  .nexus-embed-copy:hover,
+  .nexus-embed-close:hover {
+    background:
+      rgba(255,255,255,.08);
+
+    color: #fff;
+  }
+
+
+  @media (max-width: 700px) {
+    .nexus-popup {
+      width: 225px;
+    }
+
+    .nexus-embed-overlay {
+      padding: 14px;
+    }
+
+    .nexus-embed-box {
+      padding:
+        21px 16px 17px;
+    }
+  }
+</style>

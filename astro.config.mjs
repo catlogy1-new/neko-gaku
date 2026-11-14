@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import node from '@astrojs/node';
+import cloudflare from '@astrojs/cloudflare';
 import tina from '@tinacms/astro/integration';
 import { tinaAdminDevRedirect } from '@tinacms/astro/vite';
 import { defineConfig } from 'astro/config';
@@ -67,7 +68,12 @@ const resolvedBase =
 
 // https://astro.build/config
 export default defineConfig({
-  adapter: node({ mode: 'standalone' }),
+  adapter: process.env.NAVFOLIO_DEPLOY_TARGET === 'cloudflare'
+    ? cloudflare({
+        prerenderEnvironment: 'node',
+        imageService: 'compile',
+      })
+    : node({ mode: 'standalone' }),
   site: resolvedSite,
   base: resolvedBase,
   markdown: {

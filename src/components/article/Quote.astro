@@ -1,0 +1,81 @@
+﻿---
+interface Props {
+  source?: string;
+}
+
+const { source = "" } = Astro.props;
+const hasSource = source.trim().length > 0;
+---
+
+<figure class="nexus-quote">
+  <blockquote class="nexus-quote__body">
+    <slot />
+  </blockquote>
+
+  {hasSource && (
+    <figcaption class="nexus-quote__source">
+      {source}
+    </figcaption>
+  )}
+</figure>
+
+<style>
+  .nexus-quote {
+    width: 100%;
+    margin: 2rem 0 1.5rem;
+  }
+
+  .nexus-quote__body {
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0 !important;
+    padding: 1.55rem 1.8rem !important;
+
+    background: #181a19 !important;
+    color: #eeeeeb !important;
+
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 4px !important;
+
+    font-style: normal !important;
+  }
+
+  .nexus-quote__body :global(p) {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .nexus-quote__body :global(p + p) {
+    margin-top: 0.9rem !important;
+  }
+
+  .nexus-quote__source {
+    margin-top: 0;
+    padding-right: 0.15rem;
+    transform: translateY(-5mm);
+
+    color: rgba(238, 238, 235, 0.68);
+
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-style: normal;
+    line-height: 1.5;
+
+    text-align: right;
+  }
+
+  @media (max-width: 700px) {
+    .nexus-quote {
+      margin: 1.7rem 0;
+    }
+
+    .nexus-quote__body {
+      padding: 1.3rem 1.25rem !important;
+    }
+
+    .nexus-quote__source {
+      margin-top: 0;
+      font-size: 0.84rem;
+    }
+  }
+</style>

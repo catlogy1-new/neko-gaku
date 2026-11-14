@@ -1,11 +1,14 @@
 ---
 import { type CollectionEntry, getCollection } from 'astro:content';
 import ArticleHeader from '../components/article/ArticleHeader.astro';
+import ArticleActions from '../components/article/ArticleActions.astro';
+import ArticleActionMenus from '../components/article/ArticleActionMenus.astro';
 import BlogTopNav from '../components/blog/BlogTopNav.astro';
 import RelatedPosts from '../components/blog/RelatedPosts.astro';
 import ScrollToTopButton from '../components/ScrollToTopButton.astro';
 import TableOfContents from '../components/blog/TableOfContents.astro';
 import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
 import CommentSection from '../components/comments/CommentSection.astro';
 import MermaidRenderer from '@navfolio/mdx-components/MermaidRenderer.astro';
 import ZoomableImage from '@navfolio/mdx-components/ZoomableImage.astro';
@@ -37,6 +40,9 @@ interface Props {
     data: {
       title: string;
       description: string;
+      japaneseTitle?: string;
+      japaneseDescription?: string;
+      japaneseBody?: string;
       date: Date;
       heroImage?: ImageMetadata | string;
       showHeroImage?: boolean;
@@ -45,6 +51,7 @@ interface Props {
       series?: string[];
       comments?: boolean;
       draft?: boolean;
+      sticky?: boolean | number;
       sidebar?: SidebarConfig;
     };
   };
@@ -88,9 +95,16 @@ const post = props.post ?? {
 const isBlogPost = post.collection === 'blog';
 const shouldMountCommentSection = supportsCommentSection(post.collection);
 const { title, description, date, heroImage, showHeroImage = true } = post.data;
+const japaneseTitle = (post.data.japaneseTitle ?? '').trim();
+const japaneseDescription = (post.data.japaneseDescription ?? '').trim();
+const japaneseBody = (post.data.japaneseBody ?? '').trim();
+const hasJapaneseTranslation = isBlogPost && Boolean(japaneseTitle && japaneseDescription && japaneseBody);
+const japaneseParagraphs = hasJapaneseTranslation
+  ? japaneseBody.split(/\n\s*\n/).filter(Boolean)
+  : [];
 const contentFont = props.contentFont ?? 'article';
 const bodyText = 'body' in post && typeof post.body === 'string' ? post.body : description;
-const englishWords = bodyText.match(/[A-Za-z0-9]+(?:['’-][A-Za-z0-9]+)*/g) ?? [];
+const englishWords = bodyText.match(/[A-Za-z0-9]+(?:['遯ｶ繝ｻ][A-Za-z0-9]+)*/g) ?? [];
 const cjkChars =
   bodyText.match(/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/gu) ?? [];
 const wordCount = englishWords.length + cjkChars.length;
@@ -134,7 +148,46 @@ const seriesLinks = rawSeries.map((name) => {
     total: isPrimarySeries ? seriesContext.total : undefined,
   };
 });
-const relatedPosts = sortByDateDesc(allBlogPosts.filter(({ id }) => id !== post.id)).slice(0, 3);
+
+/* NEXUS ARTICLE NEIGHBORS START */
+
+const chronologicalBlogPosts = isBlogPost
+  ? [...allBlogPosts].sort((a, b) => {
+      const dateDifference =
+        a.data.date.getTime() - b.data.date.getTime();
+
+      if (dateDifference !== 0) {
+        return dateDifference;
+      }
+
+      return a.id.localeCompare(b.id);
+    })
+  : [];
+
+const chronologicalIndex =
+  chronologicalBlogPosts.findIndex(
+    ({ id }) => id === post.id
+  );
+
+const previousBlogPost =
+  chronologicalIndex > 0
+    ? chronologicalBlogPosts[
+        chronologicalIndex - 1
+      ]
+    : undefined;
+
+const nextBlogPost =
+  chronologicalIndex >= 0 &&
+  chronologicalIndex <
+    chronologicalBlogPosts.length - 1
+    ? chronologicalBlogPosts[
+        chronologicalIndex + 1
+      ]
+    : undefined;
+
+/* NEXUS ARTICLE NEIGHBORS END */
+
+const relatedPosts = sortByDateDesc(allBlogPosts.filter(({ id }) => id !== post.id)).slice(0, 4);
 const hasRelatedPosts =
   shouldRenderSidebar && (sidebarConfig.relatedPosts ?? true) && relatedPosts.length > 0;
 const hasSidebar = false;
@@ -151,7 +204,7 @@ const hasSidebar = false;
     }
   </head>
   <body class:list={['blog-detail-page', { 'blog-content-ui': contentFont === 'ui' }]}>
-    <BlogTopNav showTocIcon={hasToc} tocItems={tocItems} />
+    <BlogTopNav showTocIcon={false} tocItems={[]} />
     <div class="blog-background" aria-hidden="true"></div>
 
     <main class:list={['blog-layout', { 'blog-layout-centered': !hasSidebar }]} data-pagefind-body>
@@ -160,6 +213,10 @@ const hasSidebar = false;
           <ArticleHeader
             title={title}
             description={description}
+            japaneseTitle={japaneseTitle}
+            japaneseDescription={japaneseDescription}
+            hasJapaneseTranslation={hasJapaneseTranslation}
+            sticky={'sticky' in post.data ? Boolean(post.data.sticky) : false}
             date={date}
             wordCount={wordCount}
             readingTime={readingTime}
@@ -190,6 +247,22 @@ const hasSidebar = false;
             <slot />
           </section>
 
+          {hasJapaneseTranslation && (
+            <section
+              id="article-start-ja"
+              class:list={['article-content', 'nexus-japanese-body', { 'article-content-ui': contentFont === 'ui' }]}
+              lang="ja"
+              aria-label="日本語訳"
+              data-pagefind-ignore
+              hidden
+            >
+              {japaneseParagraphs.map((paragraph) => <p>{paragraph}</p>)}
+            </section>
+          )}
+
+          <ArticleActions tags={tagLinks} />
+          <ArticleActionMenus />
+
           {
             seriesContext && (seriesContext.prev || seriesContext.next) && (
               <nav
@@ -215,8 +288,1769 @@ const hasSidebar = false;
               </nav>
             )
           }
-        </article>
+
+<!-- NEXUS PREV NEXT FINAL START -->
+
+<style is:global>
+
+/* =========================================================
+   NEXUS PREVIOUS / NEXT
+   BLACK / SQUARE / QUIET ORANGE HOVER
+   ========================================================= */
+
+.blog-detail-page .nexus-author-footer {
+  margin-bottom: 0 !important;
+}
+
+.blog-detail-page .series-neighbor-nav {
+  display: none !important;
+}
+
+
+/* divider */
+.blog-detail-page .nexus-prevnext-divider {
+  display: block;
+
+  width: 100%;
+  max-width: 665px;
+
+  height: 0;
+
+  margin:
+    0
+    auto
+    0;
+
+  border: 0;
+
+  border-top:
+    1px solid
+    rgba(255,255,255,0.13);
+}
+
+
+/* two columns */
+.blog-detail-page .nexus-prevnext-nav {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0,1fr)
+    minmax(0,1fr);
+
+  gap: 14px;
+
+  width: 100%;
+  max-width: 665px;
+
+  margin:
+    38px
+    auto
+    0;
+}
+
+
+/* card */
+.blog-detail-page .nexus-prevnext-card {
+  position: relative;
+
+  box-sizing: border-box;
+
+  display: block;
+
+  height: 94px;
+  min-width: 0;
+
+  padding:
+    35px
+    15px
+    12px;
+
+  overflow: hidden;
+
+  background:
+    #050505 !important;
+
+  border:
+    1px solid
+    rgba(150,154,148,0.22) !important;
+
+  border-radius:
+    0 !important;
+
+  box-shadow:
+    none !important;
+
+  color: inherit;
+
+  text-decoration:
+    none !important;
+
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease;
+}
+
+
+/* =========================================================
+   HOVER
+   actual quiet orange used by existing card system
+   ========================================================= */
+
+.blog-detail-page .nexus-prevnext-card:hover,
+.blog-detail-page .nexus-prevnext-card:focus-visible {
+  background:
+    #050505 !important;
+
+  border-color:
+    rgba(255,90,0,0.72) !important;
+
+  box-shadow:
+    none !important;
+
+  outline:
+    none !important;
+}
+
+
+/* label */
+.blog-detail-page .nexus-prevnext-label {
+  position: absolute;
+
+  top: 12px;
+
+  display: inline-flex;
+  align-items: center;
+
+  gap: 6px;
+
+  margin: 0;
+
+  color:
+    #b7ff00 !important;
+
+  font-family:
+    "Inter Variable",
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+
+  font-size:
+    0.67rem;
+
+  font-weight:
+    650;
+
+  line-height:
+    1;
+
+  letter-spacing:
+    0.105em;
+
+  text-transform:
+    uppercase;
+}
+
+.blog-detail-page
+.nexus-prevnext-card.is-prev
+.nexus-prevnext-label {
+  left: 15px;
+}
+
+.blog-detail-page
+.nexus-prevnext-card.is-next
+.nexus-prevnext-label {
+  right: 15px;
+}
+
+.blog-detail-page .nexus-prevnext-arrow {
+  color:
+    #b7ff00 !important;
+
+  font-size:
+    0.76rem;
+
+  font-weight:
+    700;
+
+  line-height:
+    1;
+}
+
+
+/* title */
+.blog-detail-page .nexus-prevnext-title {
+  display:
+    -webkit-box;
+
+  width:
+    100%;
+
+  overflow:
+    hidden;
+
+  -webkit-box-orient:
+    vertical;
+
+  -webkit-line-clamp:
+    2;
+
+  line-clamp:
+    2;
+
+  color:
+    #c7cac4 !important;
+
+  font-family:
+    "Host Grotesk Variable",
+    "Inter Variable",
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+
+  font-size:
+    0.88rem;
+
+  font-weight:
+    600;
+
+  line-height:
+    1.34;
+
+  letter-spacing:
+    -0.012em;
+
+  text-overflow:
+    ellipsis;
+
+  transition:
+    transform
+    180ms
+    cubic-bezier(0.16,1,0.3,1);
+}
+
+
+.blog-detail-page
+.nexus-prevnext-card.is-prev
+.nexus-prevnext-title {
+  text-align:
+    left;
+
+  transform:
+    translateX(0);
+}
+
+.blog-detail-page
+.nexus-prevnext-card.is-next
+.nexus-prevnext-title {
+  text-align:
+    right;
+
+  transform:
+    translateX(0);
+}
+
+
+/* hover = movement only */
+.blog-detail-page
+.nexus-prevnext-card.is-prev:hover
+.nexus-prevnext-title,
+
+.blog-detail-page
+.nexus-prevnext-card.is-prev:focus-visible
+.nexus-prevnext-title {
+  color:
+    #c7cac4 !important;
+
+  transform:
+    translateX(3px);
+}
+
+
+.blog-detail-page
+.nexus-prevnext-card.is-next:hover
+.nexus-prevnext-title,
+
+.blog-detail-page
+.nexus-prevnext-card.is-next:focus-visible
+.nexus-prevnext-title {
+  color:
+    #c7cac4 !important;
+
+  transform:
+    translateX(-3px);
+}
+
+
+/* labels never change */
+.blog-detail-page
+.nexus-prevnext-card:hover
+.nexus-prevnext-label,
+
+.blog-detail-page
+.nexus-prevnext-card:focus-visible
+.nexus-prevnext-label,
+
+.blog-detail-page
+.nexus-prevnext-card:hover
+.nexus-prevnext-arrow,
+
+.blog-detail-page
+.nexus-prevnext-card:focus-visible
+.nexus-prevnext-arrow {
+  color:
+    #b7ff00 !important;
+}
+
+
+@media (max-width: 700px) {
+
+  .blog-detail-page .nexus-prevnext-divider,
+  .blog-detail-page .nexus-prevnext-nav {
+    max-width:
+      100%;
+  }
+
+  .blog-detail-page .nexus-prevnext-nav {
+    grid-template-columns:
+      1fr;
+
+    gap:
+      10px;
+  }
+
+  .blog-detail-page .nexus-prevnext-card {
+    height:
+      88px;
+
+    padding:
+      33px
+      14px
+      11px;
+  }
+
+  .blog-detail-page .nexus-prevnext-title {
+    font-size:
+      0.84rem;
+  }
+
+}
+
+</style>
+
+
+<div
+  class="nexus-prevnext-divider"
+  aria-hidden="true"
+></div>
+
+
+<nav
+  class="nexus-prevnext-nav"
+  aria-label="Previous and next articles"
+>
+
+  {
+    previousBlogPost ? (
+
+      <a
+        class="nexus-prevnext-card is-prev"
+        href={`/blog/${previousBlogPost.id}/`}
+      >
+
+        <div class="nexus-prevnext-label">
+          <span class="nexus-prevnext-arrow">&lt;</span>
+          <span>Previous</span>
+        </div>
+
+        <div class="nexus-prevnext-title">
+          {previousBlogPost.data.title}
+        </div>
+
+      </a>
+
+    ) : (
+
+      <span
+        class="nexus-prevnext-card is-prev"
+        aria-hidden="true"
+        style="visibility:hidden; pointer-events:none;"
+      ></span>
+
+    )
+  }
+
+
+  {
+    nextBlogPost ? (
+
+      <a
+        class="nexus-prevnext-card is-next"
+        href={`/blog/${nextBlogPost.id}/`}
+      >
+
+        <div class="nexus-prevnext-label">
+          <span>Next</span>
+          <span class="nexus-prevnext-arrow">&gt;</span>
+        </div>
+
+        <div class="nexus-prevnext-title">
+          {nextBlogPost.data.title}
+        </div>
+
+      </a>
+
+    ) : (
+
+      <span
+        class="nexus-prevnext-card is-next"
+        aria-hidden="true"
+        style="visibility:hidden; pointer-events:none;"
+      ></span>
+
+    )
+  }
+
+</nav>
+
+<!-- NEXUS PREV NEXT FINAL END -->
+
+</article>
         {hasRelatedPosts && <RelatedPosts posts={relatedPosts} class="article-after-related" />}
+
+<!-- NEXUS COMMENTS PREVIEW START -->
+<section class="nexus-comments-preview" aria-label="Comments">
+  <h2 class="nexus-comments-heading">
+    <span class="nexus-comments-dot" aria-hidden="true"></span>
+    <span>Comments</span>
+    <span class="nexus-comments-count">(0)</span>
+  </h2>
+<!-- NEXUS COMMENTS CAT START -->
+<div class="nexus-comments-avatar" aria-hidden="true">
+  <img src="/images/about/cat-icon.gif" alt="" />
+</div>
+<!-- NEXUS COMMENTS CAT END -->
+<!-- NEXUS COMMENT MOCK BOX START -->
+
+<div
+  class="nexus-comments-mockbox"
+  data-nexus-comment-box
+>
+  <div
+    class="nexus-comments-editor"
+    contenteditable="true"
+    role="textbox"
+    aria-multiline="true"
+    data-placeholder="What are your thoughts?"
+  ></div>
+
+  <div class="nexus-comments-toolbar">
+
+    <div class="nexus-comments-format">
+
+      <button
+        type="button"
+        class="nexus-comments-format-button"
+        data-comment-command="bold"
+        aria-label="Bold"
+        title="Bold"
+      >
+        <strong>B</strong>
+      </button>
+
+      <button
+        type="button"
+        class="nexus-comments-format-button"
+        data-comment-command="italic"
+        aria-label="Italic"
+        title="Italic"
+      >
+        <em>I</em>
+      </button>
+
+      <button
+        type="button"
+        class="nexus-comments-format-button"
+        data-comment-link
+        aria-label="Add link"
+        title="Add link"
+      >
+        竊・      </button>
+
+    </div>
+
+    <div class="nexus-comments-actions">
+
+      <button
+        type="button"
+        class="nexus-comments-cancel"
+        data-comment-cancel
+      >
+        Cancel
+      </button>
+
+      <button
+        type="button"
+        class="nexus-comments-respond"
+        data-comment-respond
+        disabled
+      >
+        Respond
+      </button>
+
+    </div>
+
+  </div>
+</div>
+
+
+<div
+  class="nexus-comments-list"
+  data-nexus-comments-list
+  aria-live="polite"
+></div>
+
+
+<script is:inline>
+(() => {
+
+  const OWNER_NAME = '\u732B\u5B66';
+
+
+  const initNexusComments = () => {
+
+    document
+      .querySelectorAll('[data-nexus-comment-box]')
+      .forEach((box) => {
+
+        if (box.dataset.nexusReady === 'true') {
+          return;
+        }
+
+        box.dataset.nexusReady = 'true';
+
+
+        const editor =
+          box.querySelector('.nexus-comments-editor');
+
+        const cancel =
+          box.querySelector('[data-comment-cancel]');
+
+        const respond =
+          box.querySelector('[data-comment-respond]');
+
+        const commandButtons =
+          box.querySelectorAll('[data-comment-command]');
+
+        const linkButton =
+          box.querySelector('[data-comment-link]');
+
+        const list =
+          box.parentElement.querySelector(
+            '[data-nexus-comments-list]'
+          );
+
+
+        /* =================================================
+           BASIC EDITOR
+           ================================================= */
+
+        const hasText = () =>
+          editor.innerText.trim().length > 0;
+
+
+        const updateRespond = () => {
+
+          const active = hasText();
+
+          respond.disabled = !active;
+
+          respond.classList.toggle(
+            'is-active',
+            active
+          );
+        };
+
+
+        const expand = () => {
+          box.classList.add('is-expanded');
+        };
+
+
+        const collapse = () => {
+
+          box.classList.remove('is-expanded');
+
+          editor.innerHTML = '';
+
+          editor.blur();
+
+          updateRespond();
+        };
+
+
+        /* =================================================
+           SANITIZE
+           B / I / LINKS ONLY
+           ================================================= */
+
+        const sanitize = (source) => {
+
+          const template =
+            document.createElement('template');
+
+          template.innerHTML = source;
+
+
+          const allowed =
+            new Set([
+              'B',
+              'STRONG',
+              'I',
+              'EM',
+              'A',
+              'BR',
+              'P',
+              'DIV'
+            ]);
+
+
+          const clean = (node) => {
+
+            if (node.nodeType === Node.TEXT_NODE) {
+
+              return document.createTextNode(
+                node.textContent || ''
+              );
+            }
+
+
+            if (node.nodeType !== Node.ELEMENT_NODE) {
+
+              return document.createDocumentFragment();
+            }
+
+
+            const tag =
+              node.tagName.toUpperCase();
+
+
+            if (!allowed.has(tag)) {
+
+              const fragment =
+                document.createDocumentFragment();
+
+              Array
+                .from(node.childNodes)
+                .forEach((child) => {
+
+                  fragment.appendChild(
+                    clean(child)
+                  );
+                });
+
+              return fragment;
+            }
+
+
+            const el =
+              document.createElement(
+                tag.toLowerCase()
+              );
+
+
+            if (tag === 'A') {
+
+              const href =
+                node.getAttribute('href') || '';
+
+              try {
+
+                const url =
+                  new URL(
+                    href,
+                    window.location.origin
+                  );
+
+                if (
+                  url.protocol === 'http:' ||
+                  url.protocol === 'https:'
+                ) {
+
+                  el.href = url.href;
+                  el.target = '_blank';
+                  el.rel =
+                    'noopener noreferrer';
+                }
+
+              }
+              catch {}
+            }
+
+
+            Array
+              .from(node.childNodes)
+              .forEach((child) => {
+
+                el.appendChild(
+                  clean(child)
+                );
+              });
+
+
+            return el;
+          };
+
+
+          const fragment =
+            document.createDocumentFragment();
+
+
+          Array
+            .from(template.content.childNodes)
+            .forEach((child) => {
+
+              fragment.appendChild(
+                clean(child)
+              );
+            });
+
+
+          return fragment;
+        };
+
+
+        const setSanitizedHTML = (
+          element,
+          html
+        ) => {
+
+          element.replaceChildren(
+            sanitize(html)
+          );
+        };
+
+
+        /* =================================================
+           AVATAR
+
+           owner = CAT / lime
+           guest = CSS anonymous / orange
+           both = 34px
+           ================================================= */
+
+        const createAvatar = (type) => {
+
+          const avatar =
+            document.createElement('div');
+
+          avatar.className =
+            'nexus-comment-avatar';
+
+
+          if (type === 'owner') {
+
+            avatar.classList.add(
+              'nexus-comment-avatar--owner'
+            );
+
+            const img =
+              document.createElement('img');
+
+            img.src =
+              '/images/about/cat-icon.gif';
+
+            img.alt = OWNER_NAME;
+
+            avatar.appendChild(img);
+
+          }
+          else {
+
+            avatar.classList.add(
+              'nexus-comment-avatar--guest'
+            );
+
+            const mark =
+              document.createElement('span');
+
+            mark.className =
+              'nexus-comment-avatar__mark';
+
+            avatar.appendChild(mark);
+          }
+
+
+          return avatar;
+        };
+
+
+        /* =================================================
+           COMMENTS COUNT
+           top-level only
+           ================================================= */
+
+        const updateCount = () => {
+
+          const count =
+            list.querySelectorAll(
+              ':scope > .nexus-comment-item'
+            ).length;
+
+
+          const counter =
+            document.querySelector(
+              '.nexus-comments-count'
+            );
+
+
+          if (counter) {
+
+            counter.textContent =
+              `(${count})`;
+          }
+        };
+
+
+        /* =================================================
+           LONG COMMENT / MORE
+           ================================================= */
+
+        const setupMore = (
+          body,
+          moreButton
+        ) => {
+
+          body.classList.remove(
+            'is-collapsed'
+          );
+
+          moreButton.hidden = true;
+
+          moreButton.textContent =
+            'More';
+
+
+          requestAnimationFrame(() => {
+
+            if (body.scrollHeight <= 155) {
+              return;
+            }
+
+
+            body.classList.add(
+              'is-collapsed'
+            );
+
+            moreButton.hidden = false;
+          });
+        };
+
+
+        /* =================================================
+           EDIT
+           ================================================= */
+
+        const startEdit = (
+          item,
+          body,
+          moreButton,
+          replyButton
+        ) => {
+
+          if (
+            item.querySelector(
+              '.nexus-comment-edit-actions'
+            )
+          ) {
+            return;
+          }
+
+
+          const original =
+            body.innerHTML;
+
+
+          body.classList.remove(
+            'is-collapsed'
+          );
+
+          moreButton.hidden = true;
+
+          replyButton.hidden = true;
+
+          body.contentEditable = 'true';
+
+          body.classList.add(
+            'is-editing'
+          );
+
+          body.focus();
+
+
+          const actions =
+            document.createElement('div');
+
+          actions.className =
+            'nexus-comment-edit-actions';
+
+
+          const cancelEdit =
+            document.createElement('button');
+
+          cancelEdit.type = 'button';
+
+          cancelEdit.textContent =
+            'Cancel';
+
+
+          const save =
+            document.createElement('button');
+
+          save.type = 'button';
+
+          save.textContent =
+            'Save';
+
+          save.className =
+            'is-save';
+
+
+          actions.append(
+            cancelEdit,
+            save
+          );
+
+
+          body.insertAdjacentElement(
+            'afterend',
+            actions
+          );
+
+
+          cancelEdit.addEventListener(
+            'click',
+            () => {
+
+              body.innerHTML =
+                original;
+
+              body.contentEditable =
+                'false';
+
+              body.classList.remove(
+                'is-editing'
+              );
+
+              actions.remove();
+
+              replyButton.hidden =
+                false;
+
+              setupMore(
+                body,
+                moreButton
+              );
+            }
+          );
+
+
+          save.addEventListener(
+            'click',
+            () => {
+
+              if (
+                body.innerText.trim()
+                  .length === 0
+              ) {
+                return;
+              }
+
+
+              const edited =
+                body.innerHTML;
+
+
+              body.replaceChildren();
+
+              body.appendChild(
+                sanitize(edited)
+              );
+
+
+              body.contentEditable =
+                'false';
+
+              body.classList.remove(
+                'is-editing'
+              );
+
+              actions.remove();
+
+              replyButton.hidden =
+                false;
+
+
+              setupMore(
+                body,
+                moreButton
+              );
+            }
+          );
+        };
+
+
+        /* =================================================
+           REPLY COMPOSER
+           current user = OWNER
+           ================================================= */
+
+        const openReplyComposer = (
+          item,
+          repliesContainer
+        ) => {
+
+          const existing =
+            item.querySelector(
+              ':scope > .nexus-comment-item__content > .nexus-reply-composer'
+            );
+
+
+          if (existing) {
+
+            existing.remove();
+
+            return;
+          }
+
+
+          const composer =
+            document.createElement('div');
+
+          composer.className =
+            'nexus-reply-composer';
+
+
+          const replyEditor =
+            document.createElement('div');
+
+          replyEditor.className =
+            'nexus-reply-editor';
+
+          replyEditor.contentEditable =
+            'true';
+
+          replyEditor.setAttribute(
+            'role',
+            'textbox'
+          );
+
+          replyEditor.setAttribute(
+            'data-placeholder',
+            'Write a reply...'
+          );
+
+
+          const replyActions =
+            document.createElement('div');
+
+          replyActions.className =
+            'nexus-reply-actions';
+
+
+          const replyCancel =
+            document.createElement('button');
+
+          replyCancel.type = 'button';
+
+          replyCancel.textContent =
+            'Cancel';
+
+
+          const replySubmit =
+            document.createElement('button');
+
+          replySubmit.type = 'button';
+
+          replySubmit.textContent =
+            'Reply';
+
+          replySubmit.disabled = true;
+
+          replySubmit.className =
+            'nexus-reply-submit';
+
+
+          replyActions.append(
+            replyCancel,
+            replySubmit
+          );
+
+
+          composer.append(
+            replyEditor,
+            replyActions
+          );
+
+
+          const content =
+            item.querySelector(
+              ':scope > .nexus-comment-item__content'
+            );
+
+
+          const replies =
+            content.querySelector(
+              ':scope > .nexus-comment-replies'
+            );
+
+
+          content.insertBefore(
+            composer,
+            replies
+          );
+
+
+          replyEditor.focus();
+
+
+          replyEditor.addEventListener(
+            'input',
+            () => {
+
+              const active =
+                replyEditor.innerText
+                  .trim()
+                  .length > 0;
+
+              replySubmit.disabled =
+                !active;
+
+              replySubmit.classList.toggle(
+                'is-active',
+                active
+              );
+            }
+          );
+
+
+          replyCancel.addEventListener(
+            'click',
+            () => {
+
+              composer.remove();
+            }
+          );
+
+
+          replySubmit.addEventListener(
+            'click',
+            () => {
+
+              if (
+                replyEditor.innerText
+                  .trim()
+                  .length === 0
+              ) {
+                return;
+              }
+
+
+              appendComment(
+                replyEditor.innerHTML,
+                'owner',
+                repliesContainer,
+                true
+              );
+
+
+              composer.remove();
+            }
+          );
+        };
+
+
+        /* =================================================
+           CREATE COMMENT
+           ================================================= */
+
+        const appendComment = (
+          html,
+          type = 'owner',
+          targetList = list,
+          isReply = false
+        ) => {
+
+          const item =
+            document.createElement(
+              'article'
+            );
+
+          item.className =
+            'nexus-comment-item';
+
+
+          if (isReply) {
+
+            item.classList.add(
+              'is-reply'
+            );
+          }
+
+
+          const avatar =
+            createAvatar(type);
+
+
+          const content =
+            document.createElement('div');
+
+          content.className =
+            'nexus-comment-item__content';
+
+
+          /* ---------- HEADER ---------- */
+
+          const header =
+            document.createElement('div');
+
+          header.className =
+            'nexus-comment-item__header';
+
+
+          const meta =
+            document.createElement('div');
+
+          meta.className =
+            'nexus-comment-item__meta';
+
+
+          const name =
+            document.createElement('span');
+
+          name.className =
+            'nexus-comment-item__name';
+
+          name.textContent =
+            type === 'owner'
+              ? OWNER_NAME
+              : 'Guest';
+
+
+          meta.appendChild(name);
+
+
+          if (type === 'owner') {
+
+            const badge =
+              document.createElement('span');
+
+            badge.className =
+              'nexus-comment-item__author';
+
+            badge.textContent =
+              'Author';
+
+            meta.appendChild(badge);
+          }
+
+
+          const time =
+            document.createElement('span');
+
+          time.className =
+            'nexus-comment-item__time';
+
+          time.textContent =
+            'Just now';
+
+          meta.appendChild(time);
+
+
+          header.appendChild(meta);
+
+
+          /* ---------- OWNER MENU ---------- */
+
+          let menuPanel = null;
+
+
+          if (type === 'owner') {
+
+            const menu =
+              document.createElement('div');
+
+            menu.className =
+              'nexus-comment-menu';
+
+
+            const menuButton =
+              document.createElement('button');
+
+            menuButton.type = 'button';
+
+            menuButton.className =
+              'nexus-comment-menu__trigger';
+
+            menuButton.textContent =
+              '\u2026';
+
+            menuButton.setAttribute(
+              'aria-label',
+              'Comment options'
+            );
+
+
+            menuPanel =
+              document.createElement('div');
+
+            menuPanel.className =
+              'nexus-comment-menu__panel';
+
+            menuPanel.hidden = true;
+
+
+            const edit =
+              document.createElement('button');
+
+            edit.type = 'button';
+
+            edit.textContent =
+              'Edit response';
+
+
+            const remove =
+              document.createElement('button');
+
+            remove.type = 'button';
+
+            remove.textContent =
+              'Delete response';
+
+            remove.className =
+              'is-delete';
+
+
+            menuPanel.append(
+              edit,
+              remove
+            );
+
+            menu.append(
+              menuButton,
+              menuPanel
+            );
+
+            header.appendChild(menu);
+
+
+            menuButton.addEventListener(
+              'click',
+              (event) => {
+
+                event.stopPropagation();
+
+                document
+                  .querySelectorAll(
+                    '.nexus-comment-menu__panel'
+                  )
+                  .forEach((panel) => {
+
+                    if (
+                      panel !== menuPanel
+                    ) {
+                      panel.hidden = true;
+                    }
+                  });
+
+
+                menuPanel.hidden =
+                  !menuPanel.hidden;
+              }
+            );
+
+
+            edit.addEventListener(
+              'click',
+              () => {
+
+                menuPanel.hidden = true;
+
+                startEdit(
+                  item,
+                  body,
+                  more,
+                  replyButton
+                );
+              }
+            );
+
+
+            remove.addEventListener(
+              'click',
+              () => {
+
+                menuPanel.hidden = true;
+
+
+                const confirmed =
+                  window.confirm(
+                    'Delete this response?'
+                  );
+
+
+                if (!confirmed) {
+                  return;
+                }
+
+
+                item.remove();
+
+                updateCount();
+              }
+            );
+          }
+
+
+          /* ---------- BODY ---------- */
+
+          const body =
+            document.createElement('div');
+
+          body.className =
+            'nexus-comment-item__body';
+
+
+          setSanitizedHTML(
+            body,
+            html
+          );
+
+
+          const more =
+            document.createElement('button');
+
+          more.type = 'button';
+
+          more.className =
+            'nexus-comment-more';
+
+          more.textContent =
+            'More';
+
+          more.hidden = true;
+
+
+          more.addEventListener(
+            'click',
+            () => {
+
+              const collapsed =
+                body.classList.toggle(
+                  'is-collapsed'
+                );
+
+              more.textContent =
+                collapsed
+                  ? 'More'
+                  : 'Less';
+            }
+          );
+
+
+          /* ---------- FOOTER ---------- */
+
+          const footer =
+            document.createElement('div');
+
+          footer.className =
+            'nexus-comment-item__footer';
+
+
+          const replyButton =
+            document.createElement('button');
+
+          replyButton.type = 'button';
+
+          replyButton.className =
+            'nexus-comment-reply-button';
+
+          replyButton.textContent =
+            'Reply';
+
+
+          footer.appendChild(
+            replyButton
+          );
+
+
+          /* ---------- REPLIES ---------- */
+
+          const repliesContainer =
+            document.createElement('div');
+
+          repliesContainer.className =
+            'nexus-comment-replies';
+
+
+          replyButton.addEventListener(
+            'click',
+            () => {
+
+              openReplyComposer(
+                item,
+                repliesContainer
+              );
+            }
+          );
+
+
+          content.append(
+            header,
+            body,
+            more,
+            footer,
+            repliesContainer
+          );
+
+
+          item.append(
+            avatar,
+            content
+          );
+
+
+          targetList.appendChild(item);
+
+
+          setupMore(
+            body,
+            more
+          );
+
+
+          updateCount();
+        };
+
+
+        /* =================================================
+           ROOT EDITOR EVENTS
+           ================================================= */
+
+        box.addEventListener(
+          'click',
+          (event) => {
+
+            if (
+              event.target.closest('button')
+            ) {
+              return;
+            }
+
+            expand();
+
+            editor.focus();
+          }
+        );
+
+
+        editor.addEventListener(
+          'focus',
+          expand
+        );
+
+
+        editor.addEventListener(
+          'input',
+          updateRespond
+        );
+
+
+        commandButtons.forEach(
+          (button) => {
+
+            button.addEventListener(
+              'mousedown',
+              (event) => {
+
+                event.preventDefault();
+
+                editor.focus();
+
+                document.execCommand(
+                  button.dataset.commentCommand,
+                  false,
+                  null
+                );
+
+                updateRespond();
+              }
+            );
+          }
+        );
+
+
+        linkButton.addEventListener(
+          'mousedown',
+          (event) => {
+
+            event.preventDefault();
+
+
+            const selection =
+              window.getSelection();
+
+
+            if (
+              !selection ||
+              selection.rangeCount === 0 ||
+              selection.isCollapsed
+            ) {
+              return;
+            }
+
+
+            const href =
+              window.prompt('Link URL');
+
+
+            if (!href) {
+              return;
+            }
+
+
+            editor.focus();
+
+
+            document.execCommand(
+              'createLink',
+              false,
+              href
+            );
+
+
+            updateRespond();
+          }
+        );
+
+
+        cancel.addEventListener(
+          'click',
+          (event) => {
+
+            event.stopPropagation();
+
+            collapse();
+          }
+        );
+
+
+        respond.addEventListener(
+          'click',
+          (event) => {
+
+            event.stopPropagation();
+
+
+            if (!hasText()) {
+              return;
+            }
+
+
+            /*
+             * CURRENT LOCAL AUTHOR COMPOSER
+             *
+             * 縺薙％縺九ｉ謚慕ｨｿ縺励◆繧ｳ繝｡繝ｳ繝医・
+             * 迪ｫ蟄ｦ / Author 縺ｨ縺励※陦ｨ遉ｺ縲・             */
+            appendComment(
+              editor.innerHTML,
+              'owner',
+              list,
+              false
+            );
+
+            /* NEXUS DIRECT COMMENT MAIL START */
+            const nexusCommentText =
+              editor.innerText.trim();
+
+            fetch(
+              'https://nexus-contact.catlogy110.workers.dev/blog-comment',
+              {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  name: 'NEXUS Visitor',
+                  comment: nexusCommentText,
+                  articleTitle:
+                    document.title || 'NEXUS',
+                  articleUrl:
+                    window.location.href,
+                  pageType: 'blog'
+                })
+              }
+            ).catch((error) => {
+              console.error(
+                'NEXUS comment mail failed:',
+                error
+              );
+            });
+            /* NEXUS DIRECT COMMENT MAIL END */
+
+
+            collapse();
+          }
+        );
+
+
+        /* menu outside click */
+
+        document.addEventListener(
+          'click',
+          (event) => {
+
+            if (
+              event.target.closest(
+                '.nexus-comment-menu'
+              )
+            ) {
+              return;
+            }
+
+
+            document
+              .querySelectorAll(
+                '.nexus-comment-menu__panel'
+              )
+              .forEach((panel) => {
+
+                panel.hidden = true;
+              });
+          }
+        );
+
+
+        updateRespond();
+        updateCount();
+
+      });
+  };
+
+
+  initNexusComments();
+
+
+  document.addEventListener(
+    'astro:page-load',
+    initNexusComments
+  );
+
+})();
+</script>
+
+<!-- NEXUS COMMENT MOCK BOX END -->
+</section>
+<!-- NEXUS COMMENTS PREVIEW END -->
         {
           shouldMountCommentSection && (
             <CommentSection frontmatter={post.data} pathname={Astro.url.pathname} />
@@ -234,17 +2068,413 @@ const hasSidebar = false;
         )
       }
     </main>
+    {isBlogPost && <Footer />}
     <ScrollToTopButton />
     <ZoomableImage />
     <MermaidRenderer />
-  </body>
+
+<!-- NEXUS HEADING SIZE AUTHORITY START -->
+<style is:global>
+
+/* =========================================================
+   NEXUS BLOG 窶・HEADING SIZE AUTHORITY
+   This is the final authority for article H2/H3/H4.
+   ========================================================= */
+
+/* H2 / 螟ｧ隕句・縺・*/
+body.blog-detail-page
+main.blog-layout
+.article-column
+article.article-card
+section.article-content h2 {
+  font-size: 26px !important;
+  font-weight: 700 !important;
+  line-height: 1.30 !important;
+}
+
+/* H3 / 荳ｭ隕句・縺・*/
+body.blog-detail-page
+main.blog-layout
+.article-column
+article.article-card
+section.article-content h3 {
+  font-size: 21px !important;
+  font-weight: 700 !important;
+  line-height: 1.38 !important;
+}
+
+/* H4 / 蟆剰ｦ句・縺・*/
+body.blog-detail-page
+main.blog-layout
+.article-column
+article.article-card
+section.article-content h4 {
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  line-height: 1.48 !important;
+}
+
+/* 隕句・縺怜・驛ｨ縺ｮ隕∫ｴ縺ｫ繧りｦｪ繧ｵ繧､繧ｺ繧貞ｼｷ蛻ｶ邯呎価 */
+body.blog-detail-page
+main.blog-layout
+.article-column
+article.article-card
+section.article-content h2 * {
+  font-size: inherit !important;
+  line-height: inherit !important;
+}
+
+body.blog-detail-page
+main.blog-layout
+.article-column
+article.article-card
+section.article-content h3 * {
+  font-size: inherit !important;
+  line-height: inherit !important;
+}
+
+body.blog-detail-page
+main.blog-layout
+.article-column
+article.article-card
+section.article-content h4 * {
+  font-size: inherit !important;
+  line-height: inherit !important;
+}
+
+@media (max-width: 700px) {
+
+  body.blog-detail-page
+  main.blog-layout
+  .article-column
+  article.article-card
+  section.article-content h2 {
+    font-size: 28px !important;
+  }
+
+  body.blog-detail-page
+  main.blog-layout
+  .article-column
+  article.article-card
+  section.article-content h3 {
+    font-size: 20px !important;
+  }
+
+  body.blog-detail-page
+  main.blog-layout
+  .article-column
+  article.article-card
+  section.article-content h4 {
+    font-size: 18px !important;
+  }
+
+}
+
+</style>
+<!-- NEXUS HEADING SIZE AUTHORITY END -->
+
+  <!-- NEXUS TAG COLLAPSE V2 START -->
+  <script is:inline>
+    (() => {
+      const initNexusTagCollapse = () => {
+        document.querySelectorAll('.article-card').forEach((card) => {
+          const tags = Array.from(card.querySelectorAll('.nexus-tag'));
+          const actions = card.querySelector('.nexus-article-actions');
+
+          /*
+           * 譌ｧ繧ｿ繧ｰUI縺ｮ譌･譛ｬ隱槭ヨ繧ｰ繝ｫ繧貞炎髯､縲・           * 迴ｾ蝨ｨ縺ｯ View More / View Less 縺ｮ縺ｿ菴ｿ逕ｨ縺吶ｋ縲・           */
+          card
+            .querySelectorAll('button, a, [role="button"]')
+            .forEach((element) => {
+              const label =
+                element.textContent
+                  ?.replace(/\s+/g, ' ')
+                  .trim();
+
+              if (
+                label === '縺吶∋縺ｦ縺ｮ繧ｿ繧ｰ繧定｡ｨ遉ｺ' ||
+                label === '蜈ｨ縺ｦ縺ｮ繧ｿ繧ｰ繧定｡ｨ遉ｺ'
+              ) {
+                element.remove();
+              }
+            });
+
+          card.classList.remove('nexus-has-tags', 'nexus-no-tags');
+
+          const oldToggle = card.querySelector('[data-nexus-tag-toggle]');
+          if (oldToggle) oldToggle.remove();
+
+          if (!tags.length) {
+            card.classList.add('nexus-no-tags');
+            return;
+          }
+
+          card.classList.add('nexus-has-tags');
+
+          const tagRow = tags[0].parentElement;
+          if (!tagRow) return;
+
+          tagRow.setAttribute('data-nexus-tags', '');
+          tagRow.classList.remove('is-collapsed', 'is-expanded');
+          tagRow.style.removeProperty('--nexus-tags-collapsed-height');
+
+          /*
+           * 荳蠎ｦ閾ｪ辟ｶ縺ｪ蜈ｨ鬮倥↓謌ｻ縺励※縺九ｉ縲・           * 螳滄圀縺ｮ繧ｿ繧ｰ菴咲ｽｮ繧呈ｸｬ螳壹☆繧九・           *
+           * 繧ｿ繧ｰ謨ｰ縺ｧ縺ｯ縺ｪ縺上悟ｮ滄圀縺ｫ菴戊｡後≠繧九°縲阪〒蛻､螳壹・           */
+          const rowRect = tagRow.getBoundingClientRect();
+
+          const measured = tags.map((tag) => {
+            const rect = tag.getBoundingClientRect();
+
+            return {
+              element: tag,
+              top: rect.top - rowRect.top,
+              bottom: rect.bottom - rowRect.top
+            };
+          });
+
+          const rowTops = [];
+
+          measured.forEach((item) => {
+            const exists = rowTops.some(
+              (top) => Math.abs(top - item.top) < 3
+            );
+
+            if (!exists) {
+              rowTops.push(item.top);
+            }
+          });
+
+          rowTops.sort((a, b) => a - b);
+
+          /* 1縲・陦後↑繧鰻iew More荳崎ｦ・*/
+          if (rowTops.length <= 2) {
+            return;
+          }
+
+          const secondRowTop = rowTops[1];
+
+          const secondRowBottom = Math.max(
+            ...measured
+              .filter(
+                (item) =>
+                  item.top <= secondRowTop + 3
+              )
+              .map((item) => item.bottom)
+          );
+
+          tagRow.style.setProperty(
+            '--nexus-tags-collapsed-height',
+            `${Math.ceil(secondRowBottom)}px`
+          );
+
+          tagRow.classList.add('is-collapsed');
+
+          const button = document.createElement('button');
+
+          button.type = 'button';
+          button.className = 'nexus-tag-toggle';
+          button.dataset.nexusTagToggle = '';
+          button.textContent = 'View More';
+          button.setAttribute('aria-expanded', 'false');
+
+          tagRow.insertAdjacentElement(
+            'afterend',
+            button
+          );
+
+          button.addEventListener('click', () => {
+            const expanded =
+              tagRow.classList.contains('is-expanded');
+
+            if (expanded) {
+              tagRow.classList.remove('is-expanded');
+              tagRow.classList.add('is-collapsed');
+
+              button.textContent = 'View More';
+              button.setAttribute(
+                'aria-expanded',
+                'false'
+              );
+            } else {
+              tagRow.classList.remove('is-collapsed');
+              tagRow.classList.add('is-expanded');
+
+              button.textContent = 'View Less';
+              button.setAttribute(
+                'aria-expanded',
+                'true'
+              );
+            }
+          });
+        });
+      };
+
+      const scheduleInit = () => {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(
+            initNexusTagCollapse
+          );
+        });
+      };
+
+      scheduleInit();
+
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(scheduleInit);
+      }
+
+      if (!document.documentElement.dataset.nexusTagCollapseBound) {
+        document.documentElement.dataset.nexusTagCollapseBound = 'true';
+
+        document.addEventListener(
+          'astro:page-load',
+          scheduleInit
+        );
+
+        let resizeTimer;
+
+        window.addEventListener('resize', () => {
+          clearTimeout(resizeTimer);
+
+          resizeTimer = setTimeout(
+            scheduleInit,
+            120
+          );
+        });
+      }
+    })();
+  </script>
+  <!-- NEXUS TAG COLLAPSE V2 END -->
+
+
+<!-- NEXUS END TAG ALIGN START -->
+
+<style is:global>
+
+/* 險倅ｺ区忰蟆ｾ繧ｿ繧ｰ繧呈悽譁・65px繝ｩ繧､繝ｳ縺ｸ */
+.blog-detail-page .nexus-end-tags-aligned {
+  box-sizing: border-box !important;
+
+  width: 100% !important;
+  max-width: 665px !important;
+
+  margin-left: auto !important;
+  margin-right: auto !important;
+
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+@media (max-width: 700px) {
+  .blog-detail-page .nexus-end-tags-aligned {
+    max-width: 100% !important;
+  }
+}
+
+</style>
+
+
+<script is:inline>
+(() => {
+
+  const initEndTagAlignment = () => {
+
+    const article =
+      document.querySelector('.article-card');
+
+    if (!article) return;
+
+
+    /*
+     * 險倅ｺ区忰蟆ｾ縺ｮ View More / View Less 繧呈爾縺吶・     */
+    const toggle =
+      [...article.querySelectorAll('button, a')]
+      .find((el) => {
+
+        const label =
+          (el.textContent || '')
+            .replace(/\s+/g, ' ')
+            .trim()
+            .toLowerCase();
+
+        return (
+          label === 'view more' ||
+          label === 'view less'
+        );
+
+      });
+
+    if (!toggle) return;
+
+
+    /*
+     * toggle 縺九ｉ隕ｪ縺ｸ荳翫′繧翫・     * 螳滄圀縺ｮ繧ｿ繧ｰ繝ｪ繝ｳ繧ｯ繧定､・焚謖√▽譛蟆剰ｦ∫ｴ繧呈治逕ｨ縲・     */
+    let node = toggle.parentElement;
+    let tagRegion = null;
+
+    while (
+      node &&
+      node !== article
+    ) {
+
+      const tagCount =
+        node.querySelectorAll(
+          'a[href*="/tags/"]'
+        ).length;
+
+      if (tagCount >= 2) {
+        tagRegion = node;
+        break;
+      }
+
+      node = node.parentElement;
+    }
+
+
+    if (!tagRegion) return;
+
+
+    tagRegion.classList.add(
+      'nexus-end-tags-aligned'
+    );
+
+  };
+
+
+  if (document.readyState === 'loading') {
+
+    document.addEventListener(
+      'DOMContentLoaded',
+      initEndTagAlignment,
+      { once: true }
+    );
+
+  } else {
+
+    initEndTagAlignment();
+
+  }
+
+
+  document.addEventListener(
+    'astro:page-load',
+    initEndTagAlignment
+  );
+
+})();
+</script>
+
+<!-- NEXUS END TAG ALIGN END -->
+
+</body>
 </html>
 
 
 
 <style is:global>
 /* =========================================================
-   NEXUS BLOG — SINGLE COLUMN TOC TEST
+   NEXUS BLOG 遯ｶ繝ｻSINGLE COLUMN TOC TEST
    Hero size unchanged
    ========================================================= */
 
@@ -278,6 +2508,14 @@ const hasSidebar = false;
     margin: 0 auto 42px !important;
 }
 
+/* Portfolio uses the full article column */
+.blog-detail-page:has(.portfolio-section) .article-header,
+.blog-detail-page:has(.portfolio-section) .article-content {
+    width: 100% !important;
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
 /* Main reading column centered */
 .blog-detail-page .article-content {
     width: 100% !important;
@@ -297,7 +2535,7 @@ const hasSidebar = false;
 </style>
 <style is:global>
 /* =========================================================
-   NEXUS — ARTICLE WIDTH ALIGNMENT
+   NEXUS 遯ｶ繝ｻARTICLE WIDTH ALIGNMENT
    BODY / HERO / TOC = SAME CENTER WIDTH
    ========================================================= */
 
@@ -332,11 +2570,699 @@ const hasSidebar = false;
     margin-bottom: 42px !important;
 }
 
-/* BODY — KEEP CURRENT GOOD WIDTH */
+/* BODY 遯ｶ繝ｻKEEP CURRENT GOOD WIDTH */
 .blog-detail-page .article-content {
     width: 100% !important;
     max-width: 720px !important;
     margin-left: auto !important;
     margin-right: auto !important;
 }
+</style>
+
+
+<!-- NEXUS AUTHOR FOOTER START -->
+
+<style is:global>
+/* =========================================================
+   NEXUS AUTHOR FOOTER
+   ========================================================= */
+
+.blog-detail-page .nexus-author-footer {
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+
+  width: 100%;
+  max-width: 16cm;
+
+  margin: 34px auto 40px;
+  padding: 0;
+}
+
+.blog-detail-page .nexus-author-footer__avatar {
+  width: 44px;
+  height: 44px;
+
+  border-radius: 50%;
+  overflow: hidden;
+
+  background: #050505;
+
+  border:
+    1px solid
+    rgba(183, 255, 0, 0.10);
+
+  box-shadow:
+    0 0 5px rgba(183, 255, 0, 0.20),
+    0 0 12px rgba(183, 255, 0, 0.11),
+    0 0 20px rgba(183, 255, 0, 0.045);
+}
+
+.blog-detail-page .nexus-author-footer__avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.blog-detail-page .nexus-author-footer__body {
+  min-width: 0;
+}
+
+.blog-detail-page .nexus-author-footer__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+
+  margin: 0 0 6px;
+  line-height: 1.25;
+}
+
+.blog-detail-page .nexus-author-footer__written,
+.blog-detail-page .nexus-author-footer__name {
+  color: #d7dad4;
+  font-size: 0.90rem;
+  font-weight: 400;
+}
+
+.blog-detail-page .nexus-author-footer__socials {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 8px;
+}
+
+.blog-detail-page .nexus-author-footer__social {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+
+  color: rgba(182, 184, 180, 0.72);
+  text-decoration: none;
+
+  transition:
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.blog-detail-page .nexus-author-footer__social:hover {
+  color: #b7ff00;
+  transform: translateY(-1px);
+}
+
+.blog-detail-page .nexus-author-footer__social svg {
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+
+.blog-detail-page .nexus-author-footer__quote {
+  margin: 0;
+  color: rgba(170, 174, 167, 0.72);
+  font-size: 0.76rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+@media (max-width: 700px) {
+  .blog-detail-page .nexus-author-footer {
+    grid-template-columns: 40px minmax(0, 1fr);
+    gap: 12px;
+    margin-top: 30px;
+    margin-bottom: 34px;
+  }
+
+  .blog-detail-page .nexus-author-footer__avatar {
+  width: 44px;
+  height: 44px;
+
+  border-radius: 50%;
+  overflow: hidden;
+
+  background: #050505;
+
+  border:
+    1px solid
+    rgba(183, 255, 0, 0.10);
+
+  box-shadow:
+    0 0 5px rgba(183, 255, 0, 0.20),
+    0 0 12px rgba(183, 255, 0, 0.11),
+    0 0 20px rgba(183, 255, 0, 0.045);
+}
+
+  .blog-detail-page .nexus-author-footer__written,
+.blog-detail-page .nexus-author-footer__name {
+  color: #d7dad4;
+  font-size: 0.90rem;
+  font-weight: 400;
+}
+
+  .blog-detail-page .nexus-author-footer__quote {
+  margin: 0;
+  color: rgba(170, 174, 167, 0.72);
+  font-size: 0.76rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+}
+</style>
+
+<script is:inline>
+(() => {
+  const createAuthorFooter = () => {
+    const author = document.createElement('section');
+    author.className = 'nexus-author-footer';
+    author.dataset.nexusAuthorFooter = '';
+
+    author.innerHTML = `
+      <div class="nexus-author-footer__avatar">
+        <img src="/images/about/cat-icon.gif" alt="迪ｫ蟄ｦ" />
+      </div>
+
+      <div class="nexus-author-footer__body">
+        <div class="nexus-author-footer__head">
+          <span class="nexus-author-footer__written">Written by</span>
+          <span class="nexus-author-footer__name">猫学</span>
+
+          <span class="nexus-author-footer__socials">
+            <a
+              class="nexus-author-footer__social"
+              href="https://x.com/catology110"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="X"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+                <path d="M18.901 2H22l-6.77 7.736L23.2 22h-6.247l-4.894-6.989L5.94 22H2.84l7.24-8.274L.8 2h6.406l4.424 6.322L18.901 2Zm-1.096 18h1.717L6.273 3.894H4.43L17.805 20Z"/>
+              </svg>
+            </a>
+
+            <a
+              class="nexus-author-footer__social"
+              href="https://www.youtube.com/@nekogaku"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="YouTube"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+                <path d="M23.498 6.186a2.986 2.986 0 0 0-2.102-2.112C19.533 3.5 12 3.5 12 3.5s-7.533 0-9.396.574A2.986 2.986 0 0 0 .502 6.186 31.2 31.2 0 0 0 0 12a31.2 31.2 0 0 0 .502 5.814 2.986 2.986 0 0 0 2.102 2.112C4.467 20.5 12 20.5 12 20.5s7.533 0 9.396-.574a2.986 2.986 0 0 0 2.102-2.112A31.2 31.2 0 0 0 24 12a31.2 31.2 0 0 0-.502-5.814ZM9.545 15.568V8.432L15.818 12l-6.273 3.568Z"/>
+              </svg>
+            </a>
+          </span>
+        </div>
+
+        <div class="nexus-author-footer__quote">
+          No bird can fly higher than imagination.
+        </div>
+      </div>
+    `;
+
+    return author;
+  };
+
+  const mountAuthorFooter = () => {
+    document
+      .querySelectorAll('[data-nexus-author-footer]')
+      .forEach((element) => element.remove());
+
+    const actions = document.querySelector('.article-card .nexus-article-actions');
+    if (!actions) return;
+
+    actions.insertAdjacentElement('afterend', createAuthorFooter());
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', mountAuthorFooter, { once: true });
+  } else {
+    mountAuthorFooter();
+  }
+
+  document.addEventListener('astro:page-load', mountAuthorFooter);
+})();
+</script>
+
+<!-- NEXUS AUTHOR FOOTER END -->
+
+
+<!-- AUTHOR BYLINE COLOR OVERRIDE START -->
+
+<style is:global>
+.blog-detail-page .nexus-author-footer .nexus-author-footer__written,
+.blog-detail-page .nexus-author-footer .nexus-author-footer__name {
+  color: #e2e4df !important;
+  font-weight: 400 !important;
+  opacity: 1 !important;
+}
+</style>
+
+<!-- AUTHOR BYLINE COLOR OVERRIDE END -->
+
+
+<!-- AUTHOR QUOTE COLOR FIX START -->
+<style is:global>
+.blog-detail-page .nexus-author-footer .nexus-author-footer__quote {
+  color: rgba(170, 174, 167, 0.72) !important;
+}
+</style>
+<!-- AUTHOR QUOTE COLOR FIX END -->
+
+
+<!-- NEXUS FINAL BLOG WIDTH 665PX START -->
+
+<style is:global>
+
+/* =========================================================
+   NEXUS BLOG FINAL READING WIDTH
+   Desktop = 665px
+   Portfolio excluded
+   ========================================================= */
+
+body.blog-detail-page:not(:has(.portfolio-section)) {
+  --nexus-reading-width: 665px !important;
+  --article-content-max: 665px !important;
+}
+
+
+/* 螟門・縺ｯBlog蟷・ｒ驍ｪ鬲斐＠縺ｪ縺・*/
+body.blog-detail-page:not(:has(.portfolio-section))
+.blog-layout,
+
+body.blog-detail-page:not(:has(.portfolio-section))
+.article-column,
+
+body.blog-detail-page:not(:has(.portfolio-section))
+.article-card {
+  width: 100% !important;
+  max-width: none !important;
+
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+
+/* HEADER */
+body.blog-detail-page:not(:has(.portfolio-section))
+.article-header:not(.article-header-archive),
+
+body.blog-detail-page:not(:has(.portfolio-section))
+.article-header:not(.article-header-archive)
+.editorial-heading,
+
+body.blog-detail-page:not(:has(.portfolio-section))
+.article-header:not(.article-header-archive)
+.editorial-hero,
+
+body.blog-detail-page:not(:has(.portfolio-section))
+.article-header:not(.article-header-archive)
+.article-hero-image {
+  width: 100% !important;
+  max-width: 665px !important;
+
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+
+/* HERO IMAGE */
+body.blog-detail-page:not(:has(.portfolio-section))
+.article-header:not(.article-header-archive)
+.editorial-hero img,
+
+body.blog-detail-page:not(:has(.portfolio-section))
+.article-header:not(.article-header-archive)
+.article-hero-image img {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+
+/* ARTICLE BODY */
+body.blog-detail-page:not(:has(.portfolio-section))
+.article-content {
+  width: 100% !important;
+  max-width: 665px !important;
+
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+
+/* TOC */
+body.blog-detail-page:not(:has(.portfolio-section))
+.mobile-article-toc {
+  width: 100% !important;
+  max-width: 665px !important;
+
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+
+/* TAGS / ACTIONS / AUTHOR */
+body.blog-detail-page:not(:has(.portfolio-section))
+.nexus-article-actions,
+
+body.blog-detail-page:not(:has(.portfolio-section))
+.nexus-author-footer,
+
+body.blog-detail-page:not(:has(.portfolio-section))
+.series-neighbor-nav {
+  width: 100% !important;
+  max-width: 665px !important;
+
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+
+/* =========================================================
+   PORTFOLIO PROTECTION
+   ========================================================= */
+
+body.blog-detail-page:has(.portfolio-section)
+.article-header,
+
+body.blog-detail-page:has(.portfolio-section)
+.article-content,
+
+body.blog-detail-page:has(.portfolio-section)
+.article-column,
+
+body.blog-detail-page:has(.portfolio-section)
+.article-card {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  body.blog-detail-page:not(:has(.portfolio-section)) {
+    --nexus-reading-width: 100% !important;
+    --article-content-max: 100% !important;
+  }
+
+  body.blog-detail-page:not(:has(.portfolio-section))
+  .article-header:not(.article-header-archive),
+
+  body.blog-detail-page:not(:has(.portfolio-section))
+  .article-header:not(.article-header-archive)
+  .editorial-heading,
+
+  body.blog-detail-page:not(:has(.portfolio-section))
+  .article-header:not(.article-header-archive)
+  .editorial-hero,
+
+  body.blog-detail-page:not(:has(.portfolio-section))
+  .article-content,
+
+  body.blog-detail-page:not(:has(.portfolio-section))
+  .mobile-article-toc,
+
+  body.blog-detail-page:not(:has(.portfolio-section))
+  .nexus-article-actions,
+
+  body.blog-detail-page:not(:has(.portfolio-section))
+  .nexus-author-footer {
+
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+}
+
+</style>
+
+<!-- NEXUS FINAL BLOG WIDTH 665PX END -->
+
+
+<!-- NEXUS PREVNEXT VISUAL FINAL START -->
+
+<style is:global>
+
+/* PREVIOUS / NEXT 窶・FINAL VISUAL */
+
+.blog-detail-page .nexus-prevnext-card {
+  border: 1px solid rgba(183, 255, 0, 0.28) !important;
+
+  box-shadow:
+    0 0 4px rgba(183, 255, 0, 0.10),
+    0 0 10px rgba(183, 255, 0, 0.045) !important;
+
+  background: #050505 !important;
+
+  transition:
+    border-color 220ms ease,
+    box-shadow 220ms ease !important;
+}
+
+
+/* box蜀・・繧ｿ繧､繝医Ν譁・ｭ励ｒ荳谿ｵ譏弱ｋ縺・*/
+.blog-detail-page
+.nexus-prevnext-card
+.nexus-prevnext-title {
+  color: #d9dbd6 !important;
+}
+
+
+/* hover = bright lime */
+.blog-detail-page .nexus-prevnext-card:hover,
+.blog-detail-page .nexus-prevnext-card:focus-visible {
+  border-color: #b7ff00 !important;
+
+  box-shadow:
+    0 0 5px rgba(183, 255, 0, 0.52),
+    0 0 13px rgba(183, 255, 0, 0.20) !important;
+}
+
+
+/* hover縺励※繧ゅち繧､繝医Ν濶ｲ縺ｯ螟峨∴縺ｪ縺・*/
+.blog-detail-page
+.nexus-prevnext-card:hover
+.nexus-prevnext-title,
+.blog-detail-page
+.nexus-prevnext-card:focus-visible
+.nexus-prevnext-title {
+  color: #d9dbd6 !important;
+}
+
+</style>
+
+<!-- NEXUS PREVNEXT VISUAL FINAL END -->
+
+<!-- NEXUS COMMENT TOOL ICONS V2 START -->
+
+<style is:global>
+  [data-nexus-comment-box] button[data-nexus-format-icon] {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    width: 28px !important;
+    height: 28px !important;
+
+    padding: 0 !important;
+
+    color: #a8aaa8 !important;
+
+    line-height: 1 !important;
+  }
+
+  [data-nexus-comment-box] button[data-nexus-format-icon="bold"]
+    .nexus-comment-tool-glyph {
+    font-family: Georgia, "Times New Roman", serif !important;
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    font-style: normal !important;
+    line-height: 1 !important;
+  }
+
+  [data-nexus-comment-box] button[data-nexus-format-icon="italic"]
+    .nexus-comment-tool-glyph {
+    font-family: Georgia, "Times New Roman", serif !important;
+    font-size: 21px !important;
+    font-weight: 400 !important;
+    font-style: italic !important;
+    line-height: 1 !important;
+  }
+
+  [data-nexus-comment-box] button[data-nexus-format-icon="link"] svg {
+    width: 18px !important;
+    height: 18px !important;
+
+    fill: none !important;
+    stroke: currentColor !important;
+    stroke-width: 2 !important;
+    stroke-linecap: round !important;
+    stroke-linejoin: round !important;
+  }
+</style>
+
+<script is:inline>
+(() => {
+  const applyCommentToolIcons = () => {
+    document
+      .querySelectorAll('[data-nexus-comment-box]')
+      .forEach((root) => {
+
+        root
+          .querySelectorAll('button')
+          .forEach((button) => {
+
+            const command =
+              (button.dataset.commentCommand || '')
+                .toLowerCase();
+
+            const label =
+              (
+                button.getAttribute('aria-label') ||
+                button.getAttribute('title') ||
+                ''
+              ).toLowerCase();
+
+            const text =
+              (button.textContent || '').trim();
+
+            let type = '';
+
+            if (
+              command === 'bold' ||
+              label.includes('bold') ||
+              text === 'B'
+            ) {
+              type = 'bold';
+            }
+            else if (
+              command === 'italic' ||
+              label.includes('italic') ||
+              text === '/'
+            ) {
+              type = 'italic';
+            }
+            else if (
+              button.hasAttribute('data-comment-link') ||
+              label.includes('link') ||
+              text === '↗'
+            ) {
+              type = 'link';
+            }
+
+            if (!type) {
+              return;
+            }
+
+            button.dataset.nexusFormatIcon = type;
+
+            if (type === 'bold') {
+              button.innerHTML =
+                '<span class="nexus-comment-tool-glyph" aria-hidden="true">B</span>';
+
+              button.setAttribute(
+                'aria-label',
+                'Bold'
+              );
+
+              button.setAttribute(
+                'title',
+                'Bold'
+              );
+            }
+
+            if (type === 'italic') {
+              button.innerHTML =
+                '<span class="nexus-comment-tool-glyph" aria-hidden="true">i</span>';
+
+              button.setAttribute(
+                'aria-label',
+                'Italic'
+              );
+
+              button.setAttribute(
+                'title',
+                'Italic'
+              );
+            }
+
+            if (type === 'link') {
+              button.innerHTML = `
+                <svg
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
+                  ></path>
+                  <path
+                    d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
+                  ></path>
+                </svg>
+              `;
+
+              button.setAttribute(
+                'aria-label',
+                'Insert link'
+              );
+
+              button.setAttribute(
+                'title',
+                'Insert link'
+              );
+            }
+          });
+      });
+  };
+
+  const scheduleCommentToolIcons = () => {
+    applyCommentToolIcons();
+
+    requestAnimationFrame(
+      applyCommentToolIcons
+    );
+
+    window.setTimeout(
+      applyCommentToolIcons,
+      100
+    );
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener(
+      'DOMContentLoaded',
+      scheduleCommentToolIcons,
+      { once: true }
+    );
+  }
+  else {
+    scheduleCommentToolIcons();
+  }
+
+  document.addEventListener(
+    'astro:page-load',
+    scheduleCommentToolIcons
+  );
+})();
+</script>
+
+<!-- NEXUS COMMENT TOOL ICONS V2 END -->
+
+<!-- NEXUS JAPANESE TRANSLATION -->
+<style is:global>
+  .blog-detail-page #article-start[hidden],
+  .blog-detail-page #article-start-ja[hidden],
+  .blog-detail-page .mobile-article-toc[hidden] {
+    display: none !important;
+  }
+  .blog-detail-page .nexus-japanese-body p {
+    white-space: pre-line;
+  }
 </style>

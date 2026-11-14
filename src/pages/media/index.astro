@@ -8,7 +8,8 @@ import {
   getSiteConfig,
   getI18n,
 } from 'virtual:navfolio/page-runtime';
-import MediaShelf from '@navfolio/mdx-components/MediaShelf.astro';
+import MediaShelf from '../../components/media/MediaShelf.astro';
+import TinaIsland from '@tinacms/astro/TinaIsland.astro';
 
 type MediaType = 'book' | 'film' | 'series' | 'album' | 'podcast';
 type CoverAspect = 'portrait' | 'landscape' | 'square' | 'wide';
@@ -61,10 +62,15 @@ const sections = [
   { id: 'books', label: ui.media.sections.books, description: ui.media.sections.booksNote, types: ['book'] as MediaType[] },
   { id: 'films', label: ui.media.sections.films, description: ui.media.sections.filmsNote, types: ['film', 'series'] as MediaType[] },
   { id: 'music', label: ui.media.sections.music, description: ui.media.sections.musicNote, types: ['album', 'podcast'] as MediaType[] },
-].map((section) => ({
-  ...section,
-  items: allMedia.filter((entry) => section.types.includes(entry.data.type)),
-}));
+].map((section) => {
+  const items = allMedia.filter((entry) => section.types.includes(entry.data.type));
+  return {
+    ...section,
+    items: items.slice(0, 8),
+    total: items.length,
+    pageCount: Math.ceil(items.length / 8),
+  };
+});
 
 function dateValue(value: Date | undefined) {
   return value?.valueOf() ?? 0;
@@ -85,7 +91,7 @@ function isPageMeta(value: unknown): value is { title: string; subtitle: string;
 <!doctype html>
 <html lang={htmlLang} data-palette={palette}>
   <head>
-    <BaseHead title={`${pageMeta.title} | ${site.title}`} description={pageMeta.subtitle} />
+    <BaseHead title={`ECHOES | ${site.title}`} description={pageMeta.subtitle} />
     <style>
       html { scroll-behavior: smooth; }
       main { width: min(100%, var(--layout-shell-width)); padding-top: 126px; }
@@ -488,6 +494,323 @@ function isPageMeta(value: unknown): value is { title: string; subtitle: string;
       0 0 7px rgba(216, 185, 40, 0.10) !important;
   }
 
+
+/* MEDIA MOBILE SUBTITLE FIX START */
+
+@media (max-width: 760px) {
+
+  main {
+    padding-top: 30px !important;
+  }
+
+  .media-layout {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .media-hero {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  .media-hero-main {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+  }
+
+  .media-kicker,
+  .media-title {
+    max-width: none !important;
+  }
+
+  .media-subtitle {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    font-size: 0.82rem !important;
+    line-height: 1.65 !important;
+  }
+
+  .media-subtitle br {
+    display: none !important;
+  }
+}
+
+/* MEDIA MOBILE SUBTITLE FIX END */
+
+
+
+/* NEXUS MOBILE HEADER FINE TUNE START */
+@media (max-width: 760px) {
+  main {
+    padding-top: 38px !important;
+  }
+
+  .media-hero::after {
+    bottom: 0px !important;
+    right: 0 !important;
+  }
+}
+/* NEXUS MOBILE HEADER FINE TUNE END */
+/* NEXUS_MEDIA_FLOATING_MOBILE_NAV_V1 START */
+@media (max-width: 760px) {
+  /* Remove stacked spacing below the hero and above the first section. */
+  .media-hero {
+    margin-bottom: 18px !important;
+  }
+  .media-layout > div {
+    padding-top: 0 !important;
+    padding-bottom: 96px;
+  }
+  .media-mobile-nav {
+    display: flex !important;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: clamp(15px, 5vw, 28px);
+    margin: 0 0 22px !important;
+    padding: 0 0 12px;
+    border-bottom: 1px solid var(--paper-line);
+  }
+  .media-mobile-nav a {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 7px;
+    padding: 4px 0 !important;
+    font-size: clamp(0.93rem, 3.5vw, 1.07rem) !important;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+  .media-mobile-nav a > span {
+    font-size: 0.82em;
+  }
+  .media-section-heading {
+    margin-bottom: 24px;
+  }
+
+  /* Floating switcher lives above the mobile browser toolbar. */
+  .media-floating-nav {
+    position: fixed;
+    left: 16px;
+    right: 16px;
+    bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+    z-index: 80;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: center;
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 11px 10px 8px;
+    background: rgba(99, 102, 102, 0.43);
+    border: 1px solid rgba(255, 255, 255, 0.19);
+    border-radius: 17px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.28);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(12px);
+    transition: opacity 180ms ease, transform 180ms ease, visibility 180ms ease;
+  }
+  .media-floating-nav.is-visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+  .media-floating-nav a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    min-height: 41px;
+    color: #d0d2ce;
+    font-family: var(--font-meta);
+    font-size: clamp(0.89rem, 3.6vw, 1.02rem);
+    font-weight: 600;
+    line-height: 1.2;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .media-floating-nav a[aria-current='true'] {
+    color: #fff;
+  }
+  .media-floating-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: transparent;
+  }
+  .media-floating-nav a[aria-current='true'] .media-floating-dot {
+    background: #b7ff00;
+    box-shadow: 0 0 5px rgba(183,255,0,.85), 0 0 11px rgba(183,255,0,.4);
+  }
+}
+@media (min-width: 761px) {
+  .media-floating-nav { display: none !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .media-floating-nav { transition: none !important; }
+}
+/* NEXUS_MEDIA_FLOATING_MOBILE_NAV_V1 END */
+/* NEXUS_MEDIA_CATEGORY_PAGING_V1 */
+.media-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  margin: 26px 0 10px;
+  padding: 16px 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.13);
+  font-family: var(--font-meta);
+}
+.media-pagination a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 7px 14px;
+  border: 1px solid rgba(183, 255, 0, 0.48);
+  border-radius: 7px;
+  color: #b7ff00;
+  font-size: 0.81rem;
+  font-weight: 650;
+  letter-spacing: 0.045em;
+  text-decoration: none;
+  transition: border-color 150ms ease, background 150ms ease;
+}
+.media-pagination a:hover,
+.media-pagination a:focus-visible {
+  border-color: #b7ff00;
+  background: rgba(183, 255, 0, 0.09);
+}
+.media-pagination-count {
+  margin-right: auto;
+  color: #92968f;
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+@media (max-width: 760px) {
+  .media-pagination { gap: 10px; margin-bottom: 12px; }
+  .media-pagination a { padding: 8px 12px; }
+}
+/* NEXUS_MEDIA_DESIGN_REFINEMENT_V1 START */
+/* Pager: quiet charcoal at rest, lime feedback on interaction. */
+.media-pagination a {
+  position: relative;
+  overflow: hidden;
+  justify-content: center;
+  gap: 9px;
+  border: 1px solid rgba(137, 148, 139, 0.45) !important;
+  background: rgba(24, 27, 25, 0.52) !important;
+  color: #e1e4de !important;
+  box-shadow: none !important;
+  transition:
+    color 220ms ease,
+    background-color 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease,
+    transform 220ms ease !important;
+}
+.media-pagination a:hover,
+.media-pagination a:focus-visible {
+  color: #101410 !important;
+  background: #b7ff00 !important;
+  border-color: #b7ff00 !important;
+  box-shadow: 0 0 8px rgba(183, 255, 0, 0.20),
+              0 0 20px rgba(183, 255, 0, 0.09) !important;
+  transform: translateY(-2px);
+}
+.media-pagination a:active {
+  color: #101410 !important;
+  background: #b7ff00 !important;
+  border-color: #b7ff00 !important;
+  transform: translateY(0) scale(0.98);
+}
+.media-pagination a:focus-visible {
+  outline: 2px solid rgba(183, 255, 0, 0.65);
+  outline-offset: 3px;
+}
+/* The next arrow stays lime in the resting state. */
+.media-pagination a[data-media-next]::after {
+  content: '\2192';
+  color: #b7ff00;
+  font-size: 1.13em;
+  transition: transform 220ms ease, color 220ms ease;
+}
+.media-pagination a[data-media-next]:hover::after,
+.media-pagination a[data-media-next]:focus-visible::after {
+  color: #101410;
+  transform: translateX(4px);
+}
+.media-pagination a[data-media-prev]::before {
+  content: '\2190';
+  color: #b7ff00;
+  font-size: 1.13em;
+  transition: transform 220ms ease, color 220ms ease;
+}
+.media-pagination a[data-media-prev]:hover::before,
+.media-pagination a[data-media-prev]:focus-visible::before {
+  color: #101410;
+  transform: translateX(-4px);
+}
+/* Remove the space reserved by the old mobile shelf bottom padding. */
+.media-section:last-child {
+  padding-bottom: 12px !important;
+}
+.media-pagination {
+  margin-bottom: 0 !important;
+}
+main {
+  min-height: 0 !important;
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+@media (max-width: 760px) {
+  .media-layout > div {
+    padding-bottom: 0 !important;
+  }
+  .media-section:last-child {
+    padding-bottom: 0 !important;
+  }
+  .media-floating-nav {
+    background: rgba(105, 109, 108, 0.27) !important;
+    border-color: rgba(255, 255, 255, 0.16) !important;
+    -webkit-backdrop-filter: blur(14px) saturate(110%) !important;
+    backdrop-filter: blur(14px) saturate(110%) !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .media-pagination a,
+  .media-pagination a::before,
+  .media-pagination a::after { transition: none !important; transform: none !important; }
+}
+/* NEXUS_MEDIA_DESIGN_REFINEMENT_V1 END */
+/* NEXUS_MEDIA_FOOTER_FLOATING_V2 */
+/* Restore breathing room between pagination and the footer. */
+main {
+  padding-bottom: 64px !important;
+}
+@media (max-width: 760px) {
+  main {
+    padding-bottom: 68px !important;
+  }
+  /* Hide only at the absolute document bottom. */
+  html.media-at-absolute-bottom .media-floating-nav,
+  html.media-at-absolute-bottom .media-floating-nav.is-visible {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    transform: translateY(14px) !important;
+  }
+}
+/* NEXUS_MEDIA_FOOTER_FLOATING_V2 END */
 </style>
   </head>
   <body>
@@ -509,19 +832,26 @@ function isPageMeta(value: unknown): value is { title: string; subtitle: string;
         <div>
           
           <nav class="media-mobile-nav" aria-label={ui.media.sectionsLabel} data-media-nav>
-            {sections.map((section, index) => <a href={`#${section.id}`} aria-current={index === 0 ? 'true' : undefined}>{section.label} <span>{section.items.length}</span></a>)}
+            {sections.map((section, index) => <a href={`#${section.id}`} aria-current={index === 0 ? 'true' : undefined}>{section.label} <span>{section.total}</span></a>)}
           </nav>
           {sections.map((section) => (
             <section class="media-section" id={section.id} data-media-section>
               <div class="media-section-heading">
                 <h2>{section.label}</h2>
-                <span class="media-count">{section.items.length} · {section.description}</span>
+                <span class="media-count">{section.total} · {section.description}</span>
               </div>
 
               {section.items.length ? (
-                <MediaShelf
-                  columns={4}
-                  items={section.items.map((entry) => ({
+                <MediaShelf columns={4} items={[]} itemCount={section.items.length}>
+                  {section.items.map((entry) => (
+                    <TinaIsland
+                      name="media-card"
+                      params={{ path: `${entry.id}.mdx` }}
+                      wrapper={{ tag: 'div' }}
+                      primary
+                    >
+                      <MediaShelf cardOnly items={[{
+                    id: `media-${entry.id}`,
                     title: entry.data.title,
                     creator: entry.data.creator,
                     type: entry.data.type,
@@ -531,10 +861,18 @@ function isPageMeta(value: unknown): value is { title: string; subtitle: string;
                     href: entry.data.externalUrl,
                     reviewHref: entry.data.review ? `${mediaRoute}/${entry.id}/` : undefined,
                     reviewLabel: entry.data.review ? ui.media.readReview : undefined,
-                  }))}
-                />
+                  }]} />
+                    </TinaIsland>
+                  ))}
+                </MediaShelf>
               ) : (
                 <p class="media-empty">{ui.media.empty}</p>
+              )}
+              {section.pageCount > 1 && (
+                <nav class="media-pagination" aria-label={`${section.label} pagination`}>
+                  <span class="media-pagination-count">01 / {String(section.pageCount).padStart(2, '0')}</span>
+                  <a data-media-next href={`/media/${section.id}/2/`}>NEXT</a>
+                </nav>
               )}
             </section>
           ))}
@@ -546,13 +884,21 @@ function isPageMeta(value: unknown): value is { title: string; subtitle: string;
             {sections.map((section, index) => (
               <a href={`#${section.id}`} aria-current={index === 0 ? 'true' : undefined}>
                 <span>{section.label}</span>
-                <span>{section.items.length}</span>
+                <span>{section.total}</span>
               </a>
             ))}
           </nav>
         </aside>
       </div>
     </main>
+    <nav class="media-floating-nav" data-media-floating-nav data-media-nav aria-label={ui.media.sectionsLabel} aria-hidden="true" inert>
+      {sections.map((section, index) => (
+        <a href={`#${section.id}`} aria-current={index === 0 ? 'true' : 'false'}>
+          <span>{section.label}</span>
+          <span class="media-floating-dot" aria-hidden="true"></span>
+        </a>
+      ))}
+    </nav>
     <Footer />
     <script>
       const sections = Array.from(
@@ -622,6 +968,41 @@ function isPageMeta(value: unknown): value is { title: string; subtitle: string;
         });
       });
 
+      /* Floating mobile section switcher and active-section tracking. */
+      const floatingMediaNav = document.querySelector<HTMLElement>('[data-media-floating-nav]');
+      const topMediaNav = document.querySelector<HTMLElement>('.media-mobile-nav');
+      let mediaFloatingFrame = 0;
+
+      const syncFloatingMediaNav = () => {
+        if (!floatingMediaNav || !topMediaNav) return;
+        const isMobile = window.matchMedia('(max-width: 760px)').matches;
+        const show = isMobile && topMediaNav.getBoundingClientRect().bottom < 0;
+        floatingMediaNav.classList.toggle('is-visible', show);
+        floatingMediaNav.toggleAttribute('inert', !show);
+        floatingMediaNav.setAttribute('aria-hidden', show ? 'false' : 'true');
+
+        if (manualActiveId !== null || !sections.length) return;
+        const switchLine = Math.min(window.innerHeight * 0.38, 230);
+        let active = sections[0].id;
+        for (const section of sections) {
+          if (section.getBoundingClientRect().top <= switchLine) {
+            active = section.id;
+          }
+        }
+        setActive(active);
+      };
+
+      const requestFloatingMediaSync = () => {
+        if (mediaFloatingFrame) return;
+        mediaFloatingFrame = window.requestAnimationFrame(() => {
+          mediaFloatingFrame = 0;
+          syncFloatingMediaNav();
+        });
+      };
+      window.addEventListener('scroll', requestFloatingMediaSync, { passive: true });
+      window.addEventListener('resize', requestFloatingMediaSync);
+      window.addEventListener('pageshow', requestFloatingMediaSync);
+      requestFloatingMediaSync();
       if (sections.length) {
         const observer = new IntersectionObserver(
           (entries) => {
@@ -642,7 +1023,35 @@ function isPageMeta(value: unknown): value is { title: string; subtitle: string;
         sections.forEach((section) => observer.observe(section));
       }
     </script>
-  </body>
+<script is:inline>
+/* NEXUS_MEDIA_FOOTER_FLOATING_V2 */
+(() => {
+  const mount = () => {
+    if (document.documentElement.dataset.mediaBottomWatcher === '1') return;
+    document.documentElement.dataset.mediaBottomWatcher = '1';
+    let raf = 0;
+    const check = () => {
+      raf = 0;
+      const doc = document.documentElement;
+      const maxScroll = Math.max(0, doc.scrollHeight - window.innerHeight);
+      const position = Math.max(0, window.scrollY || doc.scrollTop || 0);
+      doc.classList.toggle('media-at-absolute-bottom', maxScroll > 0 && position >= maxScroll - 0.25);
+    };
+    const schedule = () => {
+      if (!raf) raf = requestAnimationFrame(check);
+    };
+    window.addEventListener('scroll', schedule, {passive: true});
+    window.addEventListener('resize', schedule, {passive: true});
+    window.addEventListener('pageshow', schedule);
+    document.addEventListener('astro:after-swap', schedule);
+    check();
+  };
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', mount, {once:true});
+  } else mount();
+})();
+</script>
+</body>
 </html>
 
 <script is:inline>

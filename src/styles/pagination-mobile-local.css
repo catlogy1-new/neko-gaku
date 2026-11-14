@@ -1,0 +1,160 @@
+/*
+ * NEXUS mobile pagination
+ * Blog / Series common layout
+ * Desktop remains unchanged.
+ */
+
+.pagination-pages-mobile {
+  display: none !important;
+}
+
+@media (max-width: 720px) {
+
+  .archive-pagination {
+    display: grid !important;
+    grid-template-columns:
+      minmax(0, 1fr)
+      auto
+      minmax(0, 1fr) !important;
+    align-items: center !important;
+    gap: 6px !important;
+    width: 100%;
+    margin-top: 28px;
+  }
+
+  .archive-pagination .pagination-pages-desktop {
+    display: none !important;
+  }
+
+  .archive-pagination .pagination-pages-mobile {
+    display: flex !important;
+    width: auto !important;
+    flex-wrap: nowrap !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 5px !important;
+    min-width: 0;
+  }
+
+  .archive-pagination .pagination-link {
+    display: inline-flex !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 36px !important;
+    padding: 0 5px !important;
+    font-size: 0.72rem !important;
+    white-space: nowrap;
+  }
+
+  .archive-pagination .pagination-number {
+    display: inline-flex !important;
+    width: 32px !important;
+    min-width: 32px !important;
+    min-height: 36px !important;
+    padding: 0 !important;
+    font-size: 0.78rem !important;
+  }
+
+  .archive-pagination .pagination-link,
+  .archive-pagination .pagination-number {
+    border: 1px solid var(--paper-line) !important;
+    border-radius: 6px !important;
+    background: #202722 !important;
+    color: #e4e9e3 !important;
+    text-decoration: none !important;
+    text-align: center;
+  }
+
+  .archive-pagination .pagination-number.current {
+    border-color: #b7ff00 !important;
+    background: #182018 !important;
+    color: #b7ff00 !important;
+  }
+
+  .archive-pagination .pagination-link.disabled {
+    opacity: 0.42 !important;
+    pointer-events: none !important;
+  }
+
+  .archive-pagination .pagination-link:not(.disabled):hover,
+  .archive-pagination .pagination-number:hover,
+  .archive-pagination .pagination-link:not(.disabled):focus-visible,
+  .archive-pagination .pagination-number:focus-visible {
+    border-color: #b7ff00 !important;
+    background: #263025 !important;
+    color: #b7ff00 !important;
+    outline: none !important;
+    box-shadow:
+      0 0 7px rgba(183,255,0,0.34),
+      0 0 15px rgba(183,255,0,0.10) !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .archive-pagination {
+    gap: 4px !important;
+  }
+
+  .archive-pagination .pagination-pages-mobile {
+    gap: 3px !important;
+  }
+
+  .archive-pagination .pagination-number {
+    width: 29px !important;
+    min-width: 29px !important;
+  }
+
+  .archive-pagination .pagination-link {
+    font-size: 0.65rem !important;
+    padding: 0 3px !important;
+  }
+}
+
+/* NEXUS MOBILE PAGINATION SPACING V2 */
+@media (max-width: 720px) {
+
+  .archive-pagination {
+    grid-template-columns:
+      minmax(0, 1fr)
+      auto
+      minmax(0, 1fr) !important;
+
+    column-gap: 12px !important;
+
+    margin-top: 78px !important;
+    padding-top: 0 !important;
+  }
+
+  .archive-pagination .pagination-pages-mobile {
+    gap: 8px !important;
+  }
+
+  .archive-pagination .pagination-link {
+    min-height: 34px !important;
+    padding: 0 7px !important;
+    font-size: 0.68rem !important;
+  }
+
+  .archive-pagination .pagination-number {
+    width: 30px !important;
+    min-width: 30px !important;
+    min-height: 34px !important;
+    font-size: 0.75rem !important;
+  }
+}
+
+@media (max-width: 380px) {
+
+  .archive-pagination {
+    column-gap: 7px !important;
+  }
+
+  .archive-pagination .pagination-pages-mobile {
+    gap: 5px !important;
+  }
+
+  .archive-pagination .pagination-number {
+    width: 28px !important;
+    min-width: 28px !important;
+  }
+}

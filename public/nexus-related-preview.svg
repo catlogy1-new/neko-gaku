@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="352" height="248" viewBox="0 0 352 248">
+<defs>
+  <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+    <stop stop-color="#303d3b"/>
+    <stop offset=".5" stop-color="#111c20"/>
+    <stop offset="1" stop-color="#5e2a15"/>
+  </linearGradient>
+</defs>
+<rect width="352" height="248" fill="url(#g)"/>
+<circle cx="264" cy="69" r="61" fill="#b7ff00" opacity=".14"/>
+<path d="M0 192L105 100L174 166L256 70L352 147V248H0Z" fill="#050807" opacity=".72"/>
+<path d="M0 209L105 117L174 183L256 87L352 164" fill="none" stroke="#b7ff00" stroke-width="2" opacity=".58"/>
+<text x="20" y="35" fill="#d8ded8" font-family="monospace" font-size="15" letter-spacing="3">NEXUS</text>
+<text x="20" y="226" fill="#a3a9a2" font-family="monospace" font-size="12" letter-spacing="2">IMAGE TEST</text>
+</svg>

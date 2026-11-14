@@ -1,4 +1,4 @@
-﻿<footer class="site-footer">
+<footer class="site-footer">
   <div class="site-footer-inner">
     <div class="footer-signature">
       <span class="signal-dot" aria-hidden="true"></span>
@@ -422,4 +422,26 @@
 </style>
 
 
+<style is:global>
+/* NEXUS FOOTER SIGNAL FINAL V1 */
+
+.site-footer .signal-dot {
+  animation:
+    nexus-footer-signal-pulse
+    2.4s
+    ease-in-out
+    infinite !important;
+}
+
+@keyframes nexus-footer-signal-pulse {
+  0%,
+  100% {
+    opacity: 0.38;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+</style>
 

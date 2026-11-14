@@ -588,7 +588,7 @@ export const collections = {
   about,
   blog,
   siteConfig,
-  ...(projectsModuleEnabled ? { projects } : {}),
-  ...(vibeModuleEnabled ? { vibe } : {}),
-  ...(mediaModuleEnabled ? { media } : {}),
+  projects,
+  vibe,
+  media,
 };
