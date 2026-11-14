@@ -17,27 +17,57 @@ import { TinaCloudAuthProvider } from 'tinacms';
   }
   const state = window as Window & { __nexusTinaAdmin?: boolean };
   const adminWindow = window as Window & { __nexusBlogMutation?: (kind: string, pathname: string, sticky: boolean) => Promise<void> };
+  const BLOG_FIELDS = `title description date draft tags categories series comments sticky heroImage showHeroImage japaneseUrl japaneseTitle japaneseDescription japaneseBody sidebar { enable toc relatedPosts } body`;
+  const BLOG_KEYS = ["title", "description", "date", "draft", "tags", "categories", "series", "comments", "sticky", "heroImage", "showHeroImage", "japaneseUrl", "japaneseTitle", "japaneseDescription", "japaneseBody", "sidebar", "body"];
+  const activeMutations = new Set<string>();
+  function canonicalBlogValue(value: unknown): string {
+    return JSON.stringify(value, (_key, item) => item && typeof item === "object" && !Array.isArray(item) ? Object.fromEntries(Object.keys(item).sort().map(key => [key, item[key]])) : item);
+  }
   adminWindow.__nexusBlogMutation = async (kind, pathname, sticky) => {
     const user = await provider.getUser();
     if (!user || !(await isNexusOwner(user))) throw new Error("Administrator login required");
     const slug = new RegExp("^/blog/([^/]+)/?$").exec(pathname)?.[1];
     if (!slug) throw new Error("Invalid article path");
-    const token = await provider.getToken();
-    if (!token?.id_token) throw new Error("Please sign in to TinaCMS");
-    const relativePath = decodeURIComponent(slug) + ".md";
-    const deleting = kind === "delete";
-    if (!deleting && kind !== "pin" && kind !== "draft") throw new Error("Unsupported action");
-    const query = deleting
-      ? `mutation RemoveBlog($relativePath: String!) { deleteDocument(collection: "blog", relativePath: $relativePath) { __typename } }`
-      : `mutation SaveBlog($relativePath: String!, $params: BlogMutation!) { updateBlog(relativePath: $relativePath, params: $params) { id } }`;
-    const variables = deleting ? { relativePath } : { relativePath, params: kind === "pin" ? { sticky } : { draft: true } };
-    const response = await fetch("https://content.tinajs.io/3.0/content/70ea1304-199c-438b-92e0-c2a44d871575/github/v1", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: "Bearer " + token.id_token },
-      body: JSON.stringify({ query, variables }),
-    });
-    const result = await response.json();
-    if (!response.ok || result.errors?.length || !result.data) throw new Error(result.errors?.[0]?.message || "TinaCMS update failed");
+    const decodedSlug = decodeURIComponent(slug);
+    if (!/^[a-zA-Z0-9_-]+$/.test(decodedSlug)) throw new Error("Invalid article slug");
+    const relativePath = decodedSlug + ".md";
+    if (!["delete", "pin", "draft"].includes(kind)) throw new Error("Unsupported action");
+    if (activeMutations.has(relativePath)) throw new Error("An update is already in progress");
+    activeMutations.add(relativePath);
+    try {
+      const token = await provider.getToken();
+      if (!token?.id_token) throw new Error("Please sign in to TinaCMS");
+      async function request(query: string, variables: Record<string, unknown>) {
+        const response = await fetch("https://content.tinajs.io/3.0/content/70ea1304-199c-438b-92e0-c2a44d871575/github/v1", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: "Bearer " + token!.id_token },
+          cache: "no-store",
+          body: JSON.stringify({ query, variables }),
+        });
+        const result = await response.json();
+        if (!response.ok || result.errors?.length || !result.data) throw new Error(result.errors?.[0]?.message || "TinaCMS request failed");
+        return result.data;
+      }
+      if (kind === "delete") {
+        await request(`mutation RemoveBlog($relativePath: String!) { deleteDocument(collection: "blog", relativePath: $relativePath) { __typename } }`, { relativePath });
+        return;
+      }
+      const readQuery = `query ReadCompleteBlog($relativePath: String!) { blog(relativePath: $relativePath) { ${BLOG_FIELDS} } }`;
+      const original = (await request(readQuery, { relativePath })).blog;
+      if (!original || !BLOG_KEYS.every(key => Object.prototype.hasOwnProperty.call(original, key))) throw new Error("Incomplete article data. Update cancelled.");
+      if (!["title", "description", "date"].every(key => typeof original[key] === "string" && original[key].trim().length > 0)) throw new Error("Required article fields missing. Update cancelled.");
+      if (!original.body || original.body.type !== "root" || !Array.isArray(original.body.children)) throw new Error("Article body unavailable. Update cancelled.");
+      const params = Object.fromEntries(BLOG_KEYS.map(key => [key, original[key]]));
+      if (kind === "pin") params.sticky = sticky;
+      else params.draft = true;
+      const latest = (await request(readQuery, { relativePath })).blog;
+      if (canonicalBlogValue(latest) !== canonicalBlogValue(original)) throw new Error("Article changed during update. Please try again.");
+      await request(`mutation SaveCompleteBlog($relativePath: String!, $params: BlogMutation!) { updateBlog(relativePath: $relativePath, params: $params) { id } }`, { relativePath, params });
+      const saved = (await request(readQuery, { relativePath })).blog;
+      if (!saved || canonicalBlogValue(saved) !== canonicalBlogValue(params)) throw new Error("Saved article verification failed. Check GitHub before making further changes.");
+    } finally {
+      activeMutations.delete(relativePath);
+    }
   };
   let revision = 0;
   async function refreshAdmin() {
