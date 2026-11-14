@@ -182,6 +182,62 @@ const ui = getUiText(siteConfig);
 <!-- NEXUS TAG DETAIL FIX END -->
 
 
+
+<!-- NEXUS TAG BACK SERIES STYLE START -->
+<style is:global>
+  .tag-detail-page .tag-detail-back a.back-link {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 34px !important;
+    padding: 7px 12px !important;
+    border: 1px solid rgba(183, 255, 0, 0.48) !important;
+    border-radius: 6px !important;
+    background: rgba(183, 255, 0, 0.035) !important;
+    color: #a4aaa1 !important;
+    font-family: 'Maple Mono', monospace !important;
+    font-size: 0.66rem !important;
+    font-weight: 600 !important;
+    line-height: 1 !important;
+    letter-spacing: 0.06em !important;
+    text-decoration: none !important;
+    transition: color 220ms ease, border-color 220ms ease, background 220ms ease, box-shadow 220ms ease !important;
+    gap: 6px !important;
+    text-transform: uppercase !important;
+  }
+
+  .tag-detail-page .tag-detail-back a.back-link:hover,
+  .tag-detail-page .tag-detail-back a.back-link:focus-visible {
+    color: #e7e8e4 !important;
+    border-color: #b7ff00 !important;
+    background: rgba(183, 255, 0, 0.055) !important;
+    box-shadow: 0 0 7px rgba(183, 255, 0, 0.20) !important;
+    outline: none !important;
+  }
+
+  .tag-detail-page .tag-detail-back a.back-link svg {
+    width: 12px !important;
+    height: 12px !important;
+    color: currentColor !important;
+    stroke: currentColor !important;
+    filter: none !important;
+  }
+
+  .tag-detail-page .tag-detail-back a.back-link:hover svg,
+  .tag-detail-page .tag-detail-back a.back-link:focus-visible svg {
+    color: inherit !important;
+    stroke: currentColor !important;
+    filter: none !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tag-detail-page .tag-detail-back a.back-link {
+      transition: none !important;
+    }
+  }
+</style>
+<!-- NEXUS TAG BACK SERIES STYLE END -->
+
 </head>
   <body>
     <BlogTopNav />
