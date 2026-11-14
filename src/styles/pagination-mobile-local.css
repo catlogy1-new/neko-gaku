@@ -158,3 +158,36 @@
     min-width: 28px !important;
   }
 }
+
+/* NEXUS DESKTOP PAGINATION COLORS */
+@media (min-width: 721px) {
+  nav.archive-pagination .pagination-link,
+  nav.archive-pagination .pagination-number {
+    background: #202722 !important;
+    color: #e4e9e3 !important;
+    border-color: #39443b !important;
+  }
+
+  nav.archive-pagination .pagination-number.current {
+    background: #182018 !important;
+    color: #b7ff00 !important;
+    border-color: #b7ff00 !important;
+  }
+
+  nav.archive-pagination .pagination-link.disabled {
+    background: #141814 !important;
+    color: #737c73 !important;
+    border-color: #303830 !important;
+    opacity: 1 !important;
+    pointer-events: none !important;
+  }
+
+  nav.archive-pagination .pagination-link:not(.disabled):hover,
+  nav.archive-pagination .pagination-number:hover,
+  nav.archive-pagination .pagination-link:not(.disabled):focus-visible,
+  nav.archive-pagination .pagination-number:focus-visible {
+    background: #263025 !important;
+    color: #b7ff00 !important;
+    border-color: #b7ff00 !important;
+  }
+}
