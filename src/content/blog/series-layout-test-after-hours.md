@@ -10,7 +10,7 @@ categories:
 series:
   - AFTER HOURS
 comments: false
-sticky: false
+sticky: true
 ---
 
 # AFTER HOURS / 01
