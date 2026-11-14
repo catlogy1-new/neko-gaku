@@ -243,7 +243,7 @@ const ui = getUiText(siteConfig);
     <BlogTopNav />
     <main class="tag-detail-page" data-pagefind-body>
       <div class="tag-detail-back">
-<BackLink href="/blog/" label={ui.groups.back} />
+<BackLink href="/blog/" label={ui.groups.back} useHistory={false} />
 </div>
       <BlogArchive
         page={page}

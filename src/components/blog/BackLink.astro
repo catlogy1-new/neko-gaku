@@ -5,14 +5,15 @@ import '@navfolio/theme-default/styles/blog-back-link.css';
 interface Props {
   href: string;
   label: string;
+  useHistory?: boolean;
 }
 
-const { href, label } = Astro.props;
+const { href, label, useHistory = true } = Astro.props;
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
 const linkHref = `${basePath}${href.startsWith('/') ? href : `/${href}`}`;
 ---
 
-<a class="back-link" href={linkHref} data-back-link>
+<a class="back-link" href={linkHref} data-back-link={useHistory ? "true" : undefined}>
   <ArrowLeft size={15} strokeWidth={2} aria-hidden="true" />
   <span>{label}</span>
 </a>
