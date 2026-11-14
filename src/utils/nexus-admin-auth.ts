@@ -57,14 +57,15 @@ import { TinaCloudAuthProvider } from 'tinacms';
       if (!original || !BLOG_KEYS.every(key => Object.prototype.hasOwnProperty.call(original, key))) throw new Error("Incomplete article data. Update cancelled.");
       if (!["title", "description", "date"].every(key => typeof original[key] === "string" && original[key].trim().length > 0)) throw new Error("Required article fields missing. Update cancelled.");
       if (!original.body || original.body.type !== "root" || !Array.isArray(original.body.children)) throw new Error("Article body unavailable. Update cancelled.");
-      const params = Object.fromEntries(BLOG_KEYS.map(key => [key, original[key]]));
+      const params = Object.fromEntries(BLOG_KEYS.filter(key => original[key] !== null && original[key] !== undefined).map(key => [key, original[key]]));
       if (kind === "pin") params.sticky = sticky;
       else params.draft = true;
       const latest = (await request(readQuery, { relativePath })).blog;
       if (canonicalBlogValue(latest) !== canonicalBlogValue(original)) throw new Error("Article changed during update. Please try again.");
       await request(`mutation SaveCompleteBlog($relativePath: String!, $params: BlogMutation!) { updateBlog(relativePath: $relativePath, params: $params) { id } }`, { relativePath, params });
       const saved = (await request(readQuery, { relativePath })).blog;
-      if (!saved || canonicalBlogValue(saved) !== canonicalBlogValue(params)) throw new Error("Saved article verification failed. Check GitHub before making further changes.");
+      const expected = { ...original, ...(kind === "pin" ? { sticky } : { draft: true }) };
+      if (!saved || canonicalBlogValue(saved) !== canonicalBlogValue(expected)) throw new Error("Saved article verification failed. Check GitHub before making further changes.");
     } finally {
       activeMutations.delete(relativePath);
     }
