@@ -4,7 +4,7 @@ description: Photography portfolio gallery.
 date: 2026-11-10T09:25:10.301Z
 draft: false
 galleryImages:
-  - src: /images/logo-thin.webp
+  - src: /images/多重露光.jpg
     title: SAMPLE
 photographyNote:
   index: ''
