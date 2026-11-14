@@ -17,8 +17,8 @@ import { TinaCloudAuthProvider } from 'tinacms';
   }
   const state = window as Window & { __nexusTinaAdmin?: boolean };
   const adminWindow = window as Window & { __nexusBlogMutation?: (kind: string, pathname: string, sticky: boolean) => Promise<void> };
-  const BLOG_FIELDS = `title description date draft tags categories series comments sticky heroImage showHeroImage japaneseUrl japaneseTitle japaneseDescription japaneseBody sidebar { enable toc relatedPosts } body`;
-  const BLOG_KEYS = ["title", "description", "date", "draft", "tags", "categories", "series", "comments", "sticky", "heroImage", "showHeroImage", "japaneseUrl", "japaneseTitle", "japaneseDescription", "japaneseBody", "sidebar", "body"];
+  const BLOG_FIELDS = `headerKicker tocVisibility title description date draft tags categories series comments sticky heroImage showHeroImage japaneseUrl japaneseTitle japaneseDescription japaneseBody sidebar { enable toc relatedPosts } body`;
+  const BLOG_KEYS = ["headerKicker", "tocVisibility", "title", "description", "date", "draft", "tags", "categories", "series", "comments", "sticky", "heroImage", "showHeroImage", "japaneseUrl", "japaneseTitle", "japaneseDescription", "japaneseBody", "sidebar", "body"];
   const activeMutations = new Set<string>();
   function canonicalBlogValue(value: unknown): string {
     return JSON.stringify(value, (_key, item) => item && typeof item === "object" && !Array.isArray(item) ? Object.fromEntries(Object.keys(item).sort().map(key => [key, item[key]])) : item);

@@ -740,6 +740,19 @@ export default defineConfig({
           },
           {
             type: "string",
+            name: "headerKicker",
+            label: "Header Kicker",
+            description: "Text above the article title. Leave empty for NOTEBOOK ENTRY.",
+          },
+          {
+            type: "string",
+            name: "tocVisibility",
+            label: "Table of Contents",
+            description: "ON: show the table of contents. OFF: hide it. Unset: use the existing article setting.",
+            options: [{ label: "ON", value: "on" }, { label: "OFF", value: "off" }],
+          },
+          {
+            type: "string",
             name: "description",
             label: "Description",
             required: true,

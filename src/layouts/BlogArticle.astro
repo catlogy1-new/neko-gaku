@@ -52,6 +52,8 @@ interface Props {
       comments?: boolean;
       draft?: boolean;
       sticky?: boolean | number;
+      headerKicker?: string;
+      tocVisibility?: "on" | "off";
       sidebar?: SidebarConfig;
     };
   };
@@ -130,7 +132,7 @@ const sidebarConfig = {
   ...props.sidebar,
 };
 const shouldRenderSidebar = sidebarConfig.enable ?? true;
-const shouldRenderToc = sidebarConfig.toc ?? true;
+const shouldRenderToc = post.data.tocVisibility === "on" ? true : post.data.tocVisibility === "off" ? false : (sidebarConfig.toc ?? true);
 const hasToc = shouldRenderToc && tocItemCount >= 2;
 
 const allBlogPosts = await getCollection('blog', ({ data }) => !data.draft);
@@ -226,7 +228,7 @@ const hasSidebar = false;
             heroImage={heroImage}
             showHeroImage={showHeroImage}
             variant={props.headerVariant}
-            kicker={props.headerKicker}
+            kicker={props.headerKicker ?? (post.data.headerKicker?.trim() || undefined)}
             note={props.headerNote}
             pathname={Astro.url.pathname}
             showPageView={isBlogPost}
