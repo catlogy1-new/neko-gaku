@@ -11,7 +11,7 @@ categories:
   - Blog Test
 series:
   - LOST MEMORY
-comments: false
+comments: true
 sticky: false
 heroImage: /images/%E5%A4%9A%E9%87%8D%E9%9C%B2%E5%85%89.jpg
 ---
