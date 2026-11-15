@@ -1,16 +1,17 @@
 ---
-title: "SIGNAL NOISE / 01"
-description: "Temporary test article for NEXUS Series pagination."
+title: SIGNAL NOISE / 01
+description: Temporary test article for NEXUS Series pagination.
 date: '2026-11-02'
 draft: false
-categories:
-  - Blog Test
 tags:
   - Series Layout Test
+categories:
+  - Blog Test
 series:
-  - "SIGNAL NOISE"
+  - SIGNAL NOISE
 comments: false
 sticky: false
+heroImage: /images/IMG_1692.JPG
 ---
 
 # SIGNAL NOISE / 01
