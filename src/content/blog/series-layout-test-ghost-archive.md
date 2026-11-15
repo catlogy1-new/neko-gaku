@@ -1,16 +1,21 @@
 ---
-title: GHOST ARCHIVE / 01
-description: Temporary test article for NEXUS Series pagination.
-date: '2026-11-02'
-draft: false
+title: To My Dear Friends
+headerKicker: drugaddiction
+tocVisibility: 'off'
+description: Let's take it slow
+date: '2026-11-15'
+draft: true
 tags:
-  - Series Layout Test
+  - drugaddiction
+  - addictionrecovery
+  - mentalhealthawareness
 categories:
-  - Blog Test
+  - drugaddiction
 series:
-  - GHOST ARCHIVE
-comments: false
-sticky: false
+  - drugaddiction
+comments: true
+sticky: true
+showHeroImage: true
 ---
 
 # GHOST ARCHIVE / 01
