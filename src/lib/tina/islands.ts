@@ -3,6 +3,7 @@ import type { IslandRegistry } from '@tinacms/astro/experimental';
 import type { QueryResult } from '@tinacms/astro/data';
 import type { BlogQuery, ProjectQuery, MediaQuery, PulseQuery } from '../../../tina/__generated__/types';
 import PostBody from '../../components/tina/PostBody.astro';
+import BlogHeader from "../../components/tina/BlogHeader.astro";
 import BlogBody from '../../components/tina/BlogBody.astro';
 import PortfolioGallery from '../../components/tina/PortfolioGallery.astro';
 import MediaCard from '../../components/tina/MediaCard.astro';
@@ -32,6 +33,18 @@ export const islands: IslandRegistry = {
     wrapper: { tag: 'div' },
     propsFromData: (data) => ({
       data: (data as QueryResult<ProjectQuery>).data?.project,
+    }),
+  },
+  "blog-header": {
+    fetch: (_request, params) => getPost(params.get("slug") ?? "", false),
+    component: BlogHeader,
+    wrapper: { tag: "div" },
+    propsFromData: (data, params) => ({
+      data: (data as QueryResult<BlogQuery>).data?.blog,
+      slug: params.get("slug") ?? "",
+      seriesName: params.get("seriesName") ?? "",
+      seriesCurrent: Number(params.get("seriesCurrent") ?? 0),
+      seriesTotal: Number(params.get("seriesTotal") ?? 0),
     }),
   },
   'blog-body': {

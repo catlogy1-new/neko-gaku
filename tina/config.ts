@@ -824,6 +824,7 @@ export default defineConfig({
             type: "string",
             name: "japaneseUrl",
             label: "Japanese URL",
+            ui: { component: "hidden" },
           },
           {
             type: "string",

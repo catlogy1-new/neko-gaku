@@ -1950,6 +1950,25 @@ const tinaEditHref = blogArticleId
 
     window.__nexusHeaderControlsBound = true;
 
+    // Reinitialize controls when Tina replaces the preview header.
+    if (window.parent !== window) {
+      const previewObserver = new MutationObserver((records) => {
+        const headerChanged = records.some((record) =>
+          record.target instanceof Element &&
+          record.target.matches("[data-tina-island^=\"/tina-island/blog-header?\"]")
+        );
+        if (!headerChanged) return;
+        init();
+        const japaneseBody = document.querySelector("#article-start-ja");
+        const languageButton = document.querySelector("[data-japanese-original]");
+        if (japaneseBody && !japaneseBody.hidden && languageButton instanceof HTMLElement && languageButton.dataset.currentLang !== "ja") {
+          languageButton.click();
+        }
+      });
+      previewObserver.observe(document.body, { childList: true, subtree: true });
+    }
+
+
 
     document.addEventListener(
       'click',

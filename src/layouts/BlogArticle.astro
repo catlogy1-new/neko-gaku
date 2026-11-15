@@ -1,5 +1,6 @@
 ---
 import { type CollectionEntry, getCollection } from 'astro:content';
+import TinaIsland from "@tinacms/astro/TinaIsland.astro";
 import ArticleHeader from '../components/article/ArticleHeader.astro';
 import ArticleActions from '../components/article/ArticleActions.astro';
 import ArticleActionMenus from '../components/article/ArticleActionMenus.astro';
@@ -33,6 +34,7 @@ type SidebarConfig = {
 };
 
 interface Props {
+  tinaSlug?: string;
   post?: {
     id: string;
     collection?: string;
@@ -213,6 +215,8 @@ const hasSidebar = false;
     <main class:list={['blog-layout', { 'blog-layout-centered': !hasSidebar }]} data-pagefind-body>
       <div class="article-column">
         <article class="article-card">
+          {isBlogPost && props.tinaSlug ? (
+            <TinaIsland name="blog-header" wrapper={{ tag: "div" }} params={{ slug: props.tinaSlug, seriesName: seriesContext?.name ?? "", seriesCurrent: seriesContext?.current ?? 0, seriesTotal: seriesContext?.total ?? 0 }}>
           <ArticleHeader
             title={title}
             description={description}
@@ -235,6 +239,31 @@ const hasSidebar = false;
             pathname={Astro.url.pathname}
             showPageView={isBlogPost}
           />
+            </TinaIsland>
+          ) : (
+          <ArticleHeader
+            title={title}
+            description={description}
+            japaneseTitle={japaneseTitle}
+            japaneseDescription={japaneseDescription}
+            hasJapaneseTranslation={hasJapaneseTranslation}
+            sticky={'sticky' in post.data ? Boolean(post.data.sticky) : false}
+            date={date}
+            wordCount={wordCount}
+            readingTime={readingTime}
+            tags={tagLinks}
+            categories={categoryLinks}
+            series={seriesLinks}
+            heroImage={heroImage}
+            showHeroImage={showHeroImage}
+            heroImagePosition={isBlogPost ? props.post?.data.heroImagePosition : undefined}
+            variant={props.headerVariant}
+            kicker={props.headerKicker ?? (post.data.headerKicker?.trim() || undefined)}
+            note={props.headerNote}
+            pathname={Astro.url.pathname}
+            showPageView={isBlogPost}
+          />
+          )}
 
           {
             hasToc && (

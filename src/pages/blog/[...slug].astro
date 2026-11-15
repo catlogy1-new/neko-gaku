@@ -20,7 +20,7 @@ const tinaMatch = /(?:^|\/)src\/content\/blog\/([^/]+)\.md$/.exec(tinaFilePath);
 const tinaSlug = tinaMatch?.[1];
 ---
 
-<BlogArticle post={post} headings={headings}>
+<BlogArticle post={post} headings={headings} tinaSlug={tinaSlug}>
   {tinaSlug ? (
     <TinaIsland
       name="blog-body"

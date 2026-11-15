@@ -2,10 +2,8 @@
 import { requestWithMetadata } from '@tinacms/astro/data';
 import client from '../../../tina/__generated__/client';
 
-export const getPost = (slug: string) =>
-  requestWithMetadata(client.queries.blog({ relativePath: slug + '.md' }), {
-    priority: 'primary',
-  });
+export const getPost = (slug: string, primary = true) =>
+  requestWithMetadata(client.queries.blog({ relativePath: slug + ".md" }), primary ? { priority: "primary" } : {});
 
 export const getPhotography = () =>
   requestWithMetadata(

@@ -1,0 +1,55 @@
+---
+import ArticleHeader from "../article/ArticleHeader.astro";
+import { getSiteConfig } from "../../data/site";
+import { getUiText } from "../../utils/ui-text";
+import { slugifyGroupName } from "../../utils/content-groups";
+import type { BlogQuery } from "../../../tina/__generated__/types";
+
+interface Props {
+  data?: BlogQuery["blog"] | null;
+  slug: string;
+  seriesName?: string;
+  seriesCurrent?: number;
+  seriesTotal?: number;
+}
+
+const { data, slug, seriesName, seriesCurrent, seriesTotal } = Astro.props;
+const ui = getUiText(await getSiteConfig());
+const plainText = (node: any): string => {
+  if (!node) return "";
+  if (typeof node.text === "string") return node.text;
+  return Array.isArray(node.children) ? node.children.map(plainText).join(" ") : "";
+};
+const text = plainText(data?.body);
+const words = text.match(/[A-Za-z0-9]+/g) ?? [];
+const cjk = text.match(/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/gu) ?? [];
+const wordCount = words.length + cjk.length;
+const readingTime = ui.article.readingTime(Math.max(1, Math.ceil(words.length / 220 + cjk.length / 500)));
+const groups = (values?: (string | null)[] | null) => (values ?? []).filter((value): value is string => typeof value === "string").map((name) => ({ name, slug: slugifyGroupName(name) }));
+const japaneseTitle = data?.japaneseTitle?.trim() ?? "";
+const japaneseDescription = data?.japaneseDescription?.trim() ?? "";
+const hasJapaneseTranslation = Boolean(japaneseTitle && japaneseDescription && data?.japaneseBody?.trim());
+const position = data?.heroImagePosition === "below-title" ? "below-title" : "above-kicker";
+---
+{data && (
+  <ArticleHeader
+    title={data.title}
+    description={data.description}
+    japaneseTitle={japaneseTitle}
+    japaneseDescription={japaneseDescription}
+    hasJapaneseTranslation={hasJapaneseTranslation}
+    sticky={Boolean(data.sticky)}
+    date={data.date ? new Date(data.date) : undefined}
+    wordCount={wordCount}
+    readingTime={readingTime}
+    tags={groups(data.tags)}
+    categories={groups(data.categories)}
+    series={groups(data.series).map((group) => ({ ...group, current: group.name === seriesName && seriesCurrent ? seriesCurrent : undefined, total: group.name === seriesName && seriesTotal ? seriesTotal : undefined }))}
+    heroImage={data.heroImage ?? undefined}
+    showHeroImage={data.showHeroImage ?? true}
+    heroImagePosition={position}
+    kicker={data.headerKicker?.trim() || undefined}
+    pathname={`/blog/${slug}/`}
+    showPageView={true}
+  />
+)}
