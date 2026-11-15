@@ -1,14 +1,16 @@
 ---
-title: "LOST MEMORY / 01"
-description: "Temporary test article for NEXUS Series pagination."
+title: えｆうぇｔｒうぇｒっつぇｒｔｓ
+headerKicker: ｄふぇｓｆｓｄｆｓｆ
+tocVisibility: 'on'
+description: Temporary test article for NEXUS Series pagination.
 date: '2026-11-02'
 draft: false
-categories:
-  - Blog Test
 tags:
   - Series Layout Test
+categories:
+  - Blog Test
 series:
-  - "LOST MEMORY"
+  - LOST MEMORY
 comments: false
 sticky: false
 ---
