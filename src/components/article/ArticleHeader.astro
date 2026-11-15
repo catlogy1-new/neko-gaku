@@ -25,6 +25,7 @@ interface Props {
   series?: { name: string; slug: string; current?: number; total?: number }[];
   heroImage?: ImageMetadata | string;
   showHeroImage?: boolean;
+  heroImagePosition?: "above-kicker" | "below-title";
   variant?: 'default' | 'archive';
   kicker?: string;
   note?: string;
@@ -47,6 +48,7 @@ const {
   series = [],
   heroImage,
   showHeroImage = true,
+  heroImagePosition = "above-kicker",
   variant = 'default',
   kicker = 'Notebook entry',
   note,
@@ -147,7 +149,7 @@ const tinaEditHref = blogArticleId
     ) : (
       <>
         {
-          showHeroImage && heroImage && (
+          heroImagePosition !== "below-title" && showHeroImage && heroImage && (
             <figure class="article-hero-image editorial-hero">
               <SmartImage width={1200} height={800} src={heroImage} alt="" />
             </figure>
@@ -158,6 +160,12 @@ const tinaEditHref = blogArticleId
           <p class="editorial-kicker">{kicker}</p>
 
           <h1 data-pagefind-meta="title">{title}</h1>
+
+          {heroImagePosition === "below-title" && showHeroImage && heroImage && (
+            <figure class="article-hero-image editorial-hero editorial-hero-below-title">
+              <SmartImage width={1200} height={800} src={heroImage} alt="" />
+            </figure>
+          )}
 
           {description && (
             <p class="editorial-subtitle">{description}</p>
@@ -2823,3 +2831,16 @@ const tinaEditHref = blogArticleId
 <script>
   import "../../utils/nexus-admin-auth";
 </script>
+
+
+<style is:global>
+  /* NEXUS HERO IMAGE POSITION */
+  .blog-detail-page .article-header:not(.article-header-archive) .editorial-heading > .editorial-hero-below-title {
+    margin: 24px auto 24px !important;
+  }
+  @media (max-width: 760px) {
+    .blog-detail-page .article-header:not(.article-header-archive) .editorial-heading > .editorial-hero-below-title {
+      margin: 20px auto 20px !important;
+    }
+  }
+</style>

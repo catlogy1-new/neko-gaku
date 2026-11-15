@@ -800,9 +800,20 @@ export default defineConfig({
             label: "Sticky",
           },
           {
-            type: "string",
+            type: "image",
             name: "heroImage",
-            label: "Hero Image Path",
+            label: "Hero Image",
+            description: "Upload a photo or select an existing image.",
+          },
+          {
+            type: "string",
+            name: "heroImagePosition",
+            label: "Hero Image Position",
+            description: "Choose the image position. Leave unset for Above Kicker.",
+            options: [
+              { label: "Above Kicker", value: "above-kicker" },
+              { label: "Below Title", value: "below-title" },
+            ],
           },
           {
             type: "boolean",

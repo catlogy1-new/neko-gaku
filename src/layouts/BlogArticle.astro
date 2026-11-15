@@ -53,6 +53,7 @@ interface Props {
       draft?: boolean;
       sticky?: boolean | number;
       headerKicker?: string;
+      heroImagePosition?: "above-kicker" | "below-title";
       tocVisibility?: "on" | "off";
       sidebar?: SidebarConfig;
     };
@@ -227,6 +228,7 @@ const hasSidebar = false;
             series={seriesLinks}
             heroImage={heroImage}
             showHeroImage={showHeroImage}
+            heroImagePosition={isBlogPost ? props.post?.data.heroImagePosition : undefined}
             variant={props.headerVariant}
             kicker={props.headerKicker ?? (post.data.headerKicker?.trim() || undefined)}
             note={props.headerNote}
