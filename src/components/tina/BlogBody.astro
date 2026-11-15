@@ -8,9 +8,29 @@ interface Props {
 }
 
 const { data } = Astro.props;
+
+// Normalize editor text leaves before rendering the live preview.
+function normalizeRichText<T>(value: T): T {
+  if (Array.isArray(value)) {
+    return value.map((item) => normalizeRichText(item)) as T;
+  }
+  if (value === null || typeof value !== "object") return value;
+  const node = value as Record<string, unknown>;
+  const result = { ...node };
+  if (typeof node.text === "string" && node.type == null && !Array.isArray(node.children)) {
+    result.type = "text";
+  }
+  if (Array.isArray(node.children)) {
+    result.children = normalizeRichText(node.children);
+  }
+  return result as T;
+}
+
+const previewBody = normalizeRichText(data?.body);
+
 ---
 {data?.body && (
   <div data-tina-field={tinaField(data, 'body')}>
-    <TinaMarkdown content={data.body} />
+    <TinaMarkdown content={previewBody} />
   </div>
 )}
