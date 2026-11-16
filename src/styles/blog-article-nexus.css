@@ -4430,3 +4430,19 @@ h2.nexus-more-from-title
 @media (max-width: 700px) {
   .blog-detail-page .article-content .nexus-youtube-embed { margin: 1.4rem 0; }
 }
+
+/* NEXUS_ARTICLE_TABLE_V1 */
+.blog-detail-page .article-content .markdown-table-scroll { display: block; width: 100%; max-width: 100%; overflow-x: auto; margin: 1.8rem 0; }
+.blog-detail-page .article-content table { width: 100%; border-collapse: collapse; border-spacing: 0; margin: 1.8rem 0; font-size: 0.9em; line-height: 1.65; }
+.blog-detail-page .article-content .markdown-table-scroll > table { margin: 0; }
+.blog-detail-page .article-content table th, .blog-detail-page .article-content table td { border: 1px solid #383d36; padding: 0.8em 1em; text-align: left; vertical-align: top; overflow-wrap: anywhere; }
+.blog-detail-page .article-content table th { background: #242922; color: #c6ff32; font-weight: 600; }
+.blog-detail-page .article-content table td { background: #151815; color: #dedfdb; }
+.blog-detail-page .article-content table tbody tr:nth-child(even) td { background: #1b1e1b; }
+.blog-detail-page .article-content table td p, .blog-detail-page .article-content table th p { margin: 0; }
+@media (max-width: 700px) { .blog-detail-page .article-content table { font-size: 0.85em; } .blog-detail-page .article-content table th, .blog-detail-page .article-content table td { padding: 0.65em 0.75em; } }
+
+/* NEXUS_ARTICLE_CODE_V1 */
+.blog-detail-page .article-content code:not(pre code) { background: #242922 !important; color: #c6ff32 !important; font-family: ui-monospace, Consolas, Menlo, monospace !important; font-size: 0.88em; font-weight: 400; padding: 0.15em 0.4em; border: 1px solid #414b36; border-radius: 4px; overflow-wrap: anywhere; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.blog-detail-page .article-content pre:not(.expressive-code pre) { font-family: ui-monospace, Consolas, Menlo, monospace !important; font-size: 0.9em; line-height: 1.7; overflow-x: auto; white-space: pre; }
+.blog-detail-page .article-content pre:not(.expressive-code pre) code { font-family: inherit !important; font-size: inherit; font-weight: 400; color: #dedfdb !important; background: transparent !important; padding: 0; border: 0; border-radius: 0; white-space: inherit; }
