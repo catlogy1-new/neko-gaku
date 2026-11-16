@@ -22,6 +22,44 @@ function normalizeRichText<T>(value: T): T {
   }
   if (Array.isArray(node.children)) {
     result.children = normalizeRichText(node.children);
+    // NEXUS_QUOTE_PREVIEW_V2
+    if (node.type === "blockquote" && Array.isArray(result.children)) {
+      const children = result.children as Record<string, unknown>[];
+      const paragraphs: Record<string, unknown>[] = [];
+      let current: Record<string, unknown>[] = [];
+      const flush = () => {
+        if (current.length) paragraphs.push({ type: "p", children: current });
+        current = [];
+      };
+      const isPlain = (child: Record<string, unknown>) =>
+        child.type === "text" && !["bold", "italic", "underline", "strikethrough", "code", "highlight"].some((key) => Boolean(child[key]));
+      for (const child of children) {
+        if (child.type === "p") {
+          flush();
+          paragraphs.push(child);
+          continue;
+        }
+        if (child.type === "break") {
+          flush();
+          continue;
+        }
+        if (child.type === "text" && typeof child.text === "string") {
+          const lines = child.text.split(/\r?\n/);
+          for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+            if (i > 0) flush();
+            if (!line.length) continue;
+            if (/^(?:—\s+|出典[：:]\s*)/.test(line.trimStart()) && current.length) flush();
+            if (current.length && isPlain(child) && current.every(isPlain)) flush();
+            current.push({ ...child, text: line });
+          }
+          continue;
+        }
+        current.push(child);
+      }
+      flush();
+      result.children = paragraphs;
+    }
   }
   return result as T;
 }

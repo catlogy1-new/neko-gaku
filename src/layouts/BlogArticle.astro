@@ -3354,3 +3354,39 @@ body.blog-detail-page:has(.portfolio-section)
     white-space: pre-line;
   }
 </style>
+
+<!-- NEXUS_QUOTE_ATTRIBUTION_V1 -->
+<script>
+  function enhanceArticleQuotes() {
+    document.querySelectorAll<HTMLElement>(".blog-detail-page .article-content blockquote").forEach((quote) => {
+      if (quote.closest(".nexus-quote")) return;
+      const last = quote.lastElementChild;
+      if (!last || last.tagName !== "P" || quote.children.length < 2) return;
+      const text = last.textContent?.trim() ?? "";
+      const sourceMatch = text.match(/^(?:—\s+|出典[：:]\s*)(.+)$/s);
+      if (!sourceMatch) return;
+      const source = sourceMatch[1].trim();
+      if (!source) return;
+      const figure = document.createElement("figure");
+      figure.className = "nexus-quote nexus-quote-enhanced";
+      const caption = document.createElement("figcaption");
+      caption.className = "nexus-quote__source";
+      caption.textContent = source;
+      quote.before(figure);
+      quote.classList.add("nexus-quote__body");
+      last.remove();
+      figure.append(quote, caption);
+    });
+  }
+  let quoteObserver: MutationObserver | undefined;
+  function initArticleQuotes() {
+    quoteObserver?.disconnect();
+    enhanceArticleQuotes();
+    const article = document.querySelector(".blog-detail-page .article-content");
+    if (!article) return;
+    quoteObserver = new MutationObserver(() => enhanceArticleQuotes());
+    quoteObserver.observe(article, { childList: true, subtree: true, characterData: true });
+  }
+  document.addEventListener("astro:page-load", initArticleQuotes);
+  initArticleQuotes();
+</script>
