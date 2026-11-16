@@ -3390,3 +3390,44 @@ body.blog-detail-page:has(.portfolio-section)
   document.addEventListener("astro:page-load", initArticleQuotes);
   initArticleQuotes();
 </script>
+
+<!-- NEXUS_YOUTUBE_EMBED_V1 -->
+<script>
+  import { getYouTubeVideoId } from "../lib/youtube";
+  function enhanceYouTubeEmbeds() {
+    const article = document.querySelector(".blog-detail-page #article-start");
+    if (!article) return;
+    article.querySelectorAll<HTMLParagraphElement>("p").forEach((paragraph) => {
+      if (paragraph.closest("blockquote, figure, li, table, pre, .nexus-youtube-embed")) return;
+      const text = paragraph.textContent?.trim() ?? "";
+      const children = Array.from(paragraph.children);
+      if (children.length > 1) return;
+      if (children.length === 1 && children[0].tagName !== "A") return;
+      if (children.length === 1 && (children[0] as HTMLAnchorElement).getAttribute("href")?.trim() !== text) return;
+      const id = getYouTubeVideoId(text);
+      if (!id) return;
+      const wrapper = document.createElement("div");
+      wrapper.className = "nexus-youtube-embed";
+      const iframe = document.createElement("iframe");
+      iframe.src = "https://www.youtube-nocookie.com/embed/" + id + "?playsinline=1";
+      iframe.title = "YouTube video player";
+      iframe.loading = "lazy";
+      iframe.referrerPolicy = "strict-origin-when-cross-origin";
+      iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+      iframe.allowFullscreen = true;
+      wrapper.append(iframe);
+      paragraph.replaceWith(wrapper);
+    });
+  }
+  let youtubeObserver: MutationObserver | undefined;
+  function initYouTubeEmbeds() {
+    youtubeObserver?.disconnect();
+    enhanceYouTubeEmbeds();
+    const article = document.querySelector(".blog-detail-page #article-start");
+    if (!article) return;
+    youtubeObserver = new MutationObserver(() => enhanceYouTubeEmbeds());
+    youtubeObserver.observe(article, { childList: true, subtree: true, characterData: true });
+  }
+  document.addEventListener("astro:page-load", initYouTubeEmbeds);
+  initYouTubeEmbeds();
+</script>
