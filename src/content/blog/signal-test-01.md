@@ -3,7 +3,7 @@ title: To My Dear Addicts
 headerKicker: Drug Addiction
 tocVisibility: 'off'
 description: Don't rush. Let's take it slow.
-date: '2026-11-16'
+date: '2026-11-19'
 draft: false
 tags:
   - drugaddiction
