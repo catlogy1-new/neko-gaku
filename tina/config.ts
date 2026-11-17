@@ -680,6 +680,12 @@ export default defineConfig({
         label: "Blog",
         path: "src/content/blog",
         format: "md",
+        defaultItem: () => ({
+          title: "New Article",
+          date: new Date().toISOString().slice(0, 10),
+          draft: true,
+          comments: false,
+        }),
         match: {
           include: "*",
         },
@@ -725,7 +731,7 @@ export default defineConfig({
             }
           },
           allowedActions: {
-            create: false,
+            create: true,
             delete: true,
             createNestedFolder: false,
           },
