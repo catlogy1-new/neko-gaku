@@ -1489,10 +1489,44 @@ function withBase(href: string) {
     display: none !important;
   }
 
-  .nexus-journal-row .nexus-journal-pin > svg,
+  .nexus-journal-row .nexus-journal-pin {
+    width: 32px !important;
+    height: 32px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .nexus-journal-row .nexus-journal-pin:hover,
+  html.nexus-blog-editor-mode .nexus-journal-row .nexus-journal-pin:hover {
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .nexus-journal-row .nexus-journal-pin > svg {
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) rotate(35deg) !important;
+    transform-origin: center !important;
+    color: #e58a50 !important;
+    stroke: #e58a50 !important;
+    filter: none !important;
+  }
+
   .nexus-journal-row .nexus-pinned-strip svg {
     transform: rotate(35deg) !important;
     transform-origin: center !important;
+    color: #e58a50 !important;
+    stroke: #e58a50 !important;
+    filter: none !important;
   }
 </style>
 <!-- NEXUS PIN ICON TILT V1 END -->
