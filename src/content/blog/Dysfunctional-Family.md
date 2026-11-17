@@ -4,7 +4,7 @@ headerKicker: ' Child Abuse/Bullying'
 tocVisibility: 'off'
 description: 'Domestic Violence, Bullying, Child Abuse, and Crime'
 date: '2026-11-20'
-draft: true
+draft: false
 tags:
   - Child Abuse
   - Crime
