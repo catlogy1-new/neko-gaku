@@ -9,10 +9,10 @@ galleryImages:
 photographyNote:
   index: ''
   year: '2026'
-  kicker: 貼っだー
-  title: 釜ヶ崎
+  kicker: SAMPLE
+  title: TEST
   paragraphs:
-    - っっかかかふぉｒんげ；ｒｇなｒ；ががんら
+    - TEST
   status: ''
 ---
 
