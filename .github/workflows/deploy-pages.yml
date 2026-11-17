@@ -57,7 +57,11 @@ jobs:
           NAVFOLIO_DEPLOY_TARGET: cloudflare
           SITE_URL: https://nekogaku.com
           SITE_BASE: /
-        run: bun run build
+        run: |
+          ./node_modules/.bin/tinacms build --skip-cloud-checks
+          bun run fonts:ui
+          ./node_modules/.bin/astro build
+          ./node_modules/.bin/pagefind --site dist/client --output-subdir pagefind --root-selector main --exclude-selectors "[data-pagefind-ignore]"
 
       - name: Verify production build
         run: |
