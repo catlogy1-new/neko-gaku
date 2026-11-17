@@ -4,7 +4,7 @@ headerKicker: Uncertain Afterimage
 tocVisibility: 'off'
 description: Drug addiction and self-harm
 date: '2026-11-18'
-draft: true
+draft: false
 tags:
   - '#drugaddiction'
   - addictionrecovery
