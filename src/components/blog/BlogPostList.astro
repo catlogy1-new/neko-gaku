@@ -1481,3 +1481,18 @@ function withBase(href: string) {
   }
   .nexus-mobile-pin-priority { color: #b7ff00; font-size: 10px !important; }
 </style>
+
+<!-- NEXUS PIN ICON TILT V1 -->
+<style is:global>
+  .nexus-journal-row .nexus-pin-priority,
+  .nexus-journal-row .nexus-mobile-pin-priority {
+    display: none !important;
+  }
+
+  .nexus-journal-row .nexus-journal-pin > svg,
+  .nexus-journal-row .nexus-pinned-strip svg {
+    transform: rotate(35deg) !important;
+    transform-origin: center !important;
+  }
+</style>
+<!-- NEXUS PIN ICON TILT V1 END -->
