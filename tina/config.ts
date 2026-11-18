@@ -401,6 +401,11 @@ export default defineConfig({
           format: 'md',
 
           ui: {
+            allowedActions: {
+              create: true,
+              delete: true,
+              createNestedFolder: false,
+            },
             router: async ({ document }) => {
               const relativePath = document._sys.relativePath;
 
