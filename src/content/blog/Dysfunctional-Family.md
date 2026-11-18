@@ -16,8 +16,8 @@ series:
 comments: true
 heroImage: /イジメ/イジメ.jpeg
 japaneseTitle: 汚れちまった悲しみに
-japaneseDescription: 機能不全家族、イジメ、ドメスティック・ヴァイオレンス、児童虐待、そして犯罪
-japaneseBody: |
+japaneseDescription: 機能不全家族、イジメ、ドメスティック・ヴァイオレンス、児童虐待、そして犯罪と…
+japaneseBody: |-
   僕は7歳の時に初めて人を刃物で刺してる。
 
   僕が生まれ育った環境は強烈なドメスティックバイオレンスの家庭で、毎日のように泥酔した父親が母親に暴力を振い、母親が血塗れになって倒れて救急車で運ばれるという家庭。
@@ -66,8 +66,14 @@ japaneseBody: |
 
   #イジメ
   #イジメダメゼッタイ
-  #一人で悩まないの
-  #苦しいときは俺に連絡しな
+  ＿＿＿＿＿＿＿＿＿＿＿＿＿＿
+  ここにたどり着いたイジメられっ子たちさ、一人で悩まないの。
+  それ何の解決にもならないからさ。
+  なにか吐き出したい時は俺に連絡しな。
+  わかってるよね。
+  一人じゃないんだよ？
+
+  LINE ID　neko_666
 ---
 
 ## Huh? Oh, right, this is just another piece of rubbish, too.
