@@ -16,7 +16,7 @@ series:
 comments: true
 sticky: true
 heroImage: /Drag/あゝ、荒野.jpg
-heroImagePosition: below-title
+heroImagePosition: above-kicker
 japaneseTitle: 忘却の過程における記憶らしきものの残像
 japaneseDescription: PTSDと自傷とドラッグ
 japaneseBody: |
