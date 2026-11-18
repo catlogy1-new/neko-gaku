@@ -7,9 +7,9 @@ galleryImages:
   - src: /images/portfolio/raia.jpg
     title: My Baby
     alt: 'My child, who was murdered at four months old.'
-  - src: /images/portfolio/remains-001.jpg
-    title: SAMPLE IMAGE / 001
-    alt: Temporary portfolio sample
+  - src: /Portfolio/cat.jpg
+    title: Cat
+    alt: ''
   - src: /images/portfolio/remains-002.jpg
     title: SAMPLE IMAGE / 002
     alt: Temporary portfolio sample
