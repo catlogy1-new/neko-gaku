@@ -16,7 +16,7 @@ series:
 comments: true
 sticky: true
 heroImage: /Drag/Drag.jpg
-heroImagePosition: below-title
+heroImagePosition: above-kicker
 showHeroImage: true
 japaneseTitle: 親愛なる仲間たちへ
 japaneseDescription: ゆっくり行こうよ
