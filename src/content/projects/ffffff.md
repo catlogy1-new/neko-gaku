@@ -11,10 +11,6 @@ categories:
   - gggg
 series:
   - gggg
-authors:
-  - {}
-links:
-  - {}
 ---
 
 ggrerg

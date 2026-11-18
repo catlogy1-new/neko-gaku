@@ -1,8 +1,7 @@
 [
   {
     "kind": "gallery",
-    "start": 0,
-    "count": 16
+    "start": 0
   },
   {
     "kind": "text",

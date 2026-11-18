@@ -34,25 +34,6 @@ const portfolioVisualLayouts = [
   'visual-card-extra-wide',
 ];
 
-const fallbackPortfolioVisuals = [
-  ['/images/portfolio/remains-001.jpg', 'SAMPLE IMAGE / 001', 'PHOTOGRAPHY', '2026'],
-  ['/images/portfolio/remains-002.jpg', 'SAMPLE IMAGE / 002', 'PHOTOGRAPHY', '2026'],
-  ['/images/portfolio/remains-003.jpg', 'SAMPLE IMAGE / 003', 'PHOTOGRAPHY', '2026'],
-  ['/images/portfolio/remains-004.jpg', 'SAMPLE IMAGE / 004', 'PHOTOGRAPHY', '2026'],
-  ['/images/portfolio/remains-005.jpg', 'SAMPLE IMAGE / 005', 'PHOTOGRAPHY', '2026'],
-  ['/images/portfolio/remains-006.jpg', 'SAMPLE IMAGE / 006', 'PHOTOGRAPHY', '2026'],
-  ['/images/portfolio/remains-007.jpg', 'SAMPLE IMAGE / 007', 'PHOTOGRAPHY', '2026'],
-  ['/images/portfolio/remains-008.jpg', 'SAMPLE IMAGE / 008', 'PHOTOGRAPHY', '2026'],
-  ['/images/portfolio/remains-009.jpg', 'SAMPLE IMAGE / 009', 'PHOTOGRAPHY', '2026'],
-  ['/images/portfolio/remains-010.jpg', 'SAMPLE IMAGE / 010', 'PHOTOGRAPHY', '2026'],
-  ['/images/portfolio/remains-011.jpg', 'SAMPLE IMAGE / 011', 'PHOTOGRAPHY', '2026'],
-  ['/images/portfolio/remains-012.jpg', 'SAMPLE IMAGE / 012', 'PHOTOGRAPHY', '2026'],
-  ['/images/portfolio/remains-013.jpg', 'SAMPLE IMAGE / 013', 'PHOTOGRAPHY', '2026'],
-  ['/images/portfolio/remains-014.jpg', 'SAMPLE IMAGE / 014', 'PHOTOGRAPHY', '2026'],
-  ['/images/portfolio/remains-015.jpg', 'SAMPLE IMAGE / 015', 'PHOTOGRAPHY', '2026'],
-  ['/images/portfolio/remains-016.jpg', 'SAMPLE IMAGE / 016', 'PHOTOGRAPHY', '2026'],
-];
-
 function asRecord(value: unknown) {
   return value && typeof value === 'object' && !Array.isArray(value)
     ? value as Record<string, unknown>
@@ -152,24 +133,9 @@ if (Array.isArray(gallery)) {
   }
 }
 
-const samplePortfolioVisuals = fallbackPortfolioVisuals.map(
-  ([src, title, type, year], index) =>
-    makePortfolioVisual(
-      src,
-      title,
-      type,
-      year,
-      'Temporary portfolio sample',
-      postedPortfolioVisuals.length + index,
-    ),
-);
+const allPortfolioVisuals = postedPortfolioVisuals;
+const portfolioVisuals = allPortfolioVisuals;
 
-const allPortfolioVisuals = [
-  ...postedPortfolioVisuals,
-  ...samplePortfolioVisuals,
-];
-
-const portfolioVisuals = allPortfolioVisuals.slice(0, 16);
 // PORTFOLIO BLOCKS V1 START
 // The JSON order determines the order of galleries and independent texts.
 type PortfolioGalleryBlock = {
@@ -243,7 +209,7 @@ const portfolioBlocks = (portfolioBlocksData as PortfolioBlock[]).map((block) =>
 
 function getPortfolioBlockVisuals(block: PortfolioGalleryBlock): PortfolioVisual[] {
   const start = Math.max(0, Math.trunc(block.start ?? 0));
-  const count = Math.max(0, Math.trunc(block.count ?? 0));
+  const count = Math.max(0, Math.trunc(block.count ?? allPortfolioVisuals.length));
   const existing = allPortfolioVisuals.slice(start, start + count);
   const added = (block.images ?? []).map((image, index) =>
     makePortfolioVisual(
