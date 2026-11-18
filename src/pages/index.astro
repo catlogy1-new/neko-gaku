@@ -140,7 +140,20 @@ const dotLinks = [
   { label: 'MEDIA', href: '/media', className: 'dot-media' },
 ];
 ---
-<BaseLayout title={site.pageTitle} description={site.pageDescription}>
+<BaseLayout
+  title={`${site.pageTitle} | 神の裁きと訣別するため`}
+  description="Pour en finir avec le jugement de Dieu（神の裁きと訣別するため）。Writing, projects, media and fragments from one digital space."
+>
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: 'Pour en finir avec le jugement de Dieu',
+      alternateName: '神の裁きと訣別するため',
+      url: 'https://nekogaku.com/',
+    })}
+  />
   <main class="hero">
     <div class="hero-grid">
       <section class="hero-copy">
