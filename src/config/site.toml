@@ -1,8 +1,8 @@
 [config.site]
 title = "Pour en finir avec le jugement de Dieu"
 description = "A personal navigation portfolio starter built with Astro."
-pageTitle = "navfolio | Digital Publication Space"
-pageDescription = "A calm AI-native personal publication space for notes, links, and writing."
+pageTitle = "Pour en finir avec le jugement de Dieu"
+pageDescription = "Writing, projects, media and fragments from one digital space."
 url = "https://nekogaku.com"
 repository = "https://github.com/catlogy1-new/neko-gaku"
 footerNote = "Released as an open-source starter."
