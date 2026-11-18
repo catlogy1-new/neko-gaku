@@ -16,7 +16,7 @@ series:
 comments: true
 heroImage: /イジメ/イジメ.jpeg
 japaneseTitle: 汚れちまった悲しみに
-japaneseDescription: 機能不全家族、イジメ、ドメスティック・ヴァイオレンス、児童虐待、そして犯罪と…
+japaneseDescription: 機能不全家族、イジメ、ドメスティック・ヴァイオレンス、児童虐待、そして犯罪と…。
 japaneseBody: |-
   僕は7歳の時に初めて人を刃物で刺してる。
 
@@ -63,6 +63,8 @@ japaneseBody: |-
 
   悪いね、不快にさせて。
   ただアナタの数倍、俺は不快な人生を歩んできたってことでこの話は終わりだ。
+
+
 
   #イジメ
   #イジメダメゼッタイ
