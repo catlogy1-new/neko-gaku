@@ -128,6 +128,35 @@ const paragraphs = (value: string) =>
     padding: 126px clamp(20px, 5vw, 88px) 110px;
   }
 
+
+  /* SUPPORT: prevent horizontal overflow */
+  .support-page {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .support-hero,
+  .support-introduction,
+  .support-sections,
+  .support-panel,
+  .support-region,
+  .support-resources,
+  .support-resource-card {
+    box-sizing: border-box;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .support-page p,
+  .support-page h1,
+  .support-page h2,
+  .support-page h3,
+  .support-resource-name,
+  .support-resource-description {
+    overflow-wrap: anywhere;
+  }
+
   .support-hero,
   .support-introduction,
   .support-sections {
@@ -205,19 +234,63 @@ const paragraphs = (value: string) =>
 
   .support-panel {
     position: relative;
-    background: var(--paper-surface, #0a0a0a);
-    border: 1px solid var(--paper-line, rgba(183,255,0,.14));
-    padding: clamp(24px, 4vw, 55px);
+    min-width: 0;
+    padding: 34px 38px 38px;
+
+    border: 1px solid rgba(144, 154, 148, 0.22);
+    border-left: 0;
+    border-radius: 9px;
+
+    background:
+      linear-gradient(
+        to bottom,
+        #6dff00 0%,
+        #aaff00 36%,
+        #e8ff2f 68%,
+        #ffe04a 100%
+      ) left top / 2px calc(100% - 28px) no-repeat,
+      linear-gradient(
+        135deg,
+        rgba(183, 255, 0, 0.014),
+        rgba(255, 255, 255, 0.008) 46%,
+        rgba(201, 71, 19, 0.014)
+      );
   }
 
   .support-panel::before {
-    content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 66px;
-    height: 2px;
-    background: var(--paper-accent, #b7ff00);
+    top: -1px;
+    right: -1px;
+
+    width: 28px;
+    height: 28px;
+
+    content: "";
+
+    border-top: 2px solid #c94713;
+    border-right: 2px solid #c94713;
+    border-top-right-radius: 9px;
+
+    box-sizing: border-box;
+    pointer-events: none;
+  }
+
+  .support-panel::after {
+    position: absolute;
+    bottom: -1px;
+    left: -1px;
+
+    width: 28px;
+    height: 28px;
+
+    content: "";
+
+    border-bottom: 2px solid #c94713;
+    border-left: 2px solid #c94713;
+    border-bottom-left-radius: 9px;
+
+    box-sizing: border-box;
+    pointer-events: none;
   }
 
   .support-panel-heading {
