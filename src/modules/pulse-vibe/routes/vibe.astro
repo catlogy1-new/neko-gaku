@@ -26,8 +26,8 @@ const showTrail = pageMeta.showTrail;
 
 const vibeEntries = (await getCollection('vibe'))
   .filter((item) => !item.data.draft)
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-const pulsePageSize = 10;
+  .sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf());
+const pulsePageSize = 6;
 const pulsePageNumber = Math.max(1, Math.floor(Number(Astro.props.pageNumber ?? 1)) || 1);
 const pulseTotalPages = Math.max(1, Math.ceil(vibeEntries.length / pulsePageSize));
 const pulsePageEntries = vibeEntries.slice(
