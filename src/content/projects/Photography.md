@@ -57,7 +57,7 @@ galleryImages:
     alt: Temporary portfolio sample
   - src: /%E3%82%A4%E3%82%B8%E3%83%A1/%E3%82%A4%E3%82%B8%E3%83%A1.jpeg
     title: イジメ
-    alt: ''
+    alt: ある日のできごと
 photographyNote:
   index: ''
   year: '2026'
