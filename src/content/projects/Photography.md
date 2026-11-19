@@ -4,12 +4,12 @@ description: Photography portfolio gallery.
 date: 2026-11-10T09:25:10.301Z
 draft: false
 galleryImages:
-  - src: /images/portfolio/raia.jpg
-    title: My Baby
-    alt: 'My child, who was murdered at four months old.'
   - src: /Portfolio/cat.jpg
     title: Cat
     alt: ''
+  - src: /images/portfolio/raia.jpg
+    title: My Baby
+    alt: 'My child, who was murdered at four months old.'
   - src: /images/portfolio/remains-002.jpg
     title: SAMPLE IMAGE / 002
     alt: Temporary portfolio sample
