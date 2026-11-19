@@ -491,6 +491,11 @@ export default defineConfig({
               label: 'Gallery Images',
               list: true,
               ui: {
+                defaultItem: () => ({
+                  src: '',
+                  title: '',
+                  alt: '',
+                }),
                 itemProps: (item) => ({
                   label: item?.title || 'Gallery Image',
                 }),
