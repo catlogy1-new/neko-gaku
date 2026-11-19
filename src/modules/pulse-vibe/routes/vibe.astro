@@ -703,24 +703,113 @@ import ScrollToTopButton from '../../../components/ScrollToTopButton.astro';
   .pulse-page-nav {
     position: relative;
     z-index: 3;
-    width: min(100%, 1000px);
+    width: min(100%, 520px);
     margin: 4.5rem auto 2rem;
-    padding: 1.5rem max(1rem, 3vw) 3.5rem;
-    border-top: 1px solid rgba(183, 255, 0, .22);
+    padding: 1.5rem 1rem 3.5rem;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    gap: 1.5rem;
+    justify-content: center;
+    gap: 1rem;
     font-family: var(--font-ui-label, system-ui);
   }
-  .pulse-page-count { color: #b7ff00; font-size: .76rem; letter-spacing: .12em; }
-  .pulse-page-links { display: flex; align-items: center; gap: 1.8rem; }
-  .pulse-page-links a { color: #eaeaea; font-size: .9rem; font-weight: 600; text-decoration: none; letter-spacing: .07em; }
-  .pulse-page-links a:hover, .pulse-page-links a:focus-visible { color: #b7ff00; }
-  .pulse-page-links span { color: #555; font-size: .9rem; }
+
+  .pulse-page-label {
+    color: #9bb300;
+    font-size: .65rem;
+    letter-spacing: .2em;
+    text-align: center;
+  }
+
+  .pulse-page-rule {
+    position: relative;
+    width: min(100%, 320px);
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pulse-page-rule::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(183,255,0,.42) 25%,
+      rgba(183,255,0,.42) 75%,
+      transparent
+    );
+  }
+
+  .pulse-page-rule::after {
+    content: "";
+    position: relative;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #b7ff00;
+    box-shadow:
+      0 0 0 5px rgba(183,255,0,.12),
+      0 0 14px rgba(183,255,0,.35);
+  }
+
+  .pulse-page-links {
+    width: min(100%, 320px);
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .pulse-page-links > :first-child {
+    justify-self: start;
+  }
+
+  .pulse-page-links > :last-child {
+    justify-self: end;
+  }
+
+  .pulse-page-count {
+    color: #b7ff00;
+    font-size: .8rem;
+    letter-spacing: .12em;
+    white-space: nowrap;
+  }
+
+  .pulse-page-links a {
+    color: #eaeaea;
+    font-size: .85rem;
+    font-weight: 600;
+    text-decoration: none;
+    letter-spacing: .07em;
+    transition: color .2s ease;
+  }
+
+  .pulse-page-links a:hover,
+  .pulse-page-links a:focus-visible {
+    color: #b7ff00;
+  }
+
+  .pulse-page-links span:not(.pulse-page-count) {
+    color: #555;
+    font-size: .85rem;
+  }
+
   @media (max-width: 720px) {
-    .pulse-page-nav { margin-top: 3.5rem; padding-bottom: 6.5rem; flex-wrap: wrap; }
-    .pulse-page-links { width: 100%; justify-content: space-between; }
+    .pulse-page-nav {
+      margin-top: 3.5rem;
+      padding-bottom: 6.5rem;
+    }
+
+    .pulse-page-links {
+      gap: .75rem;
+    }
+
     .pulse-mobile-trail { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 0; opacity: .7; }
     .vibe-stream > .vibe-item { position: relative; z-index: 1; }
   }
@@ -815,11 +904,13 @@ import ScrollToTopButton from '../../../components/ScrollToTopButton.astro';
         </section>
         {pulseTotalPages > 1 && (
           <nav class="pulse-page-nav" aria-label="Pulse pagination">
-            <span class="pulse-page-count">PAGE {String(pulsePageNumber).padStart(2, '0')} / {String(pulseTotalPages).padStart(2, '0')}</span>
+            <span class="pulse-page-label">PULSE / NAVIGATION</span>
+            <span class="pulse-page-rule" aria-hidden="true"></span>
             <div class="pulse-page-links">
               {pulsePageNumber > 1 ? (
                 <a href={pulsePageUrl(pulsePageNumber - 1)} rel="prev">← PREV</a>
               ) : <span aria-hidden="true">← PREV</span>}
+              <span class="pulse-page-count">{String(pulsePageNumber).padStart(2, '0')} / {String(pulseTotalPages).padStart(2, '0')}</span>
               {pulsePageNumber < pulseTotalPages ? (
                 <a href={pulsePageUrl(pulsePageNumber + 1)} rel="next">NEXT →</a>
               ) : <span aria-hidden="true">NEXT →</span>}
