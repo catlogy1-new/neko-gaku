@@ -1,0 +1,341 @@
+---
+import BlogTopNav from '../components/blog/BlogTopNav.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+import { getCollection } from 'astro:content';
+
+const entry = (await getCollection('support'))[0];
+
+if (!entry) {
+  throw new Error('Missing SUPPORT content');
+}
+
+const {
+  title,
+  description,
+  introduction,
+  addictionNote,
+  safetyIntroduction,
+  afterword,
+  resources,
+} = entry.data;
+
+const groups = [
+  {
+    id: 'addiction',
+    number: '01',
+    title: 'Drug Addiction Counseling Hotline',
+    introduction: addictionNote,
+  },
+  {
+    id: 'safety',
+    number: '02',
+    title: 'Safety & Protection Services',
+    subtitle: 'DV, Child Safety, LGBTQ+ & Racial Equity',
+    introduction: safetyIntroduction,
+  },
+] as const;
+
+const paragraphs = (value: string) =>
+  value.split(/\n\s*\n/).map((text) => text.trim()).filter(Boolean);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title} | NEXUS</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={new URL('/support/', Astro.site ?? Astro.url)} />
+  </head>
+
+  <body>
+    <BlogTopNav />
+
+    <main class="support-page">
+      <header class="support-hero">
+        <p class="support-kicker">RESOURCES / SAFETY / SOLIDARITY</p>
+        <h1>SUPPORT</h1>
+        <p class="support-subtitle">Support &amp; Helplines（緊急相談先）</p>
+      </header>
+
+      <section class="support-introduction">
+        {paragraphs(introduction).map((paragraph) => <p>{paragraph}</p>)}
+      </section>
+
+      <div class="support-sections">
+        {groups.map((group) => (
+          <section class="support-panel" id={group.id}>
+            <header class="support-panel-heading">
+              <span class="support-index">{group.number} / SUPPORT</span>
+              <h2>{group.title}</h2>
+              {group.subtitle && <p class="support-group-subtitle">{group.subtitle}</p>}
+            </header>
+
+            <div class="support-panel-introduction">
+              {paragraphs(group.introduction).map((paragraph) => <p>{paragraph}</p>)}
+            </div>
+
+            {(['US', 'JP'] as const).map((region) => {
+              const items = resources.filter(
+                (resource) => resource.category === group.id && resource.region === region
+              );
+
+              return (
+                <section class="support-region">
+                  <h3>{region === 'US' ? 'UNITED STATES' : 'JAPAN'}</h3>
+                  <ul class="support-resources">
+                    {items.map((resource) => (
+                      <li>
+                        <a
+                          class="support-resource-card"
+                          href={resource.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <span class="support-resource-name">{resource.name}</span>
+                          <span class="support-resource-description">{resource.description}</span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              );
+            })}
+          </section>
+        ))}
+
+        <section class="support-panel support-afterword">
+          <header class="support-panel-heading">
+            <span class="support-index">03 / CLOSING NOTE</span>
+            <h2>Afterword</h2>
+          </header>
+          {paragraphs(afterword).map((paragraph) => <p>{paragraph}</p>)}
+        </section>
+      </div>
+    </main>
+
+    <Footer />
+  </body>
+</html>
+
+<style>
+  .support-page {
+    min-height: 100vh;
+    background: var(--paper-bg, #050505);
+    color: var(--paper-ink, #f5f5f2);
+    padding: 38px clamp(20px, 5vw, 88px) 110px;
+  }
+
+  .support-hero,
+  .support-introduction,
+  .support-sections {
+    max-width: 1120px;
+    margin-inline: auto;
+  }
+
+  .support-hero {
+    position: relative;
+    padding: 32px 0 38px;
+    border-bottom: 1px solid var(--paper-line-strong);
+  }
+
+  .support-kicker,
+  .support-index {
+    font-family: "Maple Mono", monospace;
+    color: var(--paper-accent, #b7ff00);
+    font-size: 11px;
+    letter-spacing: .14em;
+  }
+
+  .support-hero h1 {
+    font-size: clamp(2.8rem, 4.4vw, 4.3rem);
+    font-weight: 700;
+    letter-spacing: -.055em;
+    line-height: 1;
+    margin: 18px 0 24px;
+  }
+
+  .support-subtitle {
+    color: var(--paper-ink-soft);
+    font-size: clamp(14px, 2vw, 19px);
+  }
+
+  .support-introduction {
+    padding: 48px 0 62px;
+    max-width: 1120px;
+  }
+
+  .support-introduction p,
+  .support-panel-introduction p,
+  .support-afterword > p {
+    max-width: 850px;
+    line-height: 1.9;
+    color: var(--paper-ink-soft);
+    margin: 0 0 20px;
+    white-space: pre-line;
+  }
+
+  .support-sections {
+    display: grid;
+    gap: 22px;
+  }
+
+  .support-panel {
+    position: relative;
+    background: var(--paper-surface, #0a0a0a);
+    border: 1px solid var(--paper-line, rgba(183,255,0,.14));
+    padding: clamp(24px, 4vw, 55px);
+  }
+
+  .support-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 66px;
+    height: 2px;
+    background: var(--paper-accent, #b7ff00);
+  }
+
+  .support-panel-heading {
+    margin-bottom: 30px;
+  }
+
+  .support-panel h2 {
+    font-size: clamp(25px, 4vw, 43px);
+    line-height: 1.15;
+    letter-spacing: -.045em;
+    margin: 18px 0 8px;
+  }
+
+  .support-group-subtitle {
+    color: var(--paper-ink-faint);
+    font-size: 13px;
+    margin: 0;
+  }
+
+  .support-panel-introduction {
+    margin-bottom: 40px;
+  }
+
+  .support-region {
+    margin-top: 36px;
+  }
+
+  .support-region h3 {
+    font-family: "Maple Mono", monospace;
+    font-size: 12px;
+    letter-spacing: .14em;
+    color: var(--paper-accent, #b7ff00);
+    border-bottom: 1px solid var(--paper-line-strong);
+    padding-bottom: 15px;
+    margin-bottom: 0;
+  }
+
+  .support-resources {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .support-resources {
+    display: grid;
+    gap: 12px;
+    padding-top: 18px;
+  }
+
+  .support-resources li {
+    min-width: 0;
+  }
+
+  .support-resource-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    padding: 24px 26px;
+    background: #171717;
+    border: 1px solid #343434;
+    border-left: 1px solid #343434;
+    border-radius: 18px;
+    color: var(--paper-ink);
+    text-decoration: none;
+    box-sizing: border-box;
+    transition:
+      background-color .22s ease,
+      border-color .22s ease,
+      box-shadow .22s ease,
+      transform .22s ease;
+  }
+
+  .support-resource-card:hover,
+  .support-resource-card:focus-visible {
+    background: #1e1e1e;
+    border-color: #9b5428;
+    border-left-color: #b7ff00;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, .25);
+    transform: translateY(-2px);
+  }
+
+  .support-resource-card:focus-visible {
+    outline: 2px solid var(--paper-accent, #b7ff00);
+    outline-offset: 3px;
+  }
+
+  .support-resource-name {
+    display: block;
+    color: var(--paper-ink);
+    font-size: clamp(15px, 2vw, 19px);
+    font-weight: 700;
+    line-height: 1.5;
+    transition: color .22s ease;
+  }
+
+  .support-resource-card:hover .support-resource-name,
+  .support-resource-card:focus-visible .support-resource-name {
+    color: #ff681c;
+  }
+
+  .support-resource-description {
+    display: block;
+    color: var(--paper-ink-soft);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.8;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .support-resource-card,
+    .support-resource-name {
+      transition: none;
+    }
+  }
+
+  .support-afterword > p:last-child {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 720px) {
+    .support-page {
+      padding: 90px 18px 70px;
+    }
+
+    .support-hero {
+      padding: 24px 0 34px;
+    }
+
+    .support-introduction {
+      padding: 32px 0 42px;
+    }
+
+    .support-panel {
+      padding: 26px 20px;
+    }
+
+    .support-region {
+      margin-top: 26px;
+    }
+  }
+</style>

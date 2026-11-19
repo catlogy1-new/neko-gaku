@@ -35,6 +35,123 @@ export default defineConfig({
   // See docs on content modeling for more info on how to setup new content models: https://tina.io/docs/r/content-modelling-collections/
   schema: {
     collections: [
+      {
+        name: "support",
+        label: "Support",
+        path: "src/content",
+        format: "mdx",
+        match: {
+          include: "support",
+        },
+        ui: {
+          allowedActions: {
+            create: false,
+            delete: false,
+            createNestedFolder: false,
+          },
+        },
+        fields: [
+          {
+            type: "string",
+            name: "title",
+            label: "Page Title",
+            required: true,
+          },
+          {
+            type: "string",
+            name: "description",
+            label: "SEO Description",
+            required: true,
+            ui: { component: "textarea" },
+          },
+          {
+            type: "datetime",
+            name: "date",
+            label: "Date",
+            required: true,
+          },
+          {
+            type: "string",
+            name: "introduction",
+            label: "Introduction",
+            required: true,
+            ui: { component: "textarea" },
+          },
+          {
+            type: "string",
+            name: "addictionNote",
+            label: "Addiction Section Note",
+            required: true,
+            ui: { component: "textarea" },
+          },
+          {
+            type: "string",
+            name: "safetyIntroduction",
+            label: "Safety Section Introduction",
+            required: true,
+            ui: { component: "textarea" },
+          },
+          {
+            type: "string",
+            name: "afterword",
+            label: "Afterword",
+            required: true,
+            ui: { component: "textarea" },
+          },
+          {
+            type: "object",
+            name: "resources",
+            label: "Support Resources",
+            list: true,
+            ui: {
+              itemProps: (item) => ({
+                label: item?.name || "Resource",
+              }),
+            },
+            fields: [
+              {
+                type: "string",
+                name: "category",
+                label: "Category",
+                required: true,
+                options: [
+                  { label: "Addiction", value: "addiction" },
+                  { label: "Safety / Protection", value: "safety" },
+                ],
+              },
+              {
+                type: "string",
+                name: "region",
+                label: "Region",
+                required: true,
+                options: [
+                  { label: "United States", value: "US" },
+                  { label: "Japan", value: "JP" },
+                ],
+              },
+              {
+                type: "string",
+                name: "name",
+                label: "Resource Name",
+                required: true,
+              },
+              {
+                type: "string",
+                name: "description",
+                label: "Description",
+                required: true,
+                ui: { component: "textarea" },
+              },
+              {
+                type: "string",
+                name: "url",
+                label: "Official URL",
+                required: true,
+              },
+            ],
+          },
+        ],
+      },
     {
       name: "about",
       label: "About",

@@ -464,6 +464,28 @@ const blog = defineCollection({
   schema: blogArticleSchema,
 });
 
+const support = defineCollection({
+  loader: glob({ base: contentBase, pattern: 'support.{md,mdx}' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    date: z.coerce.date(),
+    introduction: z.string(),
+    addictionNote: z.string(),
+    safetyIntroduction: z.string(),
+    afterword: z.string(),
+    resources: z.array(
+      z.object({
+        category: z.enum(['addiction', 'safety']),
+        region: z.enum(['US', 'JP']),
+        name: z.string(),
+        description: z.string(),
+        url: z.url(),
+      }),
+    ).optional().default([]),
+  }),
+});
+
 const about = defineCollection({
   loader: glob({ base: contentBase, pattern: 'about.{md,mdx}' }),
   schema: (context) =>
@@ -589,6 +611,7 @@ const media = defineCollection({
 
 export const collections = {
   about,
+  support,
   blog,
   siteConfig,
   projects,

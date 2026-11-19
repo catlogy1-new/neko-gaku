@@ -149,6 +149,10 @@ module = "media"
 label = "About"
 href = "/about"
 
+[[config.topNav.links]]
+label = "Support"
+href = "/support"
+
 [config.home]
 
 [config.home.quote]
