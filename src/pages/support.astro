@@ -125,7 +125,7 @@ const paragraphs = (value: string) =>
     min-height: 100vh;
     background: var(--paper-bg, #050505);
     color: var(--paper-ink, #f5f5f2);
-    padding: 38px clamp(20px, 5vw, 88px) 110px;
+    padding: 126px clamp(20px, 5vw, 88px) 110px;
   }
 
   .support-hero,
@@ -137,8 +137,29 @@ const paragraphs = (value: string) =>
 
   .support-hero {
     position: relative;
-    padding: 32px 0 38px;
-    border-bottom: 1px solid var(--paper-line-strong);
+    padding: 0 0 38px;
+  }
+
+  .support-hero::after {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 1px;
+    content: "";
+
+    background:
+      linear-gradient(
+        90deg,
+        rgba(201, 71, 19, 0) 0%,
+        rgba(201, 71, 19, 0.08) 16%,
+        rgba(201, 71, 19, 0.22) 34%,
+        rgba(201, 71, 19, 0.72) 72%,
+        rgba(201, 71, 19, 0.96) 100%
+      );
+
+    box-shadow:
+      0 0 3px rgba(201, 71, 19, 0.16);
   }
 
   .support-kicker,
@@ -319,11 +340,11 @@ const paragraphs = (value: string) =>
 
   @media (max-width: 720px) {
     .support-page {
-      padding: 90px 18px 70px;
+      padding: 38px 18px 70px;
     }
 
     .support-hero {
-      padding: 24px 0 34px;
+      padding: 0 0 30px;
     }
 
     .support-introduction {
