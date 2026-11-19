@@ -55,6 +55,9 @@ galleryImages:
   - src: /images/portfolio/remains-016.jpg
     title: SAMPLE IMAGE / 016
     alt: Temporary portfolio sample
+  - src: /%E3%82%A4%E3%82%B8%E3%83%A1/%E3%82%A4%E3%82%B8%E3%83%A1.jpeg
+    title: ''
+    alt: ''
 photographyNote:
   index: ''
   year: '2026'
