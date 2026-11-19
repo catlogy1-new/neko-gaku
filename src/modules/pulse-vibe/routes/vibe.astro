@@ -48,7 +48,7 @@ const vibes = await Promise.all(
     return { entry, Content, align, imageLayout };
   }),
 );
-import ScrollToTopButton from '../../../components/ScrollToTopButton.astro';
+
 ---
 
 <!doctype html>
@@ -646,13 +646,21 @@ import ScrollToTopButton from '../../../components/ScrollToTopButton.astro';
     white-space: pre;
   }
 
-      /* VIBE SCROLL TOP CLEARANCE START */
+      /* PULSE DESKTOP RIGHT ALIGNMENT */
       @media (min-width: 721px) {
-        .vibe-item.right {
-          margin-right: 38px;
+        .vibe-stream {
+          gap: 64px;
         }
       }
-      /* VIBE SCROLL TOP CLEARANCE END */
+
+      @media (min-width: 721px) {
+        .vibe-item.right {
+          margin-right: 0;
+          transform: none;
+          width: min(100%, 690px);
+          max-width: 690px;
+        }
+      }
 
 /* NEXUS VIBE MOBILE HERO FIX START */
 @media (max-width: 720px) {
@@ -919,7 +927,7 @@ import ScrollToTopButton from '../../../components/ScrollToTopButton.astro';
         )}
       </div>
     </main>
-  <ScrollToTopButton />
+
     <Footer />
     {
       showTrail && (
