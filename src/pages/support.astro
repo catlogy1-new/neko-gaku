@@ -50,7 +50,7 @@ const paragraphs = (value: string) =>
     <link rel="canonical" href={new URL('/support/', Astro.site ?? Astro.url)} />
   </head>
 
-  <body>
+  <body class="support-body">
     <BlogTopNav />
 
     <main class="support-page">
@@ -119,6 +119,16 @@ const paragraphs = (value: string) =>
     <Footer />
   </body>
 </html>
+
+<style is:global>
+  @media (max-width: 720px) {
+    html:has(body.support-body),
+    body.support-body {
+      overflow-x: hidden !important;
+      overscroll-behavior-x: none;
+    }
+  }
+</style>
 
 <style>
   .support-page {
@@ -414,6 +424,24 @@ const paragraphs = (value: string) =>
   @media (max-width: 720px) {
     .support-page {
       padding: 38px 18px 70px;
+    }
+
+    /* Keep SUPPORT paragraphs comfortably inside the mobile viewport. */
+    .support-introduction,
+    .support-panel-introduction,
+    .support-afterword {
+      min-width: 0;
+    }
+
+    .support-introduction > p {
+      margin-right: 12px;
+      margin-left: 12px;
+    }
+
+    .support-panel-introduction > p,
+    .support-afterword > p {
+      margin-right: 4px;
+      margin-left: 4px;
     }
 
     .support-hero {
