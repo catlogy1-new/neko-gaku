@@ -52,6 +52,9 @@ japaneseBody: |
   いくら忘れようとしても、この笑顔が僕を追いかけてくる。
   ずっと。
   ずっとだ。
+  ずっと続くんだ。
+
+  でも、この写真を消すことが出来ない自分がいる。
 
 
 
@@ -120,6 +123,12 @@ It's the greatest violence there is for a human being.
 
 No matter how hard I try to forget, this smile keeps coming after me.
 
+This smile keeps coming after me.
+
 Always.
 
 Always.
+
+It will go on forever.
+
+And yet, I can't bring myself to delete this photo.
