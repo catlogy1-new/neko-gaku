@@ -117,3 +117,9 @@ it won't laugh anymore
 probably, right
 
 It's the greatest violence there is for a human being.
+
+No matter how hard I try to forget, this smile keeps coming after me.
+
+Always.
+
+Always.
