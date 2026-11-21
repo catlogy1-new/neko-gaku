@@ -37,12 +37,34 @@ function withBase(href: string) {
   if (href === '/') return `${basePath}/` || '/';
   return `${basePath}${href.startsWith('/') ? href : `/${href}`}`;
 }
+function getDisplayGroups(post: BlogPost) {
+const seenNames = new Set<string>();
+const uniqueItems = (items: string[]) =>
+  items.filter((name) => {
+    const key = slugifyGroupName(name);
+    if (seenNames.has(key)) return false;
+    seenNames.add(key);
+    return true;
+  });
+
+const displayTags = uniqueItems(
+  (post.data.tags ?? []).map((tag) => tag.trim().replace(/^#+\s*/, ''))
+);
+const displayCategories = uniqueItems(post.data.categories ?? []);
+const displaySeries = uniqueItems(post.data.series ?? []);
+
+  return { displayTags, displayCategories, displaySeries };
+}
+
 ---
 
 <ListTag class="nexus-journal-list">
   {
     posts.map((post, index) => {
       const postHref = withBase(`/blog/${post.id}/`);
+
+      const { displayTags, displayCategories, displaySeries } =
+        getDisplayGroups(post);
 
       return (
         <li class="nexus-journal-item">
@@ -88,9 +110,9 @@ function withBase(href: string) {
                   <FormattedDate date={post.data.date} />
                 </time>
 
-                {post.data.categories.length > 0 && (
+                {displayCategories.length > 0 && (
                   <span class="nexus-journal-groups">
-                    {post.data.categories.map((category) => (
+                    {displayCategories.map((category) => (
                       <a
                         href={withBase(`/blog/categories/${slugifyGroupName(category)}/`)}
                         data-no-card-click
@@ -101,9 +123,9 @@ function withBase(href: string) {
                   </span>
                 )}
 
-                {post.data.series.length > 0 && (
+                {displaySeries.length > 0 && (
                   <span class="nexus-journal-groups nexus-journal-series">
-                    {post.data.series.map((series) => (
+                    {displaySeries.map((series) => (
                       <a
                         href={withBase(`/blog/series/${slugifyGroupName(series)}/`)}
                         data-no-card-click
@@ -114,9 +136,9 @@ function withBase(href: string) {
                   </span>
                 )}
 
-                {post.data.tags && post.data.tags.length > 0 && (
+                {displayTags.length > 0 && (
                   <span class="nexus-journal-tags">
-                    {post.data.tags.map((tag) => (
+                    {displayTags.map((tag) => (
                       <a href={withBase(`/tags/${slugifyGroupName(tag)}/`)} data-no-card-click>
                         #{tag}
                       </a>
@@ -492,6 +514,7 @@ function withBase(href: string) {
   .nexus-journal-groups a,
   .nexus-journal-tags a {
     color: #b7ff00;
+    white-space: nowrap;
 
     text-decoration: none;
 
