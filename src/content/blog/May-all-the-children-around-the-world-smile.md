@@ -2,9 +2,13 @@
 title: May all the children around the world smile.
 headerKicker: the loss of a child
 tocVisibility: 'off'
-description: the loss of a child
+description: 'The remnants of memory that seem about to fade, yet never do'
 date: '2026-11-21'
 draft: false
+tags:
+  - ''
+series:
+  - the loss of a child
 comments: true
 heroImage: /イジメ/らいあ.jpeg
 japaneseTitle: 世界中の子供たちが笑顔でありますように
