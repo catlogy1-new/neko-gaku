@@ -16,6 +16,7 @@ type CoverAspect = 'portrait' | 'landscape' | 'square' | 'wide';
 type MediaStatus = 'completed' | 'in-progress' | 'planned' | 'abandoned';
 type MediaEntry = {
   id: string;
+  filePath?: string;
   data: {
     title: string;
     creator: string;
@@ -846,7 +847,7 @@ main {
                   {section.items.map((entry) => (
                     <TinaIsland
                       name="media-card"
-                      params={{ path: `${entry.id}.mdx` }}
+                      params={{ path: entry.filePath?.split("/").pop() ?? `${entry.id}.mdx` }}
                       wrapper={{ tag: 'div' }}
                       primary
                     >

@@ -900,7 +900,7 @@ const vibes = await Promise.all(
                 {showTrail && <span class="vibe-dot" data-vibe-dot aria-hidden="true" />}
                 <TinaIsland
                   name="pulse-body"
-                  params={{ path: `${entry.id}.mdx` }}
+                  params={{ path: entry.filePath?.split("/").pop() ?? `${entry.id}.mdx` }}
                   wrapper={{ tag: 'div' }}
                   primary
                 >
