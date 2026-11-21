@@ -3435,3 +3435,17 @@ body.blog-detail-page:has(.portfolio-section)
   document.addEventListener("astro:page-load", initYouTubeEmbeds);
   initYouTubeEmbeds();
 </script>
+
+
+<style is:global>
+/* NAVFOLIO_PARAGRAPH_SPACING_FIX_20261121 */
+body.blog-detail-page .article-content p {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+body.blog-detail-page .article-content blockquote p,
+body.blog-detail-page .article-content table p {
+  margin-bottom: 0;
+}
+</style>
