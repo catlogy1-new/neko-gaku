@@ -55,6 +55,7 @@ japaneseBody: |
   ずっと続くんだ。
 
   でも、この写真を消すことが出来ない自分がいる。
+  クソが。
 
 
 
@@ -132,3 +133,5 @@ Always.
 It will go on forever.
 
 And yet, I can't bring myself to delete this photo.
+
+Bullshit.
