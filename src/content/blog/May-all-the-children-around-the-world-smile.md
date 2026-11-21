@@ -89,7 +89,8 @@ Me, right now, watching my mother get hit over the head with a glass ashtray and
 
 Me, right now, being dragged around by my hair.
 
-\
+
+
 ...That was the other personality's me, so I don't cry and I don't speak. The other me just watches, objectively and calmly, the me it's happening to.
 
 So it doesn't hurt at all.
@@ -103,7 +104,6 @@ I've survived years of witnessing violence at home, abuse, and bullying, and non
 
 But the act of holding my own child's body offers no escape as a multiple personality, and not a trace of room for any verbal interpretation to put myself at ease.
 
-\
 Just
 
 surely
