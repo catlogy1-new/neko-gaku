@@ -999,12 +999,12 @@ export default defineConfig({
             ],
           },
           {
-            type: "string",
+            type: "rich-text",
             name: "body",
-            label: "Article Body (Markdown)",
+            label: "Article Body",
             isBody: true,
-            ui: {
-              component: "textarea",
+            parser: {
+              type: "markdown",
             },
           },
         ],
