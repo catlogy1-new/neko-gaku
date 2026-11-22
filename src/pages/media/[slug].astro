@@ -1,0 +1,116 @@
+---
+import { getCollection, render } from 'astro:content';
+import YouTubeEmbed from '../../components/media/YouTubeEmbed.astro';
+import AmazonBookCard from '../../components/media/AmazonBookCard.astro';
+import {
+  BaseHead,
+  Footer,
+  getHtmlLang,
+  getSiteConfig,
+} from 'virtual:navfolio/page-runtime';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('media', ({ data }) =>
+    !data.draft && data.review === true
+  );
+
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+const config = await getSiteConfig();
+const { site, theme } = config;
+const htmlLang = getHtmlLang(config);
+---
+
+<!doctype html>
+<html lang={htmlLang} data-palette={theme.palette}>
+  <head>
+    <BaseHead
+      title={`${entry.data.title} | ${site.title}`}
+      description={entry.data.title}
+    />
+  </head>
+  <body>
+    <main class="media-review">
+      <nav class="media-review-back">
+        <a href="/media/">← MEDIA</a>
+      </nav>
+
+      <article>
+        <header>
+          <p class="media-review-kicker">
+            {entry.data.type.toUpperCase()} / REVIEW
+          </p>
+          <h1>{entry.data.title}</h1>
+          <p class="media-review-creator">{entry.data.creator}</p>
+        </header>
+
+        <div class="media-review-body">
+          <Content components={{ YouTubeEmbed, AmazonBookCard }} />
+        </div>
+      </article>
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style>
+  :global(body) {
+    margin: 0;
+    background: #090909;
+    color: #f3f3f0;
+  }
+
+  .media-review {
+    width: min(100% - 40px, 780px);
+    margin: 0 auto;
+    padding: 72px 0 120px;
+  }
+
+  .media-review-back a {
+    color: #b7ff00;
+    text-decoration: none;
+  }
+
+  .media-review article {
+    margin-top: 60px;
+  }
+
+  .media-review-kicker {
+    color: #b7ff00;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+  }
+
+  .media-review-creator {
+    opacity: 0.65;
+  }
+
+  .media-review-body {
+    margin-top: 54px;
+    font-size: 1.05rem;
+    line-height: 1.9;
+    overflow-wrap: anywhere;
+  }
+
+  .media-review-body :global(img) {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .media-review-body :global(iframe) {
+    max-width: 100%;
+  }
+</style>

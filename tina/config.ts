@@ -508,6 +508,43 @@ export default defineConfig({
             name: "body",
             label: "Review Body",
             isBody: true,
+            templates: [
+              {
+                name: "YouTubeEmbed",
+                label: "YouTube Video",
+                fields: [
+                  {
+                    type: "string",
+                    name: "url",
+                    label: "YouTube URL",
+                    required: true,
+                  },
+                ],
+              },
+              {
+                name: "AmazonBookCard",
+                label: "Amazon Book Card",
+                fields: [
+                  {
+                    type: "string",
+                    name: "url",
+                    label: "Amazon Product URL",
+                    required: true,
+                  },
+                  {
+                    type: "string",
+                    name: "title",
+                    label: "Book Title",
+                    required: true,
+                  },
+                  {
+                    type: "image",
+                    name: "cover",
+                    label: "Book Cover (optional)",
+                  },
+                ],
+              },
+            ],
           },
         ],
       },

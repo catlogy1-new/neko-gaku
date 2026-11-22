@@ -1,0 +1,91 @@
+---
+interface Props {
+  url?: string;
+  title?: string;
+  cover?: string;
+}
+
+const { url = '', title = '', cover = '' } = Astro.props;
+
+function isAmazonLink(value: string): boolean {
+  try {
+    const u = new URL(value);
+    const host = u.hostname.toLowerCase();
+
+    return u.protocol === 'https:' && (
+      /(^|\.)amazon\.[a-z.]+$/i.test(host) ||
+      host === 'amzn.to'
+    );
+  } catch {
+    return false;
+  }
+}
+
+const valid = isAmazonLink(url);
+const safeCover =
+  cover.startsWith('/') && !cover.startsWith('//')
+    ? cover
+    : /^https:\/\//i.test(cover)
+      ? cover
+      : '';
+---
+
+{
+  valid ? (
+    <a
+      class="amazon-book-card"
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer sponsored"
+    >
+      {safeCover && (
+        <img src={safeCover} alt={`${title} の書影`} loading="lazy" />
+      )}
+      <span class="amazon-book-card-text">
+        <strong>{title || 'Amazonで書籍を見る'}</strong>
+        <small>Amazonの商品ページを開く</small>
+      </span>
+    </a>
+  ) : (
+    <p class="amazon-book-card-error">
+      Amazonの商品URLを確認してください。
+    </p>
+  )
+}
+
+<style>
+  .amazon-book-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    margin: 2rem 0;
+    border: 1px solid #454545;
+    border-radius: 8px;
+    color: inherit;
+    text-decoration: none;
+  }
+  .amazon-book-card:hover {
+    border-color: #b7ff00;
+  }
+  .amazon-book-card img {
+    width: 92px;
+    max-height: 140px;
+    object-fit: contain;
+    flex: none;
+  }
+  .amazon-book-card-text {
+    display: grid;
+    gap: 10px;
+    min-width: 0;
+  }
+  .amazon-book-card-text strong {
+    overflow-wrap: anywhere;
+  }
+  .amazon-book-card-text small {
+    color: #b7ff00;
+  }
+  .amazon-book-card-error {
+    opacity: .7;
+  }
+</style>
