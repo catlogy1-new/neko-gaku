@@ -826,7 +826,7 @@ export default defineConfig({
             }
 
             const slug = match[1];
-            const route = `/blog/${slug}/`;
+            const route = `/blog/${slug.toLowerCase()}/`;
 
             try {
               const response = await fetch(route, {
