@@ -248,7 +248,7 @@ const ui = getUiText(siteConfig);
       <BlogArchive
         page={page}
         headerKicker={ui.groups.tag}
-        headerTitle={tag.name}
+        headerTitle={tag.name.replace(/^#+\s*/, '')}
         headerNote={ui.groups.tagNote(tag.count)}
         coverImageStyle={pageMeta.coverImageStyle}
       />
