@@ -68,76 +68,48 @@ japaneseBody: |
 
 ## That's right. It's just a bunch of nonsense.
 
-My child.
-
+My child.\
 Killed at four months old.
 
-Around that time, the baby seemed to find drinking milk hilarious. The moment the milk started, the laughing started, so they hardly ever got much down, you know.
-
+Around that time, the baby seemed to find drinking milk hilarious.\
+&#x20;The moment the milk started, the laughing started, so they hardly ever got much down, you know.\
 They laughed a lot.
 
-From as far back as I can remember, I grew up in a home with intense domestic violence, and I was abused by my parents.
-
-I have a severe developmental disorder, so outside the house I was brutally bullied. In short, there was no safe place anywhere.
-
+From as far back as I can remember, I grew up in a home with intense domestic violence, and I was abused by my parents.\
+I have a severe developmental disorder, so outside the house I was brutally bullied. In short, there was no safe place anywhere.\
 So I created another personality and killed off emotion itself.
 
-\
-Me, right now, being punched, nose bleeding.
-
-Me, right now, watching my mother get hit over the head with a glass ashtray and collapse, blood spraying from her head.
-
+Me, right now, being punched, nose bleeding.\
+Me, right now, watching my mother get hit over the head with a glass ashtray and collapse, blood spraying from her head.\
 Me, right now, being dragged around by my hair.
 
-
-
-...That was the other personality's me, so I don't cry and I don't speak. The other me just watches, objectively and calmly, the me it's happening to.
-
+...That was the other personality's me, so I don't cry and I don't speak. The other me just watches, objectively and calmly, the me it's happening to.\
 So it doesn't hurt at all.
 
-\
-After my child died and the autopsy was over, I went to the police station to collect the body, and an officer said, "I'm sorry, but the eyes have been removed."
-
+After my child died and the autopsy was over, I went to the police station to collect the body, and an officer said, "I'm sorry, but the eyes have been removed."\
 When I held my child's body, with no eyes, the brain swollen, the head abnormally large, it felt twice as heavy as when they were alive.
 
-I've survived years of witnessing violence at home, abuse, and bullying, and none of it ever hurt.
-
+I've survived years of witnessing violence at home, abuse, and bullying, and none of it ever hurt.\
 But the act of holding my own child's body offers no escape as a multiple personality, and not a trace of room for any verbal interpretation to put myself at ease.
 
-Just
-
-surely
-
-quietly
-
-as an object
-
-it exists
-
-probably
-
-this thing called death
-
-probably
-
-it won't laugh anymore
-
+Just\
+surely\
+quietly\
+as an object\
+it exists\
+probably\
+this thing called death\
+probably\
+it won't laugh anymore\
 probably, right
 
-\
-It's the greatest violence there is for a human being.
-
+It's the greatest violence there is for a human being.\
 No matter how hard I try to forget, this smile keeps coming after me.
 
-This smile keeps coming after me.
-
-Always.
-
-Always.
-
+This smile keeps coming after me.\
+Always.\
+Always.\
 It will go on forever.
 
-\
-And yet, I can't bring myself to delete this photo.
-
+And yet, I can't bring myself to delete this photo.\
 Bullshit.
