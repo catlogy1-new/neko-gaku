@@ -586,7 +586,12 @@ const vibe = defineCollection({
       images: z.array(contentImageSchema({ image })).optional().default([]),
       tags: z.array(z.string()).optional().default([]),
       align: z.enum(['left', 'right', 'center']).optional(),
-      size: z.enum(['sm', 'md', 'lg']).optional().default('md'),
+      size: z.preprocess(
+        (value) => typeof value === 'string' && value.trim() === ''
+          ? undefined
+          : value,
+        z.enum(['sm', 'md', 'lg']).optional().default('md'),
+      ),
     }),
 });
 
