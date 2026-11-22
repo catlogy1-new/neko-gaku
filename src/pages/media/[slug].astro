@@ -1,0 +1,196 @@
+---
+import { getCollection, render } from 'astro:content';
+import {
+  BaseHead,
+  Footer,
+  getHtmlLang,
+  getSiteConfig,
+} from 'virtual:navfolio/page-runtime';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('media', ({ data }) =>
+    !data.draft && data.review === true
+  );
+
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+const config = await getSiteConfig();
+const { site, theme } = config;
+const htmlLang = getHtmlLang(config);
+---
+
+<!doctype html>
+<html lang={htmlLang} data-palette={theme.palette}>
+  <head>
+    <BaseHead
+      title={`${entry.data.title} | ${site.title}`}
+      description={entry.data.title}
+    />
+  </head>
+  <body>
+    <main class="media-review">
+      <nav class="media-review-back">
+        <a href="/media/">← MEDIA</a>
+      </nav>
+
+      <article>
+        <header>
+          <p class="media-review-kicker">
+            {entry.data.type.toUpperCase()} / REVIEW
+          </p>
+          <h1>{entry.data.title}</h1>
+          <p class="media-review-creator">{entry.data.creator}</p>
+        </header>
+
+        <div class="media-review-body">
+          <Content />
+        </div>
+      </article>
+    </main>
+    <Footer />
+
+<script is:inline>
+(() => {
+  function convertMediaLinks() {
+    document.querySelectorAll('.media-review-body p').forEach((paragraph) => {
+      const links = paragraph.querySelectorAll('a[href]');
+      if (links.length !== 1) return;
+
+      const link = links[0];
+      if (Array.from(paragraph.childNodes).some((node) =>
+        node !== link &&
+        (node.nodeType !== Node.TEXT_NODE || node.textContent.trim())
+      )) return;
+
+      let url;
+      try { url = new URL(link.href); }
+      catch { return; }
+      if (url.protocol !== 'https:') return;
+
+      const host = url.hostname.toLowerCase();
+      const parts = url.pathname.split('/').filter(Boolean);
+      let videoId = '';
+
+      if (host === 'youtu.be') {
+        videoId = parts[0] || '';
+      } else if (['youtube.com', 'www.youtube.com', 'm.youtube.com'].includes(host)) {
+        videoId = parts[0] === 'shorts' || parts[0] === 'embed'
+          ? parts[1] || ''
+          : url.searchParams.get('v') || '';
+      }
+
+      if (/^[A-Za-z0-9_-]{11}$/.test(videoId)) {
+        const frame = document.createElement('iframe');
+        frame.src = 'https://www.youtube-nocookie.com/embed/' + videoId;
+        frame.title = 'YouTube video';
+        frame.loading = 'lazy';
+        frame.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; web-share';
+        frame.allowFullscreen = true;
+        frame.style.cssText = 'width:100%;aspect-ratio:16/9;border:0;display:block';
+
+        const wrapper = document.createElement('div');
+        wrapper.style.cssText = 'width:100%;margin:2rem 0';
+        wrapper.append(frame);
+        paragraph.replaceWith(wrapper);
+        return;
+      }
+
+      const amazon = /(^|\.)amazon\.(co\.jp|com|co\.uk|de|fr|it|es|ca|com\.au)$/.test(host)
+        || host === 'amzn.to';
+
+      if (amazon) {
+        const card = document.createElement('a');
+        card.href = url.href;
+        card.target = '_blank';
+        card.rel = 'noopener noreferrer sponsored';
+        card.style.cssText = 'display:flex;align-items:center;gap:20px;padding:20px;margin:2rem 0;border:1px solid #555;border-radius:8px;color:inherit;text-decoration:none';
+
+        const cover = link.querySelector('img');
+        if (cover) {
+          const image = cover.cloneNode(true);
+          image.style.cssText = 'width:92px;max-height:140px;object-fit:contain';
+          card.append(image);
+        }
+
+        const title = document.createElement('span');
+        title.style.cssText = 'overflow-wrap:anywhere';
+        title.textContent = link.textContent.trim() || 'Amazonで書籍を見る';
+        card.append(title);
+        paragraph.replaceWith(card);
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', convertMediaLinks, { once: true });
+  } else {
+    convertMediaLinks();
+  }
+  document.addEventListener('astro:page-load', convertMediaLinks);
+})();
+</script>
+
+</body>
+</html>
+
+<style>
+  :global(body) {
+    margin: 0;
+    background: #090909;
+    color: #f3f3f0;
+  }
+
+  .media-review {
+    width: min(100% - 40px, 780px);
+    margin: 0 auto;
+    padding: 72px 0 120px;
+  }
+
+  .media-review-back a {
+    color: #b7ff00;
+    text-decoration: none;
+  }
+
+  .media-review article {
+    margin-top: 60px;
+  }
+
+  .media-review-kicker {
+    color: #b7ff00;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+  }
+
+  .media-review-creator {
+    opacity: 0.65;
+  }
+
+  .media-review-body {
+    margin-top: 54px;
+    font-size: 1.05rem;
+    line-height: 1.9;
+    overflow-wrap: anywhere;
+  }
+
+  .media-review-body :global(img) {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .media-review-body :global(iframe) {
+    max-width: 100%;
+  }
+</style>
