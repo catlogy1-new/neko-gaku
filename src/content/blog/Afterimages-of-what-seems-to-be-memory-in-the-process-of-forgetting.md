@@ -6,7 +6,7 @@ description: Drug addiction and self-harm
 date: '2026-11-18'
 draft: false
 tags:
-  - '#drugaddiction'
+  - drugaddiction
   - addictionrecovery
   - mentalhealthawareness
 categories:
