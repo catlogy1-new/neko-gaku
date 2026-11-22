@@ -48,7 +48,9 @@ const uniqueItems = (items: string[]) =>
   });
 
 const displayTags = uniqueItems(
-  (post.data.tags ?? []).map((tag) => tag.trim().replace(/^#+\s*/, ''))
+  (post.data.tags ?? [])
+    .map((tag) => tag.trim().replace(/^#+\s*/, ''))
+    .filter((tag) => tag.length > 0)
 );
 const displayCategories = uniqueItems(post.data.categories ?? []);
 const displaySeries = uniqueItems(post.data.series ?? []);
