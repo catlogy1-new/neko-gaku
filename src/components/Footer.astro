@@ -16,8 +16,8 @@
           猫学
         </a>
 
-        <span class="footer-admin-separator" aria-hidden="true">|</span>
-        <a class="footer-admin" href="/admin/index.html" target="_blank" rel="noopener noreferrer" aria-label="ADMIN - TinaCMS management (opens in a new tab)">ADMIN</a>
+        <span class="footer-admin-separator" aria-hidden="true" hidden>|</span>
+        <a hidden class="footer-admin" href="/admin/index.html" target="_blank" rel="noopener noreferrer" aria-label="ADMIN - TinaCMS management (opens in a new tab)">ADMIN</a>
       </span>
     </div>
   </div>
@@ -478,3 +478,37 @@
     }
   }
 </style>
+
+<!-- NEXUS_OWNER_ONLY_FOOTER_ADMIN_20261122 -->
+<style is:global>
+  .site-footer .footer-admin[hidden],
+  .site-footer .footer-admin-separator[hidden] {
+    display: none !important;
+  }
+</style>
+
+<script>
+  import "../utils/nexus-admin-auth";
+
+  function refreshFooterAdmin() {
+    const owner =
+      (window as Window & { __nexusTinaAdmin?: boolean })
+        .__nexusTinaAdmin === true;
+
+    document.querySelectorAll<HTMLElement>(
+      ".site-footer .footer-admin, .site-footer .footer-admin-separator"
+    ).forEach((element) => {
+      element.hidden = !owner;
+    });
+  }
+
+  document.addEventListener(
+    "nexus-admin-auth-change",
+    refreshFooterAdmin
+  );
+  document.addEventListener(
+    "astro:page-load",
+    refreshFooterAdmin
+  );
+  refreshFooterAdmin();
+</script>
