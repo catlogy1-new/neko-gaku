@@ -19,8 +19,8 @@ galleryImages:
   - src: /%E9%87%9C%E3%83%B6%E5%B4%8E/image8.jpeg
     title: Kamagasaki
     alt: Temporary portfolio sample
-  - src: /images/portfolio/remains-005.jpg
-    title: SAMPLE IMAGE / 005
+  - src: /45CDC690-535F-49F3-850D-E75CE10525482026-07-13_18-54-23_318-(2026-07-13T17_02_40.378).JPEG
+    title: Nami
     alt: Temporary portfolio sample
   - src: /images/portfolio/remains-006.jpg
     title: SAMPLE IMAGE / 006
