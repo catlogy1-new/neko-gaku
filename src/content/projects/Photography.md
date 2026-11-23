@@ -16,8 +16,8 @@ galleryImages:
   - src: /歌舞伎町/image3.jpeg
     title: Eriko
     alt: Temporary portfolio sample
-  - src: /images/portfolio/remains-004.jpg
-    title: SAMPLE IMAGE / 004
+  - src: /%E9%87%9C%E3%83%B6%E5%B4%8E/image8.jpeg
+    title: Kamagasaki
     alt: Temporary portfolio sample
   - src: /images/portfolio/remains-005.jpg
     title: SAMPLE IMAGE / 005
