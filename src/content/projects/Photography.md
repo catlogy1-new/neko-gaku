@@ -10,9 +10,9 @@ galleryImages:
   - src: /Portfolio/cat.jpg
     title: Cat
     alt: ''
-  - src: /images/portfolio/remains-002.jpg
-    title: SAMPLE IMAGE / 002
-    alt: Temporary portfolio sample
+  - src: /歌舞伎町/海.jpg
+    title: Umi
+    alt: ''
   - src: /images/portfolio/remains-003.jpg
     title: SAMPLE IMAGE / 003
     alt: Temporary portfolio sample
