@@ -1,0 +1,28 @@
+---
+import Vibe from '../../../modules/pulse-vibe/routes/vibe.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const entries = (await getCollection('vibe'))
+    .filter((entry) => !entry.data.draft);
+
+  const tags = new Map<string, string>();
+
+  for (const entry of entries) {
+    for (const value of entry.data.tags ?? []) {
+      const tag = value.trim();
+      if (tag && !tags.has(tag.toLowerCase())) {
+        tags.set(tag.toLowerCase(), tag);
+      }
+    }
+  }
+
+  return [...tags.values()].map((tag) => ({
+    params: { tag: encodeURIComponent(tag) },
+    props: { tagFilter: tag },
+  }));
+}
+
+const { tagFilter } = Astro.props;
+---
+<Vibe tagFilter={tagFilter} />

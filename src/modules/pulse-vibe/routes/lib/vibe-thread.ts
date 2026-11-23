@@ -19,17 +19,44 @@ const clearVibeThread = (): void => {
 
 const getDotPositions = (stream: HTMLElement): VibeDotPosition[] => {
   const streamBox = stream.getBoundingClientRect();
-  const dots = Array.from(stream.querySelectorAll('[data-vibe-dot]')).filter(
-    (dot): dot is HTMLElement => dot instanceof HTMLElement && dot.getClientRects().length > 0,
-  );
 
-  return dots.map((dot) => {
-    const dotBox = dot.getBoundingClientRect();
+  const dots = Array.from(
+    stream.querySelectorAll<HTMLElement>('[data-vibe-dot]')
+  ).filter((dot) => dot.getClientRects().length > 0);
 
-    return {
-      x: dotBox.left + dotBox.width / 2 - streamBox.left,
-      y: dotBox.top + dotBox.height / 2 - streamBox.top + 28,
-    };
+  return dots.flatMap((dot) => {
+    const item = dot.closest<HTMLElement>('.vibe-item');
+    const headbox = item?.querySelector<HTMLElement>('.vibe-headbox');
+
+    if (!item || !headbox) return [];
+
+    const itemBox = item.getBoundingClientRect();
+    const box = headbox.getBoundingClientRect();
+
+    let x = box.left + box.width / 2;
+
+    if (item.classList.contains('left')) {
+      x = box.right + 18;
+    } else if (item.classList.contains('right')) {
+      x = box.left - 18;
+    }
+
+    // 投稿の位置に追従しつつ、左右の振れ幅を抑える
+    const centerX = streamBox.left + streamBox.width / 2;
+    const curveStrength = 0.60;
+    x = centerX + (x - centerX) * curveStrength;
+
+    const y = box.top + 4;
+
+    dot.style.left = `${x - itemBox.left}px`;
+    dot.style.right = 'auto';
+    dot.style.top = `${y - itemBox.top}px`;
+    dot.style.transform = 'translate(-50%, -50%)';
+
+    return [{
+      x: x - streamBox.left,
+      y: y - streamBox.top + 28,
+    }];
   });
 };
 

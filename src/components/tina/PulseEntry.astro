@@ -67,7 +67,9 @@ const imageLayout = getVibeImageLayout(entryData.images.length);
                     {entryData.tags.length > 0 && (
                       <span class="vibe-tags" data-tina-field={data ? tinaField(data, 'tags') : undefined}>
                         {entryData.tags.map((tag) => (
-                          <span class="vibe-tag">#{tag}</span>
+                          <a class="vibe-tag"
+       href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/vibe/tag/${encodeURIComponent(tag)}/`}
+    >#{tag}</a>
                         ))}
                       </span>
                     )}
