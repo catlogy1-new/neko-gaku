@@ -13,8 +13,8 @@ galleryImages:
   - src: /歌舞伎町/海.jpg
     title: Umi
     alt: ''
-  - src: /images/portfolio/remains-003.jpg
-    title: SAMPLE IMAGE / 003
+  - src: /歌舞伎町/image3.jpeg
+    title: Eriko
     alt: Temporary portfolio sample
   - src: /images/portfolio/remains-004.jpg
     title: SAMPLE IMAGE / 004
@@ -55,6 +55,9 @@ galleryImages:
   - src: /images/portfolio/remains-016.jpg
     title: SAMPLE IMAGE / 016
     alt: Temporary portfolio sample
+  - src: ''
+    title: ''
+    alt: ''
 photographyNote:
   index: ''
   year: '2026'
