@@ -317,6 +317,7 @@ export default defineConfig({
             type: "datetime",
             name: "updatedDate",
             label: "Updated Date",
+            ui: { component: "hidden" },
           },
           {
             type: "boolean",
@@ -333,16 +334,19 @@ export default defineConfig({
             type: "string",
             name: "mood",
             label: "Mood",
+            ui: { component: "hidden" },
           },
           {
             type: "string",
             name: "location",
             label: "Location",
+            ui: { component: "hidden" },
           },
           {
             type: "image",
             name: "images",
             label: "Images",
+            ui: { component: "hidden" },
             list: true,
           },
           {
