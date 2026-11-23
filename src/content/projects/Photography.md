@@ -25,7 +25,7 @@ galleryImages:
   - src: /%E9%A2%A8%E6%99%AF/image1.jpeg
     title: Untitled
     alt: Temporary portfolio sample
-  - src: /images/portfolio/remains-007.jpg
+  - src: /%E9%A2%A8%E6%99%AF/%E5%B1%B1%E8%B0%B7/image4.jpeg
     title: SAMPLE IMAGE / 007
     alt: Temporary portfolio sample
   - src: /images/portfolio/remains-008.jpg
