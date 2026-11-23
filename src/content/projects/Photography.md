@@ -22,8 +22,8 @@ galleryImages:
   - src: /45CDC690-535F-49F3-850D-E75CE10525482026-07-13_18-54-23_318-(2026-07-13T17_02_40.378).JPEG
     title: Nami
     alt: Temporary portfolio sample
-  - src: /images/portfolio/remains-006.jpg
-    title: SAMPLE IMAGE / 006
+  - src: /%E9%A2%A8%E6%99%AF/image1.jpeg
+    title: Untitled
     alt: Temporary portfolio sample
   - src: /images/portfolio/remains-007.jpg
     title: SAMPLE IMAGE / 007
