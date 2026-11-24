@@ -488,7 +488,25 @@
 </style>
 
 <script>
-  import "../utils/nexus-admin-auth";
+  const loadAdminAuth = () => {
+    try {
+      if (localStorage.getItem("tinacms-auth")) {
+        void import("../utils/nexus-admin-auth")
+          .catch(console.error);
+      }
+    } catch {
+      // Storage unavailable: keep admin controls hidden.
+    }
+  };
+
+  document.addEventListener("astro:page-load", loadAdminAuth);
+  window.addEventListener("focus", loadAdminAuth);
+  window.addEventListener("storage", (event) => {
+    if (event.key === "tinacms-auth" || event.key === null) {
+      loadAdminAuth();
+    }
+  });
+  loadAdminAuth();
 
   function refreshFooterAdmin() {
     const owner =
