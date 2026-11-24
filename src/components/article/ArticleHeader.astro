@@ -2848,7 +2848,20 @@ const tinaEditHref = blogArticleId
 <!-- NEXUS EDITOR ACTION BRIDGE END -->
 
 <script>
-  import "../../utils/nexus-admin-auth";
+  const loadAdminAuth = () => {
+    try {
+      if (localStorage.getItem("tinacms-auth")) {
+        void import("../../utils/nexus-admin-auth").catch(console.error);
+      }
+    } catch {
+      // Keep admin controls hidden when storage is unavailable.
+    }
+  };
+
+  document.addEventListener("astro:page-load", loadAdminAuth);
+  window.addEventListener("focus", loadAdminAuth);
+  window.addEventListener("storage", loadAdminAuth);
+  loadAdminAuth();
 </script>
 
 

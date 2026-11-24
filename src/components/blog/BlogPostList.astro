@@ -1492,7 +1492,20 @@ const displaySeries = uniqueItems(post.data.series ?? []);
 </style>
 <!-- NEXUS PINNED STRIP V2 END -->
 <script>
-  import "../../utils/nexus-admin-auth";
+  const loadAdminAuth = () => {
+    try {
+      if (localStorage.getItem("tinacms-auth")) {
+        void import("../../utils/nexus-admin-auth").catch(console.error);
+      }
+    } catch {
+      // Keep admin controls hidden when storage is unavailable.
+    }
+  };
+
+  document.addEventListener("astro:page-load", loadAdminAuth);
+  window.addEventListener("focus", loadAdminAuth);
+  window.addEventListener("storage", loadAdminAuth);
+  loadAdminAuth();
 </script>
 <style is:global>
   @media (min-width: 721px) {
