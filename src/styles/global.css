@@ -1057,154 +1057,10 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
 
    陞滄摩謐臥ｹ晢ｽｩ郢ｧ・､郢晢｣ｰ邵ｺ・ｯ隰ｦ・､陷ｴ・ｻ邵ｲ繝ｻ   郢晏生繝ｻ郢ｧ・ｹ邵ｺ・ｯ隴牙干・樣ｫｱ蝣､繝ｻ豼ｶ・ｲ邵ｲ繝ｻ   陜怜ｹ・嚀邵ｺ・ｰ邵ｺ驢肴ｴ堤ｸｺ繝ｻﾎ帷ｹｧ・､郢晢｣ｰ郢晄じﾎ帷ｹｧ・ｱ郢昴・繝ｨ邵ｲ繝ｻ   ========================================================= */
 
-.year-wheel-shell {
-  position: relative !important;
-
-  box-sizing: border-box !important;
-
-  height: 172px !important;
-  min-height: 172px !important;
-
-  width: 440px !important;
-  margin: 0 0 10px auto !important;
-  padding: 0 !important;
-
-  overflow: hidden !important;
-
-  clip-path:
-    polygon(
-      6px 0,
-      calc(100% - 6px) 0,
-      100% 6px,
-      100% calc(100% - 6px),
-      calc(100% - 6px) 100%,
-      6px 100%,
-      0 calc(100% - 6px),
-      0 6px
-    ) !important;
-
-  border:
-    1px solid rgba(59, 76, 80, .68) !important;
-
-  background:
-
-    /* TOP LEFT */
-    linear-gradient(
-      90deg,
-      #b7ff00,
-      #b7ff00
-    )
-    7px 0 /
-    18px 2px
-    no-repeat,
-
-    linear-gradient(
-      180deg,
-      #b7ff00,
-      #b7ff00
-    )
-    0 7px /
-    2px 16px
-    no-repeat,
-
-
-    /* TOP RIGHT */
-    linear-gradient(
-      90deg,
-      #b7ff00,
-      #b7ff00
-    )
-    calc(100% - 25px) 0 /
-    18px 2px
-    no-repeat,
-
-    linear-gradient(
-      180deg,
-      #b7ff00,
-      #b7ff00
-    )
-    100% 7px /
-    2px 16px
-    no-repeat,
-
-
-    /* BOTTOM LEFT */
-    linear-gradient(
-      90deg,
-      #b7ff00,
-      #b7ff00
-    )
-    7px 100% /
-    18px 2px
-    no-repeat,
-
-    linear-gradient(
-      180deg,
-      #b7ff00,
-      #b7ff00
-    )
-    0 calc(100% - 23px) /
-    2px 16px
-    no-repeat,
-
-
-    /* BOTTOM RIGHT */
-    linear-gradient(
-      90deg,
-      #b7ff00,
-      #b7ff00
-    )
-    calc(100% - 25px) 100% /
-    18px 2px
-    no-repeat,
-
-    linear-gradient(
-      180deg,
-      #b7ff00,
-      #b7ff00
-    )
-    100% calc(100% - 23px) /
-    2px 16px
-    no-repeat,
-
-
-    /* scan lines */
-    repeating-linear-gradient(
-      180deg,
-      rgba(53, 88, 101, .022) 0,
-      rgba(53, 88, 101, .022) 1px,
-      transparent 1px,
-      transparent 4px
-    ),
-
-
-    /* blue wheel atmosphere */
-    radial-gradient(
-      ellipse at 21% 48%,
-      rgba(29, 73, 91, .115),
-      transparent 35%
-    ),
-
-    linear-gradient(
-      180deg,
-      #070c0f 0%,
-      #030607 100%
-    ) !important;
-
-  box-shadow:
-    inset 0 0 0 1px rgba(78, 99, 102, .06),
-    0 0 7px rgba(183,255,0,.025) !important;
-}
-
 
 /*
   陷鷹亂繝ｻ騾榊床・ｼ・ｼ髫補悪・ｴ・ｰ郢ｧ・ｳ郢晢ｽｼ郢晉ｿｫ繝ｻ郢昴・縺倡ｹｧ・､郢晢ｽｳ郢ｧ雋橸ｽｮ謔溘・陋帶㊧・ｭ・｢
 */
-.year-wheel-shell::before,
-.year-wheel-shell::after {
-  display: none !important;
-  content: none !important;
-}
 
 
 /* =========================================================
@@ -1212,43 +1068,10 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
    闕ｳﾂ陜玲ｧｭ・願棔・ｧ邵ｺ髦ｪ・･
    ========================================================= */
 
-.year-wheel-label {
-  position: absolute !important;
-
-  top: 15px !important;
-  left: 22px !important;
-
-  z-index: 10 !important;
-
-  margin: 0 !important;
-
-  color: #718084 !important;
-
-  font-family:
-    "Maple Mono",
-    monospace !important;
-
-  font-size: 10px !important;
-  font-weight: 700 !important;
-
-  line-height: 1 !important;
-
-  letter-spacing: .17em !important;
-}
-
 
 /* =========================================================
    LAYOUT
    ========================================================= */
-
-.year-wheel-layout {
-  position: relative !important;
-
-  display: block !important;
-
-  width: 100% !important;
-  height: 172px !important;
-}
 
 
 /* =========================================================
@@ -1267,226 +1090,20 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
 
    邵ｺ阮呻ｽ檎ｸｺ・ｧ陞ｳ謔溘・陝・ｽｾ驕假ｽｰ邵ｲ繝ｻ   ========================================================= */
 
-.year-wheel-up,
-.year-wheel-down {
-  position: absolute !important;
-
-  top: 68px !important;
-}
-
-
-.year-wheel-up {
-  left: 71px !important;
-}
-
-
-.year-wheel-down {
-  left: 311px !important;
-}
-
-
-.year-wheel-arrow {
-  width: 38px !important;
-  height: 38px !important;
-
-  display: grid !important;
-  place-items: center !important;
-
-  padding: 0 !important;
-
-  border:
-    1px solid rgba(184, 76, 20, .55) !important;
-
-  border-radius: 999px !important;
-
-  background:
-    rgba(16, 9, 5, .72) !important;
-
-  color:
-    #b84c14 !important;
-
-  box-shadow:
-    0 0 7px rgba(184, 76, 20, .10),
-    inset 0 0 8px rgba(184, 76, 20, .035) !important;
-
-  cursor: pointer !important;
-
-  transition:
-    color .18s ease,
-    border-color .18s ease,
-    background .18s ease,
-    box-shadow .18s ease,
-    transform .18s ease !important;
-}
-
-
-.year-wheel-arrow:hover,
-.year-wheel-arrow:focus-visible {
-  color: #ff711f !important;
-
-  border-color:
-    rgba(255, 113, 31, .92) !important;
-
-  background:
-    rgba(38, 15, 5, .82) !important;
-
-  box-shadow:
-    0 0 6px rgba(255, 105, 24, .48),
-    0 0 15px rgba(255, 105, 24, .20),
-    inset 0 0 9px rgba(255, 105, 24, .08) !important;
-
-  transform:
-    translateY(-1px) !important;
-}
-
 
 /* =========================================================
    WHEEL FIELD
    ========================================================= */
-
-.year-wheel {
-  position: absolute !important;
-
-  top: 27px !important;
-  left: 116px !important;
-
-  width: 188px !important;
-  height: 118px !important;
-
-  overflow: hidden !important;
-
-  border: 0 !important;
-  outline: 0 !important;
-
-  background:
-    linear-gradient(
-      90deg,
-
-      transparent 0%,
-
-      rgba(28, 69, 84, .050) 10%,
-
-      rgba(40, 91, 108, .120) 50%,
-
-      rgba(28, 69, 84, .050) 90%,
-
-      transparent 100%
-    ) !important;
-
-  -webkit-mask-image:
-    linear-gradient(
-      to bottom,
-      transparent 0%,
-      #000 8%,
-      #000 92%,
-      transparent 100%
-    );
-
-  mask-image:
-    linear-gradient(
-      to bottom,
-      transparent 0%,
-      #000 8%,
-      #000 92%,
-      transparent 100%
-    );
-}
-
-
-.year-wheel-window {
-  position: relative !important;
-
-  width: 100% !important;
-  height: 100% !important;
-}
 
 
 /* =========================================================
    FADED RAILS
    ========================================================= */
 
-.year-wheel-window::before,
-.year-wheel-window::after {
-  position: absolute !important;
-
-  top: 3px !important;
-  bottom: 3px !important;
-
-  z-index: 20 !important;
-
-  width: 1px !important;
-
-  content: "" !important;
-
-  pointer-events: none !important;
-
-  background:
-    linear-gradient(
-      180deg,
-
-      transparent,
-
-      rgba(48,89,101,.08) 10%,
-
-      rgba(57,105,115,.22) 28%,
-
-      rgba(75,119,118,.25) 43%,
-
-      rgba(115,145,101,.27) 49%,
-
-      rgba(115,145,101,.27) 51%,
-
-      rgba(75,119,118,.25) 57%,
-
-      rgba(57,105,115,.22) 72%,
-
-      rgba(48,89,101,.08) 90%,
-
-      transparent
-    ) !important;
-
-  opacity:
-    .70 !important;
-}
-
-
-.year-wheel-window::before {
-  left: 21px !important;
-}
-
-
-.year-wheel-window::after {
-  right: 21px !important;
-}
-
 
 /* =========================================================
    CENTER DOTS
    ========================================================= */
-
-.year-wheel-window {
-  background:
-
-    radial-gradient(
-      circle,
-      rgba(183,255,0,.88) 0 1.2px,
-      rgba(183,255,0,.30) 1.5px,
-      transparent 4px
-    )
-    17px 55px /
-    8px 8px
-    no-repeat,
-
-    radial-gradient(
-      circle,
-      rgba(183,255,0,.88) 0 1.2px,
-      rgba(183,255,0,.30) 1.5px,
-      transparent 4px
-    )
-    calc(100% - 25px) 55px /
-    8px 8px
-    no-repeat !important;
-}
 
 
 /* =========================================================
@@ -1494,330 +1111,32 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
    郢晢ｽｩ郢ｧ・､郢晏現縺堤ｹ晢ｽｬ郢晢ｽｼ 遶翫・hover騾具ｽｽ
    ========================================================= */
 
-.year-wheel-track {
-  position: absolute !important;
-
-  inset: 0 !important;
-
-  width: 100% !important;
-
-  transform:
-    none !important;
-}
-
-
-.year-wheel-option {
-  display:
-    none !important;
-}
-
-
-.year-wheel-option.is-active {
-  position: absolute !important;
-
-  top: 50% !important;
-  left: 0 !important;
-
-  display: flex !important;
-
-  align-items: center !important;
-  justify-content: center !important;
-
-  width: 100% !important;
-  height: 34px !important;
-
-  padding: 0 !important;
-  margin: 0 !important;
-
-  border: 0 !important;
-
-  background:
-    transparent !important;
-
-  color:
-    #d7dcd9 !important;
-
-  opacity:
-    1 !important;
-
-  transform:
-    translateY(-50%) !important;
-
-  font-family:
-    "Host Grotesk Variable",
-    "Inter Variable",
-    sans-serif !important;
-
-  font-size:
-    27px !important;
-
-  font-weight:
-    690 !important;
-
-  line-height:
-    34px !important;
-
-  letter-spacing:
-    -.045em !important;
-
-  cursor:
-    default !important;
-
-  text-shadow:
-    none !important;
-
-  transition:
-    color 150ms ease,
-    text-shadow 150ms ease !important;
-}
-
-
-.year-wheel-option.is-active:hover {
-  color:
-    #ffffff !important;
-
-  text-shadow:
-    0 0 6px rgba(255,255,255,.08) !important;
-}
-
-
-.year-wheel-option.is-active::before,
-.year-wheel-option.is-active::after {
-  display:
-    none !important;
-
-  content:
-    none !important;
-}
-
 
 /* =========================================================
    GHOST YEARS
    ========================================================= */
-
-.year-wheel-ghost {
-  position: absolute !important;
-
-  left: 27px !important;
-  right: 27px !important;
-
-  z-index: 30 !important;
-
-  height: 30px !important;
-
-  margin: 0 !important;
-  padding: 0 !important;
-
-  border: 0 !important;
-
-  background:
-    transparent !important;
-
-  color:
-    #646d6f !important;
-
-  font-family:
-    "Host Grotesk Variable",
-    "Inter Variable",
-    sans-serif !important;
-
-  font-size:
-    19px !important;
-
-  font-weight:
-    610 !important;
-
-  line-height:
-    30px !important;
-
-  letter-spacing:
-    -.035em !important;
-
-  opacity:
-    .96 !important;
-
-  cursor:
-    pointer !important;
-
-  transition:
-    color 150ms ease,
-    opacity 150ms ease !important;
-}
-
-
-.year-wheel-ghost-newer {
-  top:
-    5px !important;
-}
-
-
-.year-wheel-ghost-older {
-  bottom:
-    5px !important;
-}
-
-
-.year-wheel-ghost:not(:disabled):hover,
-.year-wheel-ghost:not(:disabled):focus-visible {
-  color:
-    #ffffff !important;
-
-  opacity:
-    1 !important;
-
-  outline:
-    none !important;
-}
-
-
-.year-wheel-ghost:disabled {
-  opacity:
-    .78 !important;
-
-  cursor:
-    default !important;
-}
 
 
 /* =========================================================
    DIVIDER 遯ｶ繝ｻREMOVED
    ========================================================= */
 
-.year-wheel-layout::before {
-  display: none !important;
-  content: none !important;
-}
-
 
 /* =========================================================
    HUD
    ========================================================= */
 
-.year-wheel-meta {
-  display: none !important;
-}
-
-
-.year-wheel-signal {
-  width: 5px !important;
-  height: 5px !important;
-
-  flex: 0 0 5px !important;
-
-  margin-top:
-    3px !important;
-
-  border-radius:
-    50% !important;
-
-  background:
-    #b7ff00 !important;
-
-  box-shadow:
-    0 0 4px rgba(183,255,0,.72),
-    0 0 9px rgba(183,255,0,.20) !important;
-}
-
-
-.year-wheel-meta [data-active-year] {
-  color:
-    #e8ece8 !important;
-
-  font-size:
-    11px !important;
-
-  font-weight:
-    700 !important;
-}
-
-
-.year-wheel-meta-divider {
-  color:
-    #414949 !important;
-}
-
-
-.year-wheel-meta strong {
-  color:
-    #b7ff00 !important;
-
-  font-size:
-    11px !important;
-}
-
 
 /* line */
-.year-wheel-meta::before {
-  position: absolute !important;
-
-  top: 37px !important;
-  left: 20px !important;
-  right: 88px !important;
-
-  height: 1px !important;
-
-  content: "" !important;
-
-  background:
-    linear-gradient(
-      90deg,
-      rgba(55,77,79,.42),
-      rgba(55,77,79,.24) 82%,
-      transparent
-    ) !important;
-}
 
 
 /* segmented bar */
-.year-wheel-meta::after {
-  position: absolute !important;
-
-  top: 54px !important;
-  left: 21px !important;
-
-  width:
-    calc(100% - 177px) !important;
-
-  height:
-    6px !important;
-
-  content: "" !important;
-
-  opacity:
-    .72 !important;
-
-  background:
-    linear-gradient(
-      90deg,
-
-      rgba(98,111,82,.57) 0 34px,
-      transparent 34px 40px,
-
-      rgba(122,155,24,.47) 40px 65px,
-      transparent 65px 71px,
-
-      rgba(61,77,75,.48) 71px 106px,
-      transparent 106px 112px,
-
-      rgba(29,41,43,.65) 112px 100%
-    ) !important;
-}
 
 
 /* hatch 遯ｶ繝ｻremoved */
 
-.year-wheel-layout::after {
-  display: none !important;
-  content: none !important;
-}
-
 
 /* LIVE FEED 遯ｶ繝ｻremoved */
-
-.year-wheel-meta > strong::after {
-  display: none !important;
-  content: none !important;
-}
 
 
 /* YEAR WHEEL 遯ｶ繝ｻGLOBAL STABLE END */
@@ -1835,169 +1154,22 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
 
    陷茨ｽｨ鬩幢ｽｨ邵ｺ・ｾ邵ｺ・｣邵ｺ貅假ｿ･陷ｷ蠕個ｧ陝・ｽｸ雎戊ｼ板繝ｻ   clip-path郢ｧ蜑・ｽｽ・ｿ郢ｧ荳岩・邵ｺ繝ｻﾂ繝ｻ   ========================================================= */
 
-.year-wheel-shell {
-  border: 1px solid rgba(53,72,76,.72) !important;
-
-  clip-path: none !important;
-
-  border-radius: 5px !important;
-
-  background:
-    repeating-linear-gradient(
-      0deg,
-      rgba(74,106,111,.022) 0,
-      rgba(74,106,111,.022) 1px,
-      transparent 1px,
-      transparent 4px
-    ),
-    radial-gradient(
-      ellipse at 34% 50%,
-      rgba(18,51,57,.15),
-      transparent 48%
-    ),
-    linear-gradient(
-      90deg,
-      #071012 0%,
-      #071012 44%,
-      #060d0f 100%
-    ) !important;
-}
-
-
-.year-wheel-shell::before {
-  display: block !important;
-
-  position: absolute !important;
-
-  inset: 0 !important;
-
-  z-index: 50 !important;
-
-  content: "" !important;
-
-  pointer-events: none !important;
-
-  border-radius: 5px !important;
-
-  background:
-
-    /* 隨上・LEFT TOP */
-    linear-gradient(#b7ff00,#b7ff00)
-    left top / 5mm 2px no-repeat,
-
-    linear-gradient(#b7ff00,#b7ff00)
-    left top / 2px 5mm no-repeat,
-
-
-    /* 隨上・RIGHT TOP */
-    linear-gradient(#b7ff00,#b7ff00)
-    right top / 5mm 2px no-repeat,
-
-    linear-gradient(#b7ff00,#b7ff00)
-    right top / 2px 5mm no-repeat,
-
-
-    /* 隨上・LEFT BOTTOM */
-    linear-gradient(#b7ff00,#b7ff00)
-    left bottom / 5mm 2px no-repeat,
-
-    linear-gradient(#b7ff00,#b7ff00)
-    left bottom / 2px 5mm no-repeat,
-
-
-    /* 隨上・RIGHT BOTTOM */
-    linear-gradient(#b7ff00,#b7ff00)
-    right bottom / 5mm 2px no-repeat,
-
-    linear-gradient(#b7ff00,#b7ff00)
-    right bottom / 2px 5mm no-repeat !important;
-
-  opacity: .88 !important;
-
-  filter:
-    drop-shadow(0 0 2px rgba(183,255,0,.22)) !important;
-}
-
-
-.year-wheel-shell::after {
-  display: none !important;
-  content: none !important;
-}
-
 
 /* =========================================================
    ROULETTE 遯ｶ繝ｻSIZE / POSITION
 
    闔臥ｿｫ竏ｪ邵ｺ・ｧ188px邵ｺ・ｰ邵ｺ・｣邵ｺ貊捺た闖ｴ阮呻ｽ・30px邵ｺ・ｸ邵ｲ繝ｻ   陝・ｻ｣・陷ｿ・ｳ邵ｺ・ｸ驕假ｽｻ陷崎ｼ板繝ｻ   ========================================================= */
 
-.year-wheel {
-  left: 102px !important;
-
-  width: 230px !important;
-}
-
 
 /* 陝ｾ・ｦ陷ｿ・ｳ郢晄㈱縺｡郢晢ｽｳ郢ｧ繧育悛邵ｺ蜉ｱ・樒ｹ晢ｽｫ郢晢ｽｼ郢晢ｽｬ郢昴・繝ｨ陝ｷ繝ｻ竊楢惺蛹ｻ・冗ｸｺ蟶呻ｽ・*/
-
-.year-wheel-up {
-  left: 50px !important;
-}
-
-.year-wheel-down {
-  left: 344px !important;
-}
 
 
 /* =========================================================
    ACTIVE YEAR
    ========================================================= */
 
-.year-wheel-option.is-active {
-  font-size: 32px !important;
-
-  font-weight: 700 !important;
-
-  letter-spacing: -.045em !important;
-
-  color: #d9dedb !important;
-
-  transition:
-    color .16s ease,
-    text-shadow .16s ease,
-    transform .16s ease !important;
-}
-
-
-.year-wheel-option.is-active:hover,
-.year-wheel-option.is-active:focus-visible {
-  color: #b7ff00 !important;
-
-  text-shadow:
-    0 0 5px rgba(183,255,0,.36),
-    0 0 13px rgba(183,255,0,.16) !important;
-}
-
 
 /* 闕ｳ雍具ｽｸ荵昴・陝ｷ・ｴ闔会ｽ｣邵ｺ・ｯ郢晢ｽｫ郢晢ｽｼ郢晢ｽｬ郢昴・繝ｨ髯ｦ・ｨ驕会ｽｺ邵ｺ・ｰ邵ｺ繝ｻ*/
-
-.year-wheel-ghost {
-  color: #626d70 !important;
-
-  pointer-events: none !important;
-
-  cursor: default !important;
-
-  transition: none !important;
-}
-
-
-.year-wheel-ghost:hover,
-.year-wheel-ghost:focus,
-.year-wheel-ghost:focus-visible {
-  color: #626d70 !important;
-
-  text-shadow: none !important;
-}
 
 
 /* =========================================================
@@ -2005,73 +1177,10 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
    霓､・ｹ邵ｺ・ｨ驍ｵ・ｦ驍ｱ螢ｹ・定惺蠕｡・ｸﾂ髫補悪・ｴ・ｰ邵ｺ・ｧ隰蜀怜愛
    ========================================================= */
 
-.year-wheel-window::before,
-.year-wheel-window::after {
-  position: absolute !important;
-
-  top: 3px !important;
-  bottom: 3px !important;
-
-  z-index: 20 !important;
-
-  width: 9px !important;
-
-  content: "" !important;
-  pointer-events: none !important;
-
-  background:
-
-    radial-gradient(
-      circle at 50% 50%,
-      #b7ff00 0 1.5px,
-      rgba(183,255,0,.48) 1.8px,
-      rgba(183,255,0,.12) 3.4px,
-      transparent 4.5px
-    ),
-
-    linear-gradient(
-      180deg,
-      transparent 0%,
-      rgba(48,91,102,.08) 8%,
-      rgba(62,108,117,.23) 27%,
-      rgba(79,122,124,.31) 44%,
-      rgba(105,139,108,.33) 50%,
-      rgba(79,122,124,.31) 56%,
-      rgba(62,108,117,.23) 73%,
-      rgba(48,91,102,.08) 92%,
-      transparent 100%
-    )
-    center / 1px 100%
-    no-repeat !important;
-
-  opacity: .88 !important;
-}
-
-.year-wheel-window::before {
-  left: 13px !important;
-}
-
-.year-wheel-window::after {
-  right: 13px !important;
-}
-
-.year-wheel-window {
-  background: transparent !important;
-}
-
 /* =========================================================
    RIGHT HUD POSITION
 
    郢晢ｽｫ郢晢ｽｼ郢晢ｽｬ郢昴・繝ｨ郢ｧ雋橸ｽｺ繝ｻ・｡邵ｺ貅ｷ繝ｻ邵ｺ・ｰ邵ｺ螟ｧ謇ｿ邵ｺ・ｸ驕假ｽｻ陷崎ｼ板繝ｻ   ========================================================= */
-
-.year-wheel-divider {
-  left: 410px !important;
-}
-
-
-.year-wheel-meta {
-  left: 430px !important;
-}
 
 
 /* =========================================================
@@ -2085,125 +1194,16 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
 
 /* 闕ｳ鬆托ｽｮ・ｵ邵ｺ・ｮ驍擾ｽｰ邵ｺ繝ｻﾂ螢ｻ・ｿ・｡郢晢ｽｩ郢ｧ・､郢晢ｽｳ */
 
-.year-wheel-meta::before {
-  height: 1px !important;
-
-  opacity: .82 !important;
-
-  background:
-    linear-gradient(
-      90deg,
-      rgba(91,145,154,.82) 0%,
-      rgba(69,116,126,.62) 34%,
-      rgba(54,91,99,.38) 72%,
-      rgba(38,64,70,.14) 94%,
-      transparent 100%
-    ) !important;
-
-  box-shadow:
-    0 0 3px rgba(67,127,139,.08) !important;
-
-  transition:
-    opacity .22s ease,
-    filter .22s ease !important;
-}
-
 
 /* 闕ｳ蛹ｺ・ｮ・ｵ邵ｺ・ｮ郢昴・繝ｻ郢ｧ・ｿ郢ｧ・ｻ郢晢ｽｫ */
 
-.year-wheel-meta::after {
-  height: 8px !important;
-
-  opacity: .88 !important;
-
-  background:
-
-    /* 1px邵ｺ・ｮ郢昴・繝ｻ郢ｧ・ｿ隘搾ｽｰ隴滂ｽｻ驍ｱ繝ｻ*/
-    linear-gradient(
-      90deg,
-      rgba(183,255,0,.28) 0%,
-      rgba(96,159,164,.18) 43%,
-      transparent 82%
-    )
-    0 0 / 100% 1px no-repeat,
-
-    /* 郢ｧ・ｻ郢晢ｽｫ驗抵ｽ､ */
-    linear-gradient(
-      90deg,
-
-      rgba(111,132,80,.91) 0 51px,
-
-      transparent 51px 60px,
-
-      rgba(137,181,23,.89) 60px 99px,
-
-      transparent 99px 108px,
-
-      rgba(74,122,129,.87) 108px 162px,
-
-      transparent 162px 171px,
-
-      rgba(53,93,101,.79) 171px 228px,
-
-      transparent 228px 237px,
-
-      rgba(40,70,76,.73) 237px 100%
-    ) !important;
-
-  background-position:
-    0 0,
-    0 0 !important;
-
-  box-shadow:
-    0 1px 0 rgba(113,166,170,.08),
-    0 0 4px rgba(88,149,131,.05) !important;
-
-  transition:
-    opacity .2s ease,
-    filter .2s ease,
-    box-shadow .2s ease !important;
-}
-
 
 /* 隴∵㏍・ｷ螢ｹ繝ｧ郢晢ｽｼ郢ｧ・ｿ郢晏ｼｱ縺・ｹｧ・ｺ 遯ｶ繝ｻremoved */
-
-.year-wheel-layout::after {
-  display: none !important;
-  content: none !important;
-}
 
 
 /* =========================================================
    HUD HOVER ACTION
    ========================================================= */
-
-.year-wheel-meta {
-  cursor: crosshair !important;
-}
-
-
-.year-wheel-meta:hover::before {
-  opacity: 1 !important;
-
-  filter:
-    brightness(1.65) !important;
-}
-
-
-.year-wheel-meta:hover::after {
-  opacity: 1 !important;
-
-  filter:
-    brightness(1.45)
-    saturate(1.15) !important;
-
-  box-shadow:
-    0 0 4px rgba(183,255,0,.10),
-    0 0 10px rgba(63,139,151,.10) !important;
-
-  animation:
-    nexusTelemetryScan .72s steps(5,end) infinite alternate;
-}
 
 
 @keyframes nexusTelemetryScan {
@@ -2224,14 +1224,6 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
 
 
 /* HUD邵ｺ・ｫ闕ｵ蜉ｱ笆ｲ邵ｺ貅倪・邵ｺ繝ｻLIVE FEED 郢ｧ繧奇ｽｵ・ｷ陷阪・*/
-
-.year-wheel-meta:hover > strong::after {
-  color: #b7ff00 !important;
-
-  text-shadow:
-    0 0 5px rgba(183,255,0,.32),
-    0 0 10px rgba(183,255,0,.12) !important;
-}
 
 
 /* YEAR WHEEL 遯ｶ繝ｻSAFE DETAIL FIX END */
@@ -2545,123 +1537,14 @@ html body .blog-top-nav .nav-actions .site-search .site-search-trigger:focus-vis
 /*
    陷ｿ繧環繝ｻ蛻､陷偵・邵ｺ・ｮHUD郢ｧ雋橸ｽｷ・ｦ陋幢ｽｴ邵ｺ・ｸ邵ｺ譏ｴ繝ｻ邵ｺ・ｾ邵ｺ・ｾ驕假ｽｻ隶髦ｪ笘・ｹｧ荵昶螺郢ｧ竏壹・隴崢驍ｨ繧奇ｽｪ・ｿ隰ｨ・ｴ邵ｲ繝ｻ   Year Wheel BOX邵ｺ譏ｴ繝ｻ郢ｧ繧・・邵ｺ・ｫ邵ｺ・ｯ髫暦ｽｦ郢ｧ蠕娯・邵ｺ繝ｻﾂ繝ｻ*/
 
-body .year-archive-stage .archive-left-hud {
-  position: relative !important;
-  height: 220px !important;
-  min-height: 220px !important;
-
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-
-  overflow: visible !important;
-}
-
 
 /* -----------------------------------------
    2026 / ARTICLES 11
    ----------------------------------------- */
 
-body .year-archive-stage .archive-left-hud .archive-hud-readout {
-  position: absolute !important;
-
-  top: 56px !important;
-  left: 0 !important;
-
-  display: flex !important;
-  align-items: baseline !important;
-
-  gap: 10px !important;
-
-  margin: 0 !important;
-  transform: none !important;
-
-  white-space: nowrap !important;
-}
-
-body .year-archive-stage .archive-hud-readout::before {
-  display: block !important;
-
-  width: 5px !important;
-  height: 5px !important;
-
-  margin-right: 2px !important;
-
-  flex: 0 0 5px !important;
-
-  content: "" !important;
-
-  border-radius: 50% !important;
-
-  background: #b7ff00 !important;
-
-  box-shadow:
-    0 0 4px rgba(183,255,0,.72),
-    0 0 10px rgba(183,255,0,.20) !important;
-}
-
-body .year-archive-stage .archive-hud-year {
-  color: #edf1ef !important;
-  font-size: 14px !important;
-  font-weight: 700 !important;
-  letter-spacing: .08em !important;
-}
-
-body .year-archive-stage .archive-hud-slash {
-  color: rgba(77,105,111,.72) !important;
-  font-size: 12px !important;
-}
-
-body .year-archive-stage .archive-hud-label {
-  color: rgba(112,139,144,.72) !important;
-  font-size: 10px !important;
-  font-weight: 600 !important;
-  letter-spacing: .18em !important;
-}
-
-body .year-archive-stage .archive-hud-count {
-  color: #b7ff00 !important;
-  font-size: 12px !important;
-  font-weight: 700 !important;
-  letter-spacing: .06em !important;
-}
-
 
 /* -----------------------------------------
    隴√・・ｭ遉ｼ蟲ｩ闕ｳ荵昴・驍擾ｽｰ邵ｺ繝ｻ・ｰ・ｴ陝ｷ・ｳ驍ｱ繝ｻ   ----------------------------------------- */
-
-body .year-archive-stage .archive-left-hud .archive-hud-line {
-  position: absolute !important;
-
-  top: 83px !important;
-  left: 0 !important;
-  right: auto !important;
-
-  width: 88% !important;
-  height: 1px !important;
-
-  margin: 0 !important;
-  transform: none !important;
-
-  opacity: .82 !important;
-
-  background:
-    linear-gradient(
-      90deg,
-      rgba(68,119,128,.74) 0%,
-      rgba(54,96,104,.50) 58%,
-      rgba(37,68,75,.21) 84%,
-      transparent 100%
-    ) !important;
-
-  box-shadow: none !important;
-}
-
-body .year-archive-stage .archive-hud-line::before,
-body .year-archive-stage .archive-hud-line::after {
-  display: none !important;
-  content: none !important;
-}
 
 
 /* -----------------------------------------
@@ -2669,215 +1552,24 @@ body .year-archive-stage .archive-hud-line::after {
    驍ｱ繝ｻ/ 郢晢ｽｩ郢ｧ・､郢晢｣ｰ / 鬮ｱ蝣､繝ｻ / 鬮ｱ蝣､繝ｻ / 鬮滂ｽｷ邵ｺ繝ｻ蝗捺ｿｶ・ｲ
    ----------------------------------------- */
 
-body .year-archive-stage .archive-left-hud .archive-hud-spectrum {
-  position: absolute !important;
-
-  top: 104px !important;
-  left: 0 !important;
-  right: auto !important;
-
-  display: grid !important;
-
-  grid-template-columns:
-    66px
-    50px
-    82px
-    75px
-    minmax(180px, 1fr) !important;
-
-  gap: 10px !important;
-
-  width: 88% !important;
-  height: 8px !important;
-
-  margin: 0 !important;
-  transform: none !important;
-
-  align-items: stretch !important;
-}
-
-body .year-archive-stage .archive-hud-spectrum i {
-  display: block !important;
-
-  width: auto !important;
-  height: 8px !important;
-
-  margin: 0 !important;
-
-  opacity: 1 !important;
-
-  border: 0 !important;
-  box-shadow: none !important;
-}
-
-body .year-archive-stage .archive-hud-spectrum i:nth-child(1) {
-  background:
-    linear-gradient(
-      90deg,
-      rgba(113,137,78,.84),
-      rgba(82,110,67,.72)
-    ) !important;
-}
-
-body .year-archive-stage .archive-hud-spectrum i:nth-child(2) {
-  background:
-    linear-gradient(
-      90deg,
-      rgba(174,231,15,.76),
-      rgba(112,160,6,.64)
-    ) !important;
-}
-
-body .year-archive-stage .archive-hud-spectrum i:nth-child(3) {
-  background:
-    linear-gradient(
-      90deg,
-      rgba(82,136,139,.76),
-      rgba(57,101,107,.62)
-    ) !important;
-}
-
-body .year-archive-stage .archive-hud-spectrum i:nth-child(4) {
-  background:
-    linear-gradient(
-      90deg,
-      rgba(63,107,114,.61),
-      rgba(43,78,84,.52)
-    ) !important;
-}
-
-body .year-archive-stage .archive-hud-spectrum i:nth-child(5) {
-  width: auto !important;
-
-  background:
-    linear-gradient(
-      90deg,
-      rgba(43,77,83,.45),
-      rgba(31,59,65,.34)
-    ) !important;
-}
-
-body .year-archive-stage .archive-hud-spectrum i:nth-child(6) {
-  display: none !important;
-}
-
 
 /* -----------------------------------------
    闔臥ｿｫ繝ｻ騾包ｽｻ鬮ｱ・｢邵ｺ・ｫ陷・ｽｺ邵ｺ・ｦ邵ｺ繝ｻ・玖抄蜻ｵ・ｨ蛹ｻ竊題叉蛹ｺ・ｮ・ｵ郢ｧ・ｻ郢晢ｽｫ
    陷ｿ繧環繝ｻ蛻､陷剃ｸ岩・邵ｺ・ｯ邵ｺ・ｪ邵ｺ繝ｻ繝ｻ邵ｺ・ｧ鬮ｱ讚・ｽ｡・ｨ驕会ｽｺ
    ----------------------------------------- */
 
-body .year-archive-stage .archive-left-hud .archive-hud-data {
-  display: none !important;
-}
-
 
 /* -----------------------------------------
    陷ｿ繧環繝ｻ蛻､陷剃ｸ樊価闕ｳ荵昴・隴∵㏍・ｷ繝ｻ   郢晁・繝ｻ騾ｶ・ｴ闕ｳ荵敖竏晄価陝・・笳・
    ----------------------------------------- */
-
-body .year-archive-stage .archive-left-hud .archive-hud-diagonal {
-  display: block !important;
-
-  position: absolute !important;
-
-  top: 125px !important;
-  right: 7% !important;
-  bottom: auto !important;
-  left: auto !important;
-
-  width: 220px !important;
-  height: 12px !important;
-
-  margin: 0 !important;
-
-  transform: skewX(-18deg) !important;
-
-  opacity: .53 !important;
-
-  background:
-    repeating-linear-gradient(
-      110deg,
-      transparent 0,
-      transparent 5px,
-      rgba(54,109,119,.46) 5px,
-      rgba(54,109,119,.46) 7px
-    ) !important;
-
-  -webkit-mask-image:
-    linear-gradient(
-      90deg,
-      transparent,
-      #000 9%,
-      #000 85%,
-      transparent
-    ) !important;
-
-  mask-image:
-    linear-gradient(
-      90deg,
-      transparent,
-      #000 9%,
-      #000 85%,
-      transparent
-    ) !important;
-}
 
 
 /* -----------------------------------------
    陷ｿ繧環繝ｻ蛻､陷剃ｸ樊価驕ｶ・ｯ LIVE FEED
    SIGNAL / ARCHIVE 邵ｺ・ｮ隴√・・ｭ闍薙・闖ｴ阮吶・CSS邵ｺ・ｧ鬮ｫ・ｰ邵ｺ繝ｻ   ----------------------------------------- */
 
-body .year-archive-stage .archive-left-hud .archive-hud-status {
-  position: absolute !important;
-
-  top: 140px !important;
-  right: 0 !important;
-  bottom: auto !important;
-  left: auto !important;
-
-  margin: 0 !important;
-  transform: none !important;
-
-  font-size: 0 !important;
-
-  color: transparent !important;
-
-  line-height: 1 !important;
-
-  text-shadow: none !important;
-}
-
-body .year-archive-stage .archive-hud-status::before {
-  display: none !important;
-  content: none !important;
-}
-
-body .year-archive-stage .archive-hud-status::after {
-  display: inline !important;
-
-  content: "LIVE FEED" !important;
-
-  color: rgba(183,255,0,.76) !important;
-
-  font-size: 9px !important;
-  font-weight: 700 !important;
-
-  letter-spacing: .21em !important;
-
-  text-shadow:
-    0 0 5px rgba(183,255,0,.12) !important;
-}
-
 
 /* 隴鯉ｽｧhover陷咲ｩゑｽｽ諛翫定厄ｽ｢邵ｺ謔滂ｽ､蟲ｨ・冗ｹｧ蟲ｨ竊醍ｸｺ繝ｻ・育ｸｺ繝ｻ蟠玖楜繝ｻ*/
-
-body .year-archive-stage .archive-left-hud:hover .archive-hud-line,
-body .year-archive-stage .archive-left-hud:hover .archive-hud-diagonal,
-body .year-archive-stage .archive-left-hud:hover .archive-hud-spectrum i {
-  animation: none !important;
-  filter: none !important;
-}
 
 /* ARCHIVE HUD REFERENCE MATCH END */
 
@@ -2889,19 +1581,10 @@ body .year-archive-stage .archive-left-hud:hover .archive-hud-spectrum i {
    LIVE FEED
    ========================================================= */
 
-body .year-archive-stage .archive-left-hud .archive-hud-status {
-  top: 174px !important;
-}
-
 
 /* =========================================================
    LEFT HUD SIGNAL DOT 遯ｶ繝ｻBLINK
    ========================================================= */
-
-body .year-archive-stage .archive-hud-readout::before {
-  animation:
-    nexusArchiveSignalBlink 1.45s ease-in-out infinite !important;
-}
 
 @keyframes nexusArchiveSignalBlink {
   0%,
@@ -2927,114 +1610,16 @@ body .year-archive-stage .archive-hud-readout::before {
    LEFT HUD HOVER
    ========================================================= */
 
-body .year-archive-stage .archive-left-hud {
-  transition:
-    filter .22s ease,
-    opacity .22s ease !important;
-}
-
-body .year-archive-stage .archive-left-hud:hover {
-  filter:
-    brightness(1.32)
-    saturate(1.10) !important;
-}
-
-body .year-archive-stage .archive-left-hud:hover .archive-hud-year {
-  color: #ffffff !important;
-
-  text-shadow:
-    0 0 5px rgba(255,255,255,.10) !important;
-}
-
-body .year-archive-stage .archive-left-hud:hover .archive-hud-count,
-body .year-archive-stage .archive-left-hud:hover .archive-hud-status::after {
-  color: #c4ff16 !important;
-
-  text-shadow:
-    0 0 5px rgba(183,255,0,.34),
-    0 0 12px rgba(183,255,0,.12) !important;
-}
-
-body .year-archive-stage .archive-left-hud:hover .archive-hud-line {
-  opacity: 1 !important;
-
-  background:
-    linear-gradient(
-      90deg,
-      rgba(93,164,174,.90) 0%,
-      rgba(70,128,138,.62) 58%,
-      rgba(49,91,99,.34) 84%,
-      transparent 100%
-    ) !important;
-
-  box-shadow:
-    0 0 5px rgba(74,146,157,.12) !important;
-}
-
-body .year-archive-stage .archive-left-hud:hover .archive-hud-spectrum i {
-  filter:
-    brightness(1.18)
-    saturate(1.10) !important;
-}
-
-body .year-archive-stage .archive-left-hud:hover .archive-hud-spectrum i:nth-child(2) {
-  box-shadow:
-    0 0 6px rgba(183,255,0,.18) !important;
-}
-
-body .year-archive-stage .archive-left-hud:hover .archive-hud-diagonal {
-  opacity: .76 !important;
-
-  filter:
-    brightness(1.30) !important;
-}
-
 
 /* =========================================================
    YEAR WHEEL ACTIVE YEAR
    hover闕ｳ・ｭ郢ｧ繧牙項邵ｺ・ｮ邵ｺ・ｾ邵ｺ・ｾ
    ========================================================= */
 
-body:has(.archive-left-hud:hover)
-.year-wheel-option.is-active {
-  color: #d9dedb !important;
-
-  text-shadow: none !important;
-}
-
 
 /* =========================================================
    YEAR WHEEL BOX
    陞溷戟譽ｧ郢晞亂縺檎ｹ晢ｽｳ邵ｺ・ｯ霑ｴ・ｾ霑･・ｶ驍ｯ・ｭ隰悶・   ========================================================= */
-
-.year-wheel-shell {
-  border-color:
-    rgba(183,255,0,.44) !important;
-
-  box-shadow:
-    0 0 2px rgba(183,255,0,.22),
-    0 0 8px rgba(183,255,0,.07) !important;
-
-  transition:
-    border-color .22s ease,
-    box-shadow .22s ease !important;
-}
-
-.year-wheel-shell::before {
-  filter:
-    drop-shadow(0 0 2px rgba(183,255,0,.34)) !important;
-}
-
-.year-wheel-shell,
-.year-wheel-option.is-active,
-.year-wheel-shell::before {
-  transition:
-    color .22s ease,
-    text-shadow .22s ease,
-    border-color .22s ease,
-    box-shadow .22s ease,
-    filter .22s ease !important;
-}
 
 
 /* ARCHIVE HUD HOVER EFFECT END */
@@ -3043,36 +1628,10 @@ body:has(.archive-left-hud:hover)
 /* YEAR WHEEL FRAME LOCK START */
 
 /* 陋ｻ譎・ｄ霑･・ｶ隲ｷ荵昴・陷医・繝ｻ隴牙干・櫁ｭｫ・ｰ */
-body .year-wheel-shell {
-  border-color:
-    rgba(53,72,76,.72) !important;
-
-  box-shadow:
-    none !important;
-}
 
 /* 陝ｾ・ｦHUD郢ｧ蜑・ｽｸﾂ陟趣ｽｦhover邵ｺ蜉ｱ笳・募ｾ娯味邵ｺ螟ｧ蟠玖楜繝ｻ*/
-body .year-wheel-shell.is-hud-activated {
-  border-color:
-    rgba(183,255,0,.44) !important;
-
-  box-shadow:
-    0 0 2px rgba(183,255,0,.22),
-    0 0 8px rgba(183,255,0,.07) !important;
-}
-
-body .year-wheel-shell.is-hud-activated::before {
-  filter:
-    drop-shadow(0 0 2px rgba(183,255,0,.34)) !important;
-}
 
 /* 陝ｷ・ｴ陷ｿ・ｷ邵ｺ・ｯ陝ｶ・ｸ邵ｺ・ｫ騾具ｽｽ */
-body .year-wheel-shell .year-wheel-option.is-active,
-body .year-wheel-shell.is-hud-activated .year-wheel-option.is-active,
-body:has(.archive-left-hud:hover) .year-wheel-option.is-active {
-  color: #d9dedb !important;
-  text-shadow: none !important;
-}
 
 /* YEAR WHEEL FRAME LOCK END */
 
@@ -3236,71 +1795,20 @@ body:has(.archive-left-hud:hover) .year-wheel-option.is-active {
    ARTICLES COUNT
    hover隴弱ｅ・らｹ晢ｽｩ郢ｧ・､郢晢｣ｰ陜暦ｽｺ陞ｳ繝ｻ   ========================================================= */
 
-body .year-archive-stage .archive-hud-count {
-  color: #b7ff00 !important;
-
-  text-shadow:
-    0 0 4px rgba(183,255,0,.18) !important;
-}
-
-body .year-archive-stage .archive-left-hud:hover .archive-hud-count {
-  color: #c9ff31 !important;
-
-  text-shadow:
-    0 0 5px rgba(183,255,0,.48),
-    0 0 12px rgba(183,255,0,.16) !important;
-}
-
 
 /* =========================================================
    LIVE FEED
    郢ｧ・､郢ｧ・ｨ郢晢ｽｭ郢晢ｽｼ陋ｹ荵滂ｽｦ竏ｵ・ｭ・｢ + 陝ｾ・ｦ邵ｺ・ｸ驕假ｽｻ陷阪・   ========================================================= */
 
-body .year-archive-stage .archive-left-hud .archive-hud-status::after {
-  color: #b7ff00 !important;
-
-  text-shadow:
-    0 0 4px rgba(183,255,0,.16) !important;
-}
-
-body .year-archive-stage .archive-left-hud:hover .archive-hud-status::after {
-  color: #c9ff31 !important;
-
-  text-shadow:
-    0 0 5px rgba(183,255,0,.46),
-    0 0 12px rgba(183,255,0,.14) !important;
-}
-
 
 /*
    LIVE FEED郢ｧ雋樊価驕ｶ・ｯ邵ｺ荵晢ｽ芽氣莉｣・陝ｾ・ｦ邵ｺ・ｸ邵ｲ繝ｻ   隴∵㏍・ｷ螢ｹ繝ｶ郢晢ｽｭ郢昴・縺醍ｸｺ・ｨ邵ｺ・ｮ邵ｺ・ｾ邵ｺ・ｨ邵ｺ・ｾ郢ｧ鄙ｫ・定托ｽｷ邵ｺ荳岩・郢ｧ荵敖繝ｻ*/
-
-body .year-archive-stage .archive-left-hud .archive-hud-status {
-  right: 7% !important;
-}
 
 
 /* =========================================================
    SIGNAL DOT
    郢晢ｽｩ郢ｧ・､郢晢｣ｰ陜暦ｽｺ陞ｳ繝ｻ+ 陝・ｻ｣・陞滂ｽｧ邵ｺ髦ｪ・･
    ========================================================= */
-
-body .year-archive-stage .archive-hud-readout::before {
-  width: 7px !important;
-  height: 7px !important;
-
-  flex: 0 0 7px !important;
-
-  background:
-    #b7ff00 !important;
-
-  box-shadow:
-    0 0 5px rgba(183,255,0,.58),
-    0 0 11px rgba(183,255,0,.16) !important;
-
-  animation:
-    nexusArchiveSignalBlinkLime 1.45s ease-in-out infinite !important;
-}
 
 @keyframes nexusArchiveSignalBlinkLime {
   0%,
@@ -3331,17 +1839,6 @@ body .year-archive-stage .archive-hud-readout::before {
 /* =========================================================
    hover隴弱ｅ繝ｻ豼ｶ・ｲ陞溽判驪､郢ｧ蜻域､幄ｱ・ｽ｢
    ========================================================= */
-
-body .year-archive-stage .archive-left-hud:hover .archive-hud-readout::before {
-  background:
-    #c9ff31 !important;
-}
-
-body .year-archive-stage .archive-left-hud:hover .archive-hud-count,
-body .year-archive-stage .archive-left-hud:hover .archive-hud-status::after {
-  filter:
-    none !important;
-}
 
 
 /* ARCHIVE HUD LIME FIX END */
@@ -3398,54 +1895,11 @@ body:has(.portfolio-section) .article-content {
 
 /* ---------- NORMAL ---------- */
 
-body .year-wheel-shell,
-body .year-wheel-shell.is-hud-activated {
-
-  border-color:
-    rgba(53,72,76,.72) !important;
-
-  box-shadow:
-    none !important;
-}
-
-
-body .year-wheel-shell .year-wheel-option.is-active,
-body .year-wheel-shell.is-hud-activated .year-wheel-option.is-active {
-
-  color:
-    #d9dedb !important;
-
-  text-shadow:
-    none !important;
-}
-
 
 /* ---------- WHOLE BOX HOVER ---------- */
 
-body .year-wheel-shell:hover,
-body .year-wheel-shell.is-hud-activated:hover {
-
-  border-color:
-    rgba(183,255,0,.44) !important;
-
-  box-shadow:
-    0 0 2px rgba(183,255,0,.22),
-    0 0 8px rgba(183,255,0,.07) !important;
-}
-
 
 /* 中央の西暦もBOX全体hoverで同時にライム */
-
-body .year-wheel-shell:hover .year-wheel-option.is-active,
-body .year-wheel-shell.is-hud-activated:hover .year-wheel-option.is-active {
-
-  color:
-    #b7ff00 !important;
-
-  text-shadow:
-    0 0 5px rgba(183,255,0,.36),
-    0 0 13px rgba(183,255,0,.16) !important;
-}
 
 
 /* NEXUS YEAR WHEEL HOVER UNIFIED END */
