@@ -22,7 +22,10 @@ const friendCirclePath = join(projectRoot, 'public/friend-circle.json');
 const fontConfig = readFontConfig();
 const subsetFontUrl = getSubsetFontUrl(fontConfig.file);
 const outputFontPath = resolveProjectPath(subsetFontUrl);
-const sourceFontPath = resolveProjectPath(fontConfig.file);
+// Preserve the original TTF for UI subset generation.
+const sourceFontPath = resolveProjectPath(
+  fontConfig.file.replace(/\.woff2$/i, '.ttf')
+);
 const subsetFontName = `${fontConfig.zh} UI Subset`;
 const isWindows = process.platform === 'win32';
 const venvBinDir = isWindows ? 'Scripts' : 'bin';
