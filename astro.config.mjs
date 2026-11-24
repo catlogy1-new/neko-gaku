@@ -83,7 +83,7 @@ export default defineConfig({
   integrations: [...astroPluginConfig.integrations, mdx(), sitemap(), tina()],
 
   vite: {
-    build: { cssMinify: false },
+    build: { cssMinify: 'esbuild' },
     plugins: [tailwindcss(), tinaAdminDevRedirect()],
     ssr: {
       noExternal: ['@tinacms/astro', '@tinacms/bridge'],
