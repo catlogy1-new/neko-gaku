@@ -907,21 +907,37 @@ const hasSidebar = false;
   };
 
   const saveComment = async (text, parentId = null) => {
+    // NEXUS COMMENT AUTH RECOVERY V1
     const getOwnerToken = window.__nexusCommentOwnerToken;
-    const ownerToken = typeof getOwnerToken === 'function'
-      ? await getOwnerToken()
-      : null;
+    let ownerToken = null;
 
-    const tinaSession =
+    if (typeof getOwnerToken === 'function') {
+      try {
+        ownerToken = await getOwnerToken();
+      } catch (error) {
+        console.warn('TinaCMS comment authentication unavailable', error);
+      }
+    }
+
+    const hasTinaSession =
       localStorage.getItem('tinacms-auth') !== null;
 
     if (
-      (window.__nexusTinaAdmin === true || tinaSession) &&
-      !ownerToken && !isLocalCommentsDev
+      !ownerToken &&
+      !isLocalCommentsDev &&
+      (window.__nexusTinaAdmin === true || hasTinaSession)
     ) {
-      throw new Error(
-        '管理者認証を確認できません。TinaCMSに再ログインしてください。'
+      const postAsGuest = window.confirm(
+        'TinaCMSの管理者認証が確認できません。' +
+        'OKでGuestとして投稿します。' +
+        '猫学 / Authorとして投稿する場合はキャンセルしてください。'
       );
+
+      if (!postAsGuest) {
+        throw new Error(
+          '管理者として投稿するにはTinaCMSの認証が必要です。'
+        );
+      }
     }
 
     const res = await fetch(COMMENTS_API, {

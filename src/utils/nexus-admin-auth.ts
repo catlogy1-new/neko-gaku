@@ -25,6 +25,11 @@ import { TinaCloudAuthProvider } from 'tinacms';
     return token?.id_token || null;
   };
 
+  // NEXUS COMMENT AUTH RECOVERY V1
+  (window as Window & {
+    __nexusCommentOwnerLogin?: () => Promise<unknown>;
+  }).__nexusCommentOwnerLogin = () => provider.authenticate();
+
   const state = window as Window & { __nexusTinaAdmin?: boolean };
   const adminWindow = window as Window & { __nexusBlogMutation?: (kind: string, pathname: string, sticky: boolean) => Promise<void> };
   const BLOG_FIELDS = `headerKicker heroImagePosition tocVisibility title description date draft tags categories series comments sticky heroImage showHeroImage japaneseUrl japaneseTitle japaneseDescription japaneseBody sidebar { enable toc relatedPosts } body`;
