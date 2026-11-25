@@ -750,6 +750,9 @@ const hasSidebar = false;
 </article>
         {hasRelatedPosts && <RelatedPosts posts={relatedPosts} class="article-after-related" />}
 
+<script>
+  import '../utils/nexus-admin-auth';
+</script>
 <!-- NEXUS COMMENTS PREVIEW START -->
 <section id="comments" class="nexus-comments-preview" aria-label="Comments">
   <h2 class="nexus-comments-heading">
@@ -848,6 +851,103 @@ const hasSidebar = false;
 
   const OWNER_NAME = '\u732B\u5B66';
 
+
+
+  // NEXUS D1 COMMENT CLIENT V2
+  const COMMENTS_API =
+    ['localhost', '127.0.0.1'].includes(window.location.hostname) &&
+    window.location.port === '4322'
+      ? 'http://127.0.0.1:8788/comments'
+      : 'https://nexus-contact.catlogy110.workers.dev/comments';
+
+  const safeCommentHTML = (text) =>
+    String(text ?? '')
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#39;')
+      .replace(/\r?\n/g, '<br>');
+
+
+
+  // NEXUS LOCAL COMMENTS OWNER V1
+  const isLocalCommentsDev =
+    ['localhost', '127.0.0.1'].includes(location.hostname) &&
+    location.port === '4322';
+
+  const manageSavedComment = async (method, id, text = null) => {
+    const getToken = window.__nexusCommentOwnerToken;
+    const token = typeof getToken === 'function'
+      ? await getToken()
+      : null;
+
+    if (!token && !isLocalCommentsDev) throw new Error('Administrator login required');
+
+    const res = await fetch(COMMENTS_API, {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(isLocalCommentsDev
+          ? { 'X-Nexus-Dev-Owner': '1' }
+          : { Authorization: 'Bearer ' + token })
+      },
+      body: JSON.stringify({
+        id,
+        articlePath: window.location.pathname,
+        ...(text !== null ? { comment: text } : {})
+      })
+    });
+
+    const data = await res.json();
+    if (!res.ok || !data.ok) {
+      throw new Error(data.error || 'Operation failed');
+    }
+    return data;
+  };
+
+  const saveComment = async (text, parentId = null) => {
+    const getOwnerToken = window.__nexusCommentOwnerToken;
+    const ownerToken = typeof getOwnerToken === 'function'
+      ? await getOwnerToken()
+      : null;
+
+    const tinaSession =
+      localStorage.getItem('tinacms-auth') !== null;
+
+    if (
+      (window.__nexusTinaAdmin === true || tinaSession) &&
+      !ownerToken && !isLocalCommentsDev
+    ) {
+      throw new Error(
+        '管理者認証を確認できません。TinaCMSに再ログインしてください。'
+      );
+    }
+
+    const res = await fetch(COMMENTS_API, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(isLocalCommentsDev
+          ? { 'X-Nexus-Dev-Owner': '1' }
+          : ownerToken ? { Authorization: 'Bearer ' + ownerToken } : {})
+      },
+      body: JSON.stringify({
+        articlePath: window.location.pathname,
+        articleTitle: document.title,
+        comment: text,
+        parentId
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.ok || !data.comment?.id) {
+      throw new Error(data.error || 'Comment save failed');
+    }
+
+    return data.comment;
+  };
 
   const initNexusComments = () => {
 
@@ -1475,30 +1575,37 @@ const hasSidebar = false;
           );
 
 
-          replySubmit.addEventListener(
-            'click',
-            () => {
+          replySubmit.addEventListener('click', async () => {
+            const text = replyEditor.innerText.trim();
+            const parentId = item.dataset.commentId;
 
-              if (
-                replyEditor.innerText
-                  .trim()
-                  .length === 0
-              ) {
-                return;
-              }
+            if (!text || replySubmit.disabled) return;
 
+            if (!parentId) {
+              window.alert('返信先IDがありません。');
+              return;
+            }
+
+            replySubmit.disabled = true;
+
+            try {
+              const saved = await saveComment(text, parentId);
 
               appendComment(
-                replyEditor.innerHTML,
-                'owner',
+                safeCommentHTML(saved.bodyText),
+                saved.authorName === OWNER_NAME ? 'owner' : 'guest',
                 repliesContainer,
-                true
+                true,
+                saved
               );
 
-
               composer.remove();
+            } catch (error) {
+              console.error('Reply failed:', error);
+              window.alert('返信を保存できませんでした。');
+              replySubmit.disabled = false;
             }
-          );
+          });
         };
 
 
@@ -1510,7 +1617,8 @@ const hasSidebar = false;
           html,
           type = 'owner',
           targetList = list,
-          isReply = false
+          isReply = false,
+          savedComment = null
         ) => {
 
           const item =
@@ -1520,6 +1628,9 @@ const hasSidebar = false;
 
           item.className =
             'nexus-comment-item';
+          if (savedComment?.id) {
+            item.dataset.commentId = savedComment.id;
+          }
 
 
           if (isReply) {
@@ -1593,8 +1704,11 @@ const hasSidebar = false;
           time.className =
             'nexus-comment-item__time';
 
-          time.textContent =
-            'Just now';
+          time.textContent = savedComment?.createdAt
+            ? new Date(
+                savedComment.createdAt.replace(' ', 'T') + 'Z'
+              ).toLocaleString('ja-JP')
+            : 'Just now';
 
           meta.appendChild(time);
 
@@ -1607,13 +1721,24 @@ const hasSidebar = false;
           let menuPanel = null;
 
 
-          if (type === 'owner') {
+          if (savedComment?.id) {
 
             const menu =
               document.createElement('div');
 
             menu.className =
               'nexus-comment-menu';
+            const refreshCommentMenu = () => {
+              menu.hidden =
+                window.__nexusTinaAdmin !== true && !isLocalCommentsDev;
+            };
+
+            document.addEventListener(
+              'nexus-admin-auth-change',
+              refreshCommentMenu
+            );
+            refreshCommentMenu();
+
 
 
             const menuButton =
@@ -1702,45 +1827,58 @@ const hasSidebar = false;
             );
 
 
-            edit.addEventListener(
-              'click',
-              () => {
+            edit.addEventListener('click', async () => {
+              menuPanel.hidden = true;
 
-                menuPanel.hidden = true;
+              const next = window.prompt(
+                'Edit response',
+                body.innerText
+              );
 
-                startEdit(
-                  item,
-                  body,
-                  more,
-                  replyButton
+              if (next === null) return;
+              if (!next.trim()) {
+                window.alert('本文を入力してください。');
+                return;
+              }
+
+              try {
+                const result = await manageSavedComment(
+                  'PATCH',
+                  item.dataset.commentId,
+                  next.trim()
                 );
+
+                setSanitizedHTML(
+                  body,
+                  safeCommentHTML(result.comment.bodyText)
+                );
+                setupMore(body, more);
+              } catch (error) {
+                console.error(error);
+                window.alert('編集を保存できませんでした。');
               }
-            );
+            });
 
 
-            remove.addEventListener(
-              'click',
-              () => {
+            remove.addEventListener('click', async () => {
+              menuPanel.hidden = true;
 
-                menuPanel.hidden = true;
+              if (!window.confirm('Delete this response?')) {
+                return;
+              }
 
-
-                const confirmed =
-                  window.confirm(
-                    'Delete this response?'
-                  );
-
-
-                if (!confirmed) {
-                  return;
-                }
-
-
+              try {
+                await manageSavedComment(
+                  'DELETE',
+                  item.dataset.commentId
+                );
                 item.remove();
-
                 updateCount();
+              } catch (error) {
+                console.error(error);
+                window.alert('削除できませんでした。');
               }
-            );
+            });
           }
 
 
@@ -1862,6 +2000,7 @@ const hasSidebar = false;
 
 
           updateCount();
+          return item;
         };
 
 
@@ -1977,63 +2116,36 @@ const hasSidebar = false;
         );
 
 
-        respond.addEventListener(
-          'click',
-          (event) => {
+        respond.addEventListener('click', async (event) => {
+          event.stopPropagation();
 
-            event.stopPropagation();
+          const text = editor.innerText.trim();
+          if (!text || respond.disabled) return;
 
+          respond.disabled = true;
 
-            if (!hasText()) {
-              return;
-            }
+          try {
+            const saved = await saveComment(text);
 
-
-            /*
-             * CURRENT LOCAL AUTHOR COMPOSER
-             *
-             * 縺薙％縺九ｉ謚慕ｨｿ縺励◆繧ｳ繝｡繝ｳ繝医・
-             * 迪ｫ蟄ｦ / Author 縺ｨ縺励※陦ｨ遉ｺ縲・             */
             appendComment(
-              editor.innerHTML,
-              'owner',
+              safeCommentHTML(saved.bodyText),
+              saved.authorName === OWNER_NAME ? 'owner' : 'guest',
               list,
-              false
+              false,
+              saved
             );
 
-            /* NEXUS DIRECT COMMENT MAIL START */
-            const nexusCommentText =
-              editor.innerText.trim();
-
-            fetch(
-              'https://nexus-contact.catlogy110.workers.dev/blog-comment',
-              {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                  name: 'NEXUS Visitor',
-                  comment: nexusCommentText,
-                  articleTitle:
-                    document.title || 'NEXUS',
-                  articleUrl:
-                    window.location.href,
-                  pageType: 'blog'
-                })
-              }
-            ).catch((error) => {
-              console.error(
-                'NEXUS comment mail failed:',
-                error
-              );
-            });
-            /* NEXUS DIRECT COMMENT MAIL END */
-
-
+            editor.textContent = '';
             collapse();
+            updateRespond();
+          } catch (error) {
+            console.error('Comment failed:', error);
+            window.alert(
+              error?.message || 'コメントを保存できませんでした。'
+            );
+            updateRespond();
           }
-        );
+        });
 
 
         /* menu outside click */
@@ -2065,6 +2177,74 @@ const hasSidebar = false;
 
         updateRespond();
         updateCount();
+
+        const loadSavedComments = async () => {
+          try {
+            const url = COMMENTS_API + '?path=' +
+              encodeURIComponent(window.location.pathname);
+
+            const res = await fetch(url);
+            if (!res.ok) throw new Error('Comment load failed');
+
+            const data = await res.json();
+            if (!data.ok || !Array.isArray(data.comments)) {
+              throw new Error('Invalid comment response');
+            }
+
+            const loaded = new Map();
+            let pending = [...data.comments];
+
+            while (pending.length) {
+              const remaining = [];
+              let progress = 0;
+
+              for (const comment of pending) {
+                const existing = Array.from(
+                  list.querySelectorAll('[data-comment-id]')
+                ).find((el) =>
+                  el.dataset.commentId === comment.id
+                );
+
+                if (existing) {
+                  loaded.set(comment.id, existing);
+                  progress++;
+                  continue;
+                }
+
+                if (comment.parentId &&
+                    !loaded.has(comment.parentId)) {
+                  remaining.push(comment);
+                  continue;
+                }
+
+                const parent = loaded.get(comment.parentId);
+                const target = parent
+                  ? parent.querySelector('.nexus-comment-replies')
+                  : list;
+
+                const item = appendComment(
+                  safeCommentHTML(comment.bodyText),
+                  comment.authorName === OWNER_NAME ? 'owner' : 'guest',
+                  target,
+                  Boolean(parent),
+                  comment
+                );
+
+                loaded.set(comment.id, item);
+                progress++;
+              }
+
+              if (!progress) break;
+              pending = remaining;
+            }
+
+            updateCount();
+          } catch (error) {
+            console.error('Comment loading failed:', error);
+          }
+        };
+
+        loadSavedComments();
 
       });
   };

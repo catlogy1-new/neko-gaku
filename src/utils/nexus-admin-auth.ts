@@ -15,6 +15,16 @@ import { TinaCloudAuthProvider } from 'tinacms';
     const hash = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, "0")).join("");
     return hash === NEXUS_OWNER_HASH;
   }
+  // NEXUS VERIFIED COMMENT OWNER V1
+  (window as Window & {
+    __nexusCommentOwnerToken?: () => Promise<string | null>;
+  }).__nexusCommentOwnerToken = async () => {
+    const user = await provider.getUser();
+    if (!(await isNexusOwner(user))) return null;
+    const token = await provider.getToken();
+    return token?.id_token || null;
+  };
+
   const state = window as Window & { __nexusTinaAdmin?: boolean };
   const adminWindow = window as Window & { __nexusBlogMutation?: (kind: string, pathname: string, sticky: boolean) => Promise<void> };
   const BLOG_FIELDS = `headerKicker heroImagePosition tocVisibility title description date draft tags categories series comments sticky heroImage showHeroImage japaneseUrl japaneseTitle japaneseDescription japaneseBody sidebar { enable toc relatedPosts } body`;
