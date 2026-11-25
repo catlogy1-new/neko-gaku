@@ -981,6 +981,19 @@ export default defineConfig({
             ui: { component: "textarea" },
           },
           {
+            type: "string",
+            name: "blogmuraBanner",
+            label: "にほんブログ村（日本語表示のみ）",
+            description: "記事ごとにバナーを選択します。",
+            options: [
+              { label: "表示しない", value: "none" },
+              { label: "総合", value: "general" },
+              { label: "メンタルヘルス", value: "mental" },
+              { label: "薬物依存症", value: "drug" },
+              { label: "写真ブログ", value: "photo" },
+            ],
+          },
+          {
             type: "object",
             name: "sidebar",
             label: "Sidebar",

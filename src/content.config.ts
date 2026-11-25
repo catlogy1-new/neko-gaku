@@ -57,6 +57,7 @@ const blogArticleSchema = (context: Parameters<CollectionSchemaFactory>[0]) =>
   articleSchema(context).extend({
     headerKicker: z.string().optional(),
     heroImagePosition: z.enum(["above-kicker", "below-title"]).optional(),
+    blogmuraBanner: z.enum(["none", "general", "mental", "drug", "photo"]).optional(),
     tocVisibility: z.enum(["on", "off"]).optional(),
     sticky: z.union([z.boolean(), z.number().positive()]).optional().default(false),
   });

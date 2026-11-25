@@ -5,6 +5,7 @@ import type { BlogQuery, ProjectQuery, MediaQuery, PulseQuery } from '../../../t
 import PostBody from '../../components/tina/PostBody.astro';
 import BlogHeader from "../../components/tina/BlogHeader.astro";
 import BlogBody from '../../components/tina/BlogBody.astro';
+import BlogmuraBannerLive from '../../components/tina/BlogmuraBannerLive.astro';
 import PortfolioGallery from '../../components/tina/PortfolioGallery.astro';
 import MediaCard from '../../components/tina/MediaCard.astro';
 import PulseEntry from '../../components/tina/PulseEntry.astro';
@@ -45,6 +46,14 @@ export const islands: IslandRegistry = {
       seriesName: params.get("seriesName") ?? "",
       seriesCurrent: Number(params.get("seriesCurrent") ?? 0),
       seriesTotal: Number(params.get("seriesTotal") ?? 0),
+    }),
+  },
+  'blogmura-banner': {
+    fetch: (_request, params) => getPost(params.get('slug') ?? '', false),
+    component: BlogmuraBannerLive,
+    wrapper: { tag: 'div' },
+    propsFromData: (data) => ({
+      data: (data as QueryResult<BlogQuery>).data?.blog,
     }),
   },
   'blog-body': {

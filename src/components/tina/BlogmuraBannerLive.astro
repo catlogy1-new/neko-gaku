@@ -1,0 +1,15 @@
+---
+import BlogmuraBanner from '../article/BlogmuraBanner.astro';
+
+type Category = 'none' | 'general' | 'mental' | 'drug' | 'photo';
+
+interface Props {
+  data?: {
+    blogmuraBanner?: Category | null;
+  } | null;
+}
+
+const { data } = Astro.props;
+---
+
+<BlogmuraBanner category={data?.blogmuraBanner ?? 'none'} />

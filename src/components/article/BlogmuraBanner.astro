@@ -1,0 +1,117 @@
+---
+type Category = 'none' | 'general' | 'mental' | 'drug' | 'photo';
+
+interface Props {
+  category?: Category;
+}
+
+const { category = 'none' } = Astro.props;
+
+const links = {
+  general: {
+    label: 'GENERAL',
+    href: 'https://blogmura.com/ranking/in?p_cid=11219688',
+  },
+  mental: {
+    label: 'MENTAL HEALTH',
+    href: 'https://mental.blogmura.com/ranking/in?p_cid=11219688',
+  },
+  drug: {
+    label: 'DRUG ADDICTION',
+    href: 'https://mental.blogmura.com/izon_drug/ranking/in?p_cid=11219688',
+  },
+  photo: {
+    label: 'PHOTOGRAPHY',
+    href: 'https://photo.blogmura.com/ranking/in?p_cid=11219688',
+  },
+};
+
+const selected = category !== 'none' ? links[category] : null;
+---
+
+{selected && (
+  <aside class="nexus-blogmura" aria-label="にほんブログ村" data-pagefind-ignore>
+    <a
+      class="nexus-blogmura-link"
+      href={selected.href}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <span class="nexus-blogmura-accent" aria-hidden="true"></span>
+      <span class="nexus-blogmura-content">
+        <span class="nexus-blogmura-overline">NEXUS / EXTERNAL NETWORK</span>
+        <span class="nexus-blogmura-category">{selected.label}</span>
+        <span class="nexus-blogmura-name">にほんブログ村</span>
+      </span>
+
+    </a>
+  </aside>
+)}
+
+<style is:global>
+  .blog-detail-page .nexus-blogmura {
+    display: none;
+    width: min(100%, 230px);
+    margin: 10px auto 8px 0;
+  }
+
+  .blog-detail-page .article-card:has(#article-start-ja:not([hidden]))
+    .nexus-blogmura {
+    display: block;
+  }
+
+  .blog-detail-page .nexus-blogmura-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 46px;
+    padding: 6px 10px 6px 0;
+    background: #090b08;
+    border: 1px solid #323a2e;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: border-color 180ms ease;
+  }
+
+  .blog-detail-page .nexus-blogmura-link:hover,
+  .blog-detail-page .nexus-blogmura-link:focus-visible {
+    border-color: #b7ff00;
+  }
+
+  .blog-detail-page .nexus-blogmura-accent {
+    align-self: stretch;
+    width: 3px;
+    flex: none;
+    background: #b7ff00;
+  }
+
+  .blog-detail-page .nexus-blogmura-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  .blog-detail-page .nexus-blogmura-overline {
+    color: #84917e;
+    font: 9px "Maple Mono", monospace;
+    letter-spacing: .08em;
+  }
+
+  .blog-detail-page .nexus-blogmura-category {
+    color: #e4e8e0;
+    font: 600 12px "Host Grotesk Variable", sans-serif;
+    letter-spacing: .045em;
+  }
+
+  .blog-detail-page .nexus-blogmura-name {
+    color: #a4aca0;
+    font-size: 11px;
+  }
+
+  .blog-detail-page .nexus-blogmura-arrow {
+    color: #b7ff00;
+    font-size: 18px;
+  }
+</style>

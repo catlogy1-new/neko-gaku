@@ -4,6 +4,7 @@ import TinaIsland from "@tinacms/astro/TinaIsland.astro";
 import ArticleHeader from '../components/article/ArticleHeader.astro';
 import ArticleActions from '../components/article/ArticleActions.astro';
 import ArticleActionMenus from '../components/article/ArticleActionMenus.astro';
+import BlogmuraBanner from '../components/article/BlogmuraBanner.astro';
 import BlogTopNav from '../components/blog/BlogTopNav.astro';
 import RelatedPosts from '../components/blog/RelatedPosts.astro';
 import ScrollToTopButton from '../components/ScrollToTopButton.astro';
@@ -57,6 +58,7 @@ interface Props {
       headerKicker?: string;
       heroImagePosition?: "above-kicker" | "below-title";
       tocVisibility?: "on" | "off";
+      blogmuraBanner?: "none" | "general" | "mental" | "drug" | "photo";
       sidebar?: SidebarConfig;
     };
   };
@@ -289,6 +291,21 @@ const hasSidebar = false;
               data-pagefind-ignore
               hidden
             >
+
+
+              {isBlogPost && hasJapaneseTranslation && (
+                props.tinaSlug ? (
+                  <TinaIsland
+                    name="blogmura-banner"
+                    wrapper={{ tag: "div" }}
+                    params={{ slug: props.tinaSlug }}
+                  >
+                    <BlogmuraBanner category={props.post?.data.blogmuraBanner} />
+                  </TinaIsland>
+                ) : (
+                  <BlogmuraBanner category={props.post?.data.blogmuraBanner} />
+                )
+              )}
               {japaneseParagraphs.map((paragraph) => <p>{paragraph}</p>)}
             </section>
           )}
