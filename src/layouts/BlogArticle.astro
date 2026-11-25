@@ -293,6 +293,8 @@ const hasSidebar = false;
             >
 
 
+              {japaneseParagraphs.map((paragraph) => <p>{paragraph}</p>)}
+
               {isBlogPost && hasJapaneseTranslation && (
                 props.tinaSlug ? (
                   <TinaIsland
@@ -306,7 +308,6 @@ const hasSidebar = false;
                   <BlogmuraBanner category={props.post?.data.blogmuraBanner} />
                 )
               )}
-              {japaneseParagraphs.map((paragraph) => <p>{paragraph}</p>)}
             </section>
           )}
 

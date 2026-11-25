@@ -49,7 +49,7 @@ export const islands: IslandRegistry = {
     }),
   },
   'blogmura-banner': {
-    fetch: (_request, params) => getPost(params.get('slug') ?? '', false),
+    fetch: (_request, params) => getPost(params.get('slug') ?? ''),
     component: BlogmuraBannerLive,
     wrapper: { tag: 'div' },
     propsFromData: (data) => ({
