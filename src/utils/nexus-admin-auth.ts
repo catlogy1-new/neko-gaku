@@ -28,11 +28,63 @@ import { TinaCloudAuthProvider } from 'tinacms';
   // NEXUS COMMENT AUTH RECOVERY V1
   (window as Window & {
     __nexusCommentOwnerLogin?: () => Promise<unknown>;
-  }).__nexusCommentOwnerLogin = async () => {
-    // Clear stale TinaCloud tokens before starting a fresh login.
-    await provider.logout();
-    return provider.authenticate();
-  };
+  }).__nexusCommentOwnerLogin = () => provider.authenticate();
+
+  // NEXUS OWNER LOGIN BUTTON V1
+  if (
+    new URLSearchParams(window.location.search).get("owner-login") === "1" &&
+    window.location.pathname.startsWith("/blog/")
+  ) {
+    const mount = () => {
+      if (document.getElementById("nexus-owner-login-button")) return;
+      const button = document.createElement("button");
+      button.id = "nexus-owner-login-button";
+      button.type = "button";
+      button.textContent = "① 古い認証情報を解除";
+      button.style.cssText =
+        "position:fixed;bottom:20px;right:20px;z-index:2147483646;" +
+        "padding:14px 20px;background:#222;color:white;border:1px solid #aaa;" +
+        "border-radius:8px;cursor:pointer;font-size:15px";
+      let cleared = false;
+
+      button.addEventListener("click", () => {
+        if (!cleared) {
+          button.disabled = true;
+          button.textContent = "認証情報を解除中...";
+          provider.logout().then(() => {
+            cleared = true;
+            button.disabled = false;
+            button.textContent = "② TinaCMSにログイン";
+          }).catch(() => {
+            button.disabled = false;
+            button.textContent = "認証解除に失敗しました";
+          });
+          return;
+        }
+
+        button.disabled = true;
+        button.textContent = "TinaCMSログイン処理中...";
+        // Directly triggered by a real button click.
+        void provider.authenticate().then(async () => {
+          const user = await provider.getUser();
+          const token = await provider.getToken();
+          const ok = await isNexusOwner(user) && !!token?.id_token;
+          button.textContent = ok ? "管理者認証 OK" : "管理者認証 NG";
+          button.disabled = false;
+        }).catch(() => {
+          button.textContent = "管理者認証 NG";
+          button.disabled = false;
+        });
+      });
+
+      document.body.appendChild(button);
+    };
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", mount, { once: true });
+    } else {
+      mount();
+    }
+  }
 
   const state = window as Window & { __nexusTinaAdmin?: boolean };
   const adminWindow = window as Window & { __nexusBlogMutation?: (kind: string, pathname: string, sticky: boolean) => Promise<void> };
