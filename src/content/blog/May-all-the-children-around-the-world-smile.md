@@ -64,6 +64,7 @@ japaneseBody: |
   #ドメスティックバイオレンス
   #グリーフケア
   #精神疾患を持つ方と繋がりたい
+blogmuraBanner: mental
 ---
 
 ## That's right. It's just a bunch of nonsense.
