@@ -65,16 +65,49 @@ import { TinaCloudAuthProvider } from 'tinacms';
         button.disabled = true;
         button.textContent = "TinaCMSログイン処理中...";
         // Directly triggered by a real button click.
-        void provider.authenticate().then(async () => {
-          const user = await provider.getUser();
-          const token = await provider.getToken();
-          const ok = await isNexusOwner(user) && !!token?.id_token;
-          button.textContent = ok ? "管理者認証 OK" : "管理者認証 NG";
+        // NEXUS OWNER AUTH DIAGNOSTIC V1
+        const result = (message: string) => {
+          button.textContent = message;
           button.disabled = false;
-        }).catch(() => {
-          button.textContent = "管理者認証 NG";
-          button.disabled = false;
-        });
+        };
+
+        void (async () => {
+          try {
+            await provider.authenticate();
+          } catch {
+            return result("① ログイン処理NG");
+          }
+
+          let user;
+          try {
+            user = await provider.getUser();
+          } catch {
+            return result("② ユーザー取得NG");
+          }
+
+          if (!user) return result("② 未ログイン");
+
+          try {
+            if (!(await isNexusOwner(user))) {
+              return result("③ 管理者照合NG");
+            }
+          } catch {
+            return result("③ 管理者照合エラー");
+          }
+
+          let token;
+          try {
+            token = await provider.getToken();
+          } catch {
+            return result("④ トークン取得NG");
+          }
+
+          if (!token?.id_token) {
+            return result("④ トークンなし");
+          }
+
+          result("管理者認証 OK");
+        })();
       });
 
       document.body.appendChild(button);
