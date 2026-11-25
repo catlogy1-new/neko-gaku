@@ -20,7 +20,7 @@ heroImagePosition: above-kicker
 showHeroImage: true
 japaneseTitle: 親愛なる仲間たちへ
 japaneseDescription: ゆっくり行こうよ
-japaneseBody: |-
+japaneseBody: |
   僕は元薬物依存者です。
   過去にはあらゆる種類の違法薬物を使用しましたが、最も長く使用していたのは覚醒剤でした。
   覚醒剤をやめてから7年が経ちました。
@@ -49,12 +49,6 @@ japaneseBody: |-
   もしできるなら、明日も同じようにしようと自分に言い聞かせて。
 
   今、薬物依存に苦しんでいる人へ、どうしてもやめられない人へ、必死にやめようとしている人へ＿どんな状況であれ、明日があなたにとって素晴らしい一日になりますように。
-
-  #drugaddiction
-  #addictionrecovery
-  #recoveryispossible
-  #addiction
-  #mentalhealthawareness
 ---
 
 ## Right? This is just a bunch of nonsense.
