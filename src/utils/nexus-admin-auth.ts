@@ -28,7 +28,11 @@ import { TinaCloudAuthProvider } from 'tinacms';
   // NEXUS COMMENT AUTH RECOVERY V1
   (window as Window & {
     __nexusCommentOwnerLogin?: () => Promise<unknown>;
-  }).__nexusCommentOwnerLogin = () => provider.authenticate();
+  }).__nexusCommentOwnerLogin = async () => {
+    // Clear stale TinaCloud tokens before starting a fresh login.
+    await provider.logout();
+    return provider.authenticate();
+  };
 
   const state = window as Window & { __nexusTinaAdmin?: boolean };
   const adminWindow = window as Window & { __nexusBlogMutation?: (kind: string, pathname: string, sticky: boolean) => Promise<void> };
