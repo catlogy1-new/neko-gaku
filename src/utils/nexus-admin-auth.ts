@@ -22,7 +22,7 @@ import { TinaCloudAuthProvider } from 'tinacms';
     const user = await provider.getUser();
     if (!(await isNexusOwner(user))) return null;
     const token = await provider.getToken();
-    return token?.id_token || null;
+    return token?.id_token || token?.access_token || null;
   };
 
   // NEXUS COMMENT AUTH RECOVERY V1
