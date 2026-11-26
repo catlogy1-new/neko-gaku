@@ -39,6 +39,7 @@ japaneseBody: |-
   TVドラマじゃねーんだよ。
   クソが。
 blogmuraBanner: mental
+blogmuraBanner2: general
 ---
 
 ## That's right. It's the kind of rubbish you wanted
