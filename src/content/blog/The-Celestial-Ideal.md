@@ -67,6 +67,7 @@ japaneseBody: |-
   「18歳で書いたとは思えない」とよく言われるが、18歳にしか書けない文章だ。
   少なくとも今の僕には書けない。
 blogmuraBanner: drug
+blogmuraBanner2: mental
 ---
 
 λ, λ, λ, lambda… Albert Einstein, in his lifetime, named two things as the ⟨greatest blunder⟩ of his life.
