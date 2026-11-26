@@ -78,6 +78,7 @@ japaneseBody: |-
 
   LINE ID　neko_666
 blogmuraBanner: mental
+blogmuraBanner2: drug
 ---
 
 ## Huh? Oh, right, this is just another piece of rubbish, too.
