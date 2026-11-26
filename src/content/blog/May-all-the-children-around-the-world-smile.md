@@ -65,6 +65,7 @@ japaneseBody: |
   #グリーフケア
   #精神疾患を持つ方と繋がりたい
 blogmuraBanner: mental
+blogmuraBanner2: psychiatry
 ---
 
 ## That's right. It's just a bunch of nonsense.
