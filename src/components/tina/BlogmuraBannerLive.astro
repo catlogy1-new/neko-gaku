@@ -1,15 +1,21 @@
 ---
 import BlogmuraBanner from '../article/BlogmuraBanner.astro';
 
-type Category = 'none' | 'general' | 'mental' | 'drug' | 'photo';
+type Category = 'none' | 'general' | 'mental' | 'drug' | 'photo' | 'street' | 'psychiatry';
 
 interface Props {
   data?: {
     blogmuraBanner?: Category | null;
+    blogmuraBanner2?: Category | null;
+    blogmuraBanner3?: Category | null;
   } | null;
 }
 
 const { data } = Astro.props;
 ---
 
-<BlogmuraBanner category={data?.blogmuraBanner ?? 'none'} />
+<BlogmuraBanner
+  category={data?.blogmuraBanner ?? 'none'}
+  category2={data?.blogmuraBanner2 ?? 'none'}
+  category3={data?.blogmuraBanner3 ?? 'none'}
+/>

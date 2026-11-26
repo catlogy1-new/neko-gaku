@@ -983,7 +983,7 @@ export default defineConfig({
           {
             type: "string",
             name: "blogmuraBanner",
-            label: "にほんブログ村（日本語表示のみ）",
+            label: "にほんブログ村 バナー1（日本語表示のみ）",
             description: "記事ごとにバナーを選択します。",
             options: [
               { label: "表示しない", value: "none" },
@@ -991,6 +991,38 @@ export default defineConfig({
               { label: "メンタルヘルス", value: "mental" },
               { label: "薬物依存症", value: "drug" },
               { label: "写真ブログ", value: "photo" },
+              { label: "ストリートフォト", value: "street" },
+              { label: "精神科・心療内科", value: "psychiatry" },
+            ],
+          },
+          {
+            type: "string",
+            name: "blogmuraBanner2",
+            label: "にほんブログ村 バナー2（日本語表示のみ）",
+            description: "記事ごとにバナーを選択します。",
+            options: [
+              { label: "表示しない", value: "none" },
+              { label: "総合", value: "general" },
+              { label: "メンタルヘルス", value: "mental" },
+              { label: "薬物依存症", value: "drug" },
+              { label: "写真ブログ", value: "photo" },
+              { label: "ストリートフォト", value: "street" },
+              { label: "精神科・心療内科", value: "psychiatry" },
+            ],
+          },
+          {
+            type: "string",
+            name: "blogmuraBanner3",
+            label: "にほんブログ村 バナー3（日本語表示のみ）",
+            description: "記事ごとにバナーを選択します。",
+            options: [
+              { label: "表示しない", value: "none" },
+              { label: "総合", value: "general" },
+              { label: "メンタルヘルス", value: "mental" },
+              { label: "薬物依存症", value: "drug" },
+              { label: "写真ブログ", value: "photo" },
+              { label: "ストリートフォト", value: "street" },
+              { label: "精神科・心療内科", value: "psychiatry" },
             ],
           },
           {

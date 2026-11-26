@@ -1,11 +1,17 @@
 ---
-type Category = 'none' | 'general' | 'mental' | 'drug' | 'photo';
+type Category = 'none' | 'general' | 'mental' | 'drug' | 'photo' | 'street' | 'psychiatry';
 
 interface Props {
   category?: Category;
+  category2?: Category;
+  category3?: Category;
 }
 
-const { category = 'none' } = Astro.props;
+const {
+  category = 'none',
+  category2 = 'none',
+  category3 = 'none',
+} = Astro.props;
 
 const links = {
   general: {
@@ -24,46 +30,62 @@ const links = {
     label: 'PHOTOGRAPHY',
     href: 'https://photo.blogmura.com/ranking/in?p_cid=11219688',
   },
+  street: {
+    label: 'STREET PHOTOGRAPHY',
+    href: 'https://photo.blogmura.com/p_street/ranking/in?p_cid=11219688',
+  },
+  psychiatry: {
+    label: 'PSYCHIATRY',
+    href: 'https://mental.blogmura.com/shinryo/ranking/in?p_cid=11219688',
+  },
 };
 
-const selected = category !== 'none' ? links[category] : null;
+const selected = [...new Set([category, category2, category3])]
+  .filter((item) => item !== 'none')
+  .map((item) => links[item]);
 ---
 
-{selected && (
+{selected.length > 0 && (
   <aside class="nexus-blogmura" aria-label="にほんブログ村" data-pagefind-ignore>
+    {selected.map((item) => (
     <a
       class="nexus-blogmura-link"
-      href={selected.href}
+      href={item.href}
       target="_blank"
       rel="noopener noreferrer"
     >
       <span class="nexus-blogmura-accent" aria-hidden="true"></span>
       <span class="nexus-blogmura-content">
         <span class="nexus-blogmura-overline">NEXUS / EXTERNAL NETWORK</span>
-        <span class="nexus-blogmura-category">{selected.label}</span>
+        <span class="nexus-blogmura-category">{item.label}</span>
         <span class="nexus-blogmura-name">にほんブログ村</span>
       </span>
 
     </a>
+    ))}
   </aside>
 )}
 
 <style is:global>
   .blog-detail-page .nexus-blogmura {
     display: none;
-    width: min(100%, 230px);
-    margin: 10px auto 8px 0;
+    width: 100%;
+    margin: 34px 0 8px;
+    flex-wrap: wrap;
+    gap: 12px;
   }
 
   .blog-detail-page .article-card:has(#article-start-ja:not([hidden]))
     .nexus-blogmura {
-    display: block;
+    display: flex;
   }
 
   .blog-detail-page .nexus-blogmura-link {
     display: flex;
     align-items: center;
     gap: 8px;
+    box-sizing: border-box;
+    width: min(100%, 230px);
     min-height: 46px;
     padding: 6px 10px 6px 0;
     background: #090b08;
