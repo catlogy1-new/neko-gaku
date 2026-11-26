@@ -8,10 +8,19 @@ import BlogBody from '../../components/tina/BlogBody.astro';
 import BlogmuraBannerLive from '../../components/tina/BlogmuraBannerLive.astro';
 import PortfolioGallery from '../../components/tina/PortfolioGallery.astro';
 import MediaCard from '../../components/tina/MediaCard.astro';
+import MediaReviewBody from '../../components/tina/MediaReviewBody.astro';
 import PulseEntry from '../../components/tina/PulseEntry.astro';
 import { getPost, getPhotography, getMedia, getPulse } from './data';
 
 export const islands: IslandRegistry = {
+  'media-review-body': {
+    fetch: (_request, params) => getMedia(params.get('path') ?? ''),
+    component: MediaReviewBody,
+    wrapper: { tag: 'div' },
+    propsFromData: (data) => ({
+      data: (data as QueryResult<MediaQuery>).data?.media,
+    }),
+  },
   'media-card': {
     fetch: (_request, params) => getMedia(params.get('path') ?? ''),
     component: MediaCard,

@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content';
+import TinaIsland from '@tinacms/astro/TinaIsland.astro';
 import {
   BaseHead,
   Footer,
@@ -20,6 +21,7 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
+const tinaMediaPath = entry.filePath?.replace(/\\/g, '/').split('/').pop();
 
 const config = await getSiteConfig();
 const { site, theme } = config;
@@ -50,7 +52,18 @@ const htmlLang = getHtmlLang(config);
         </header>
 
         <div class="media-review-body">
-          <Content />
+          {tinaMediaPath ? (
+            <TinaIsland
+              name="media-review-body"
+              params={{ path: tinaMediaPath }}
+              wrapper={{ tag: 'div' }}
+              primary
+            >
+              <Content />
+            </TinaIsland>
+          ) : (
+            <Content />
+          )}
         </div>
       </article>
     </main>

@@ -9,7 +9,7 @@ interface Props {
 
 const { data } = Astro.props;
 const relativePath = data?._sys?.relativePath ?? '';
-const slug = relativePath.replace(/\.(mdx|md)$/i, '');
+const slug = relativePath.replace(/\.(mdx|md)$/i, '').toLowerCase();
 
 const localCovers = import.meta.glob<ImageMetadata>(
   '/src/content/media/**/*.{jpg,jpeg,png,webp,avif,gif}',
