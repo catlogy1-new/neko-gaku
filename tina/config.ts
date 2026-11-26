@@ -385,6 +385,39 @@ export default defineConfig({
             const relativePath = document._sys.relativePath;
             if (!/^[a-zA-Z0-9_-]+\.mdx$/.test(relativePath)) return undefined;
 
+            // Open the review page when its Tina island matches this document.
+            const reviewSlug = relativePath
+              .replace(/\.mdx$/i, '')
+              .toLowerCase();
+
+            const reviewRoute = `/media/${reviewSlug}/`;
+            const reviewMarker = '/tina-island/media-review-body?' +
+              new URLSearchParams({ path: relativePath }).toString();
+
+            try {
+              const response = await fetch(reviewRoute, {
+                cache: 'no-store',
+              });
+
+              if (response.ok) {
+                const html = await response.text();
+                const page = new DOMParser().parseFromString(
+                  html, 'text/html'
+                );
+
+                const found = Array.from(
+                  page.querySelectorAll('[data-tina-island]')
+                ).some(
+                  element =>
+                    element.getAttribute('data-tina-island') === reviewMarker
+                );
+
+                if (found) return reviewRoute;
+              }
+            } catch {
+              // Fall back to the existing Media list router.
+            }
+
             const marker = '/tina-island/media-card?' +
               new URLSearchParams({ path: relativePath }).toString();
 
