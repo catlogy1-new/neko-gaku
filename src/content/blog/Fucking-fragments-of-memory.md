@@ -38,6 +38,7 @@ japaneseBody: |-
   おまえら、子供を殺されたことあるのか？
   TVドラマじゃねーんだよ。
   クソが。
+blogmuraBanner: mental
 ---
 
 ## That's right. It's the kind of rubbish you wanted
