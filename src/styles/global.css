@@ -1,5 +1,4 @@
 @import './fonts.css';
-@import 'katex/dist/katex.min.css';
 /* Cyber dark theme overrides */
 :root {
   --paper-bg: #050505;

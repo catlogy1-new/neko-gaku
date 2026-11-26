@@ -6,6 +6,7 @@ import { ArrowRight } from 'lucide-astro';
 import FormattedDate from '../FormattedDate.astro';
 import Icon from '../Icon.astro';
 import SmartImage from '../SmartImage.astro';
+import { blogThumbnail } from '../../utils/blog-thumbnail';
 import { getSiteConfig } from '../../data/site';
 import { slugifyGroupName } from '../../utils/content-groups';
 import { getStickyPriority, isStickyEntry } from '../../utils/content-dates';
@@ -95,7 +96,7 @@ const displaySeries = uniqueItems(post.data.series ?? []);
                 <SmartImage
                   width={760}
                   height={480}
-                  src={post.data.heroImage}
+                  src={blogThumbnail(post.data.heroImage, "list")}
                   alt=""
                 />
               ) : (

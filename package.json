@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "tinacms dev -c \"astro dev\"",
     "fonts:ui": "bun scripts/fonts/subset-ui-font.ts",
-    "build": "tinacms build && bun run fonts:ui && astro build && pagefind --site dist/client --output-subdir pagefind --root-selector main --exclude-selectors \"[data-pagefind-ignore]\"",
+    "build": "tinacms build && bun run fonts:ui && bun run images:blog && astro build && pagefind --site dist/client --output-subdir pagefind --root-selector main --exclude-selectors \"[data-pagefind-ignore]\"",
     "preview": "astro preview",
     "docs:dev": "NAVFOLIO_CONTENT_SOURCE=docs astro dev",
     "docs:build": "NAVFOLIO_CONTENT_SOURCE=docs bun run build",
@@ -23,7 +23,8 @@
     "lint": "eslint .",
     "format": "prettier --write --ignore-unknown .",
     "format:check": "bun run lint && prettier --check --ignore-unknown .",
-    "prepare": "husky"
+    "prepare": "husky",
+    "images:blog": "node scripts/images/build-blog-thumbnails.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.10",
