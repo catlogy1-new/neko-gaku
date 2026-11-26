@@ -56,6 +56,7 @@ japaneseBody: |
   この場所に帰って来たかったんだ。
 
   任務完了。
+blogmuraBanner: drug
 ---
 
 ## Yeah. This is another piece of rubbish, too.
