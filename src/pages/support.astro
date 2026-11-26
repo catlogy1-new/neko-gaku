@@ -121,23 +121,12 @@ const paragraphs = (value: string) =>
 </html>
 
 <style is:global>
-  /* SUPPORT_SCROLL_NAV_DIAGNOSTIC */
-  @media (max-width: 720px) {
-    body.support-body .blog-top-nav,
-    body.support-body .blog-top-nav[data-nav-hidden='true'] {
-      transform: none !important;
-      transition: none !important;
-      backdrop-filter: none !important;
-      opacity: 1 !important;
-      pointer-events: auto !important;
-    }
-  }
-
   @media (max-width: 720px) {
     html:has(body.support-body),
     body.support-body {
       overflow-x: clip !important;
       overscroll-behavior-x: none;
+      touch-action: pan-y pinch-zoom;
     }
   }
 </style>
