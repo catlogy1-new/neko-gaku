@@ -53,7 +53,7 @@ japaneseBody: |
   ＿＿＿＿＿＿＿＿
 blogmuraBanner: drug
 blogmuraBanner2: mental
-blogmuraBanner3: psychiatry
+blogmuraBanner3: none
 ---
 
 ## Right? This is just a bunch of nonsense.
