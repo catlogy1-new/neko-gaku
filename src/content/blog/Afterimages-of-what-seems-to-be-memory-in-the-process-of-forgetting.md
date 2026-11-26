@@ -19,7 +19,7 @@ heroImage: /Drag/あゝ、荒野.jpg
 heroImagePosition: above-kicker
 japaneseTitle: 忘却の過程における記憶らしきものの残像
 japaneseDescription: PTSDと自傷とドラッグ
-japaneseBody: |
+japaneseBody: |+
   僕は18年間覚醒剤依存症だったが、普通とは違う使い方で、半年からそれ以上の頻度でしか覚醒剤を使用しなかった。
   一年くらい使用しないのも普通だ。
 
@@ -56,6 +56,9 @@ japaneseBody: |
   この場所に帰って来たかったんだ。
 
   任務完了。
+
+
+
 blogmuraBanner: drug
 ---
 
