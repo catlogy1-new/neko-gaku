@@ -77,6 +77,7 @@ japaneseBody: |-
   一人じゃないんだよ？
 
   LINE ID　neko_666
+blogmuraBanner: mental
 ---
 
 ## Huh? Oh, right, this is just another piece of rubbish, too.
