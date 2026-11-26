@@ -63,12 +63,14 @@ jobs:
           bun run images:blog
           ./node_modules/.bin/astro build
           ./node_modules/.bin/pagefind --site dist/client --output-subdir pagefind --root-selector main --exclude-selectors "[data-pagefind-ignore]"
+          ./node_modules/.bin/pagefind --site dist/client --output-subdir pagefind-ja --root-selector main --exclude-selectors "[data-pagefind-ignore]" --force-language ja
 
       - name: Verify production build
         run: |
           test -f dist/server/entry.mjs
           test -f dist/client/admin/index.html
-          test -d dist/client/pagefind
+          test -f dist/client/pagefind/pagefind.js
+          test -f dist/client/pagefind-ja/pagefind.js
           python -c "import json; from pathlib import Path; p=Path(\"dist/server/wrangler.json\"); d=json.loads(p.read_text()); assert d.get(\"name\")==\"astro-navfolio\"; d.pop(\"route\",None); d[\"routes\"]=[{\"pattern\":\"nekogaku.com\",\"custom_domain\":True}]; d[\"workers_dev\"]=True; d[\"preview_urls\"]=True; bindings=d.get(\"kv_namespaces\",[]); session=[x for x in bindings if x.get(\"binding\")==\"SESSION\"]; assert len(session)==1; session[0][\"id\"]=\"30eb28be2df34038827ded023e8c89a3\"; p.write_text(json.dumps(d,indent=2)+chr(10)); print(\"PASS: Production domain and SESSION binding verified\")"
 
       - name: Deploy to Cloudflare Workers

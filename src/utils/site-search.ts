@@ -30,7 +30,9 @@ const pagefindPath = `${baseUrl.replace(/\/$/, '')}/pagefind/pagefind.js`.replac
   '/pagefind',
 );
 
-let pagefindPromise: Promise<PagefindModule> | null = null;
+const pagefindJaPath = `${baseUrl.replace(/\/$/, '')}/pagefind-ja/pagefind.js`;
+type SearchLanguage = 'en' | 'ja';
+const pagefindPromises: Partial<Record<SearchLanguage, Promise<PagefindModule>>> = {};
 let lastFocusedElement: HTMLElement | null = null;
 const searchLayers = new WeakMap<HTMLElement, HTMLElement>();
 
@@ -89,21 +91,22 @@ function getResultTitle(result: Awaited<ReturnType<PagefindResult['data']>>) {
   return result.meta?.title?.trim() || getResultPath(result.url);
 }
 
-async function loadPagefind() {
-  if (!pagefindPromise) {
-    pagefindPromise = import(/* @vite-ignore */ pagefindPath)
+async function loadPagefind(language: SearchLanguage = 'en') {
+  if (!pagefindPromises[language]) {
+    const modulePath = language === 'ja' ? pagefindJaPath : pagefindPath;
+    pagefindPromises[language] = import(/* @vite-ignore */ modulePath)
       .then(async (module: PagefindModule) => {
         await module.options?.({ baseUrl });
         await module.init?.();
         return module;
       })
       .catch((error) => {
-        pagefindPromise = null;
+        delete pagefindPromises[language];
         throw error;
       });
   }
 
-  return pagefindPromise;
+  return pagefindPromises[language]!;
 }
 
 function setStatus(root: HTMLElement, status: string) {
@@ -244,7 +247,9 @@ export function initSiteSearch() {
       setStatus(root, root.dataset.searchLoadingLabel || 'Searching...');
 
       try {
-        const pagefind = await loadPagefind();
+        const japaneseQuery =
+          /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/u.test(query);
+        const pagefind = await loadPagefind(japaneseQuery ? 'ja' : 'en');
         const search = await pagefind.search(query);
         const resultData = await Promise.all(
           search.results.slice(0, maxResults).map((result) => result.data()),

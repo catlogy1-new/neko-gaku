@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "tinacms dev -c \"astro dev\"",
     "fonts:ui": "bun scripts/fonts/subset-ui-font.ts",
-    "build": "tinacms build && bun run fonts:ui && bun run images:blog && astro build && pagefind --site dist/client --output-subdir pagefind --root-selector main --exclude-selectors \"[data-pagefind-ignore]\"",
+    "build": "tinacms build && bun run fonts:ui && bun run images:blog && astro build && pagefind --site dist/client --output-subdir pagefind --root-selector main --exclude-selectors \"[data-pagefind-ignore]\" && pagefind --site dist/client --output-subdir pagefind-ja --root-selector main --exclude-selectors \"[data-pagefind-ignore]\" --force-language ja",
     "preview": "astro preview",
     "docs:dev": "NAVFOLIO_CONTENT_SOURCE=docs astro dev",
     "docs:build": "NAVFOLIO_CONTENT_SOURCE=docs bun run build",
