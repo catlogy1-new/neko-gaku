@@ -60,6 +60,7 @@ japaneseBody: |+
 
 
 blogmuraBanner: drug
+blogmuraBanner2: mental
 ---
 
 ## Yeah. This is another piece of rubbish, too.
