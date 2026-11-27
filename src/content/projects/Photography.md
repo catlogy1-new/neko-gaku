@@ -40,8 +40,8 @@ galleryImages:
   - src: /Portfolio/image1.jpeg
     title: Kamagasaki
     alt: Temporary portfolio sample
-  - src: /images/portfolio/remains-012.jpg
-    title: SAMPLE IMAGE / 012
+  - src: /Portfolio/image0.jpeg
+    title: Untitled
     alt: Temporary portfolio sample
   - src: /images/portfolio/remains-013.jpg
     title: SAMPLE IMAGE / 013
