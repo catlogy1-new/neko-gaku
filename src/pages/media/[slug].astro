@@ -73,6 +73,55 @@ const htmlLang = getHtmlLang(config);
 (() => {
   function convertMediaLinks() {
     document.querySelectorAll('.media-review-body p').forEach((paragraph) => {
+      // TinaCMSの改行でURLが前の文章と同じ段落になった場合に対応。
+      const candidate = paragraph.querySelector('a[href]');
+
+      if (candidate &&
+          candidate.parentElement === paragraph &&
+          paragraph.querySelectorAll('a[href]').length === 1) {
+
+        let parsed;
+        try { parsed = new URL(candidate.href); } catch {}
+
+        const host = parsed?.hostname.toLowerCase() || '';
+        const supported = parsed?.protocol === 'https:' && (
+          ['youtu.be', 'youtube.com', 'www.youtube.com',
+           'm.youtube.com'].includes(host) ||
+          /(^|\.)amazon\.(co\.jp|com|co\.uk|de|fr|it|es|ca|com\.au)$/.test(host) ||
+          host === 'amzn.to'
+        );
+
+        let before = candidate.previousSibling;
+        while (before &&
+               before.nodeType === Node.TEXT_NODE &&
+               !before.textContent.trim()) {
+          before = before.previousSibling;
+        }
+
+        let after = candidate.nextSibling;
+        while (after &&
+               after.nodeType === Node.TEXT_NODE &&
+               !after.textContent.trim()) {
+          after = after.nextSibling;
+        }
+
+        if (supported && before?.nodeName === 'BR' && !after) {
+          const isolated = document.createElement('p');
+          paragraph.after(isolated);
+          isolated.append(candidate);
+
+          while (paragraph.lastChild && (
+            paragraph.lastChild.nodeName === 'BR' ||
+            (paragraph.lastChild.nodeType === Node.TEXT_NODE &&
+             !paragraph.lastChild.textContent.trim())
+          )) {
+            paragraph.lastChild.remove();
+          }
+
+          paragraph = isolated;
+        }
+      }
+
       const links = paragraph.querySelectorAll('a[href]');
       const rawUrl = paragraph.textContent.trim();
       const plainUrl = (
