@@ -128,3 +128,9 @@ const ratingLabel = (rating: number | undefined) =>
   @media (max-width: 720px) { .navfolio-media-shelf--shelf { grid-template-columns:repeat(3, minmax(0, 1fr)); } }
   @media (max-width: 430px) { .navfolio-media-shelf--shelf { grid-template-columns:repeat(2, minmax(0, 1fr)); } .navfolio-media-shelf--shelf .navfolio-media-shelf__meta { flex-direction:column; gap:0; } }
 </style>
+
+
+<script>
+  import { installMediaEditorNavigation } from '../../utils/tina-media-navigation';
+  installMediaEditorNavigation();
+</script>
