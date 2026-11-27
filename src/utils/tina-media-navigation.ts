@@ -37,6 +37,17 @@ export function installMediaEditorNavigation(): void {
     );
 
     if (!isBack && !isCard) return;
+
+    // Editable fields must be handled by TinaCMS click-to-focus.
+    // Cancel the card link without blocking Tina's click listener.
+    if (
+      isCard &&
+      target.closest('[data-tina-field], [data-tina-field-overlay]')
+    ) {
+      event.preventDefault();
+      return;
+    }
+
     if (link.target && link.target !== '_self') return;
 
     const destination = new URL(link.href);
