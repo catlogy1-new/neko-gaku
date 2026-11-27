@@ -88,7 +88,7 @@ const htmlLang = getHtmlLang(config);
           ['youtu.be', 'youtube.com', 'www.youtube.com',
            'm.youtube.com'].includes(host) ||
           /(^|\.)amazon\.(co\.jp|com|co\.uk|de|fr|it|es|ca|com\.au)$/.test(host) ||
-          host === 'amzn.to'
+          ['amzn.to', 'amzn.asia'].includes(host)
         );
 
         let before = candidate.previousSibling;
@@ -172,7 +172,7 @@ const htmlLang = getHtmlLang(config);
       }
 
       const amazon = /(^|\.)amazon\.(co\.jp|com|co\.uk|de|fr|it|es|ca|com\.au)$/.test(host)
-        || host === 'amzn.to';
+        || ['amzn.to', 'amzn.asia'].includes(host);
 
       if (amazon) {
         const card = document.createElement('a');
