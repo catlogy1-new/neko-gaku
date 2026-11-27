@@ -380,11 +380,6 @@ export default defineConfig({
         label: "Media",
         path: "src/content/media",
         format: "mdx",
-        defaultItem: () => ({
-          title: "タイトル未設定",
-          creator: "未設定",
-          type: "album",
-        }),
         ui: {
           router: async ({ document }) => {
             const relativePath = document._sys.relativePath;
@@ -476,8 +471,6 @@ export default defineConfig({
             type: "string",
             name: "title",
             label: "Title",
-            isTitle: true,
-            required: true,
           },
           {
             type: "string",
@@ -488,13 +481,11 @@ export default defineConfig({
             type: "string",
             name: "creator",
             label: "Creator",
-            required: true,
           },
           {
             type: "string",
             name: "type",
             label: "Media Type",
-            required: true,
             options: ["book", "film", "series", "album", "podcast"],
           },
           {

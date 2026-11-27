@@ -20,7 +20,7 @@ type MediaEntry = {
   data: {
     title: string;
     creator: string;
-    type: MediaType;
+    type?: MediaType;
     status: MediaStatus;
     completedAt?: Date;
     draft?: boolean;
@@ -64,7 +64,7 @@ const sections = [
   { id: 'films', label: ui.media.sections.films, description: ui.media.sections.filmsNote, types: ['film', 'series'] as MediaType[] },
   { id: 'music', label: ui.media.sections.music, description: ui.media.sections.musicNote, types: ['album', 'podcast'] as MediaType[] },
 ].map((section) => {
-  const items = allMedia.filter((entry) => section.types.includes(entry.data.type));
+  const items = allMedia.filter((entry) => (entry.data.type !== undefined && section.types.includes(entry.data.type)));
   return {
     ...section,
     items: items.slice(0, 8),
@@ -854,7 +854,7 @@ main {
                     id: `media-${entry.id}`,
                     title: entry.data.title,
                     creator: entry.data.creator,
-                    type: entry.data.type,
+                    type: entry.data.type!,
                     cover: entry.data.cover,
                     coverAspect: entry.data.coverAspect,
                     rating: entry.data.rating,

@@ -45,7 +45,7 @@ const htmlLang = getHtmlLang(config);
       <article>
         <header>
           <p class="media-review-kicker">
-            {entry.data.type.toUpperCase()} / REVIEW
+            {(entry.data.type?.toUpperCase() ?? 'MEDIA')} / REVIEW
           </p>
           <h1>{entry.data.title}</h1>
           <p class="media-review-creator">{entry.data.creator}</p>

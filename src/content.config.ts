@@ -602,9 +602,9 @@ const media = defineCollection({
   loader: glob({ base: `${contentBase}/media`, pattern: '**/*.{md,mdx}' }),
   schema: ({ image }) =>
     z.object({
-      title: z.string(),
-      creator: z.string(),
-      type: z.enum(['book', 'film', 'series', 'album', 'podcast']),
+      title: z.string().optional().default(''),
+      creator: z.string().optional().default(''),
+      type: z.enum(['book', 'film', 'series', 'album', 'podcast']).optional(),
       status: z.enum(['completed', 'in-progress', 'planned', 'abandoned']).default('completed'),
       completedAt: z.coerce.date().optional(),
       draft: z.boolean().optional().default(false),
