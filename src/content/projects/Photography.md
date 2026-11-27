@@ -37,8 +37,8 @@ galleryImages:
   - src: /Portfolio/image2.jpeg
     title: Sanya
     alt: Temporary portfolio sample
-  - src: /images/portfolio/remains-011.jpg
-    title: SAMPLE IMAGE / 011
+  - src: /Portfolio/image1.jpeg
+    title: Kamagasaki
     alt: Temporary portfolio sample
   - src: /images/portfolio/remains-012.jpg
     title: SAMPLE IMAGE / 012
