@@ -32,7 +32,7 @@ galleryImages:
     title: Untitled
     alt: Temporary portfolio sample
   - src: /images/IMG_1692.JPG
-    title: SAMPLE IMAGE / 009
+    title: 秘すれば花なり
     alt: Temporary portfolio sample
   - src: /images/portfolio/remains-010.jpg
     title: SAMPLE IMAGE / 010
