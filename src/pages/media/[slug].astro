@@ -179,7 +179,7 @@ const htmlLang = getHtmlLang(config);
         card.href = url.href;
         card.target = '_blank';
         card.rel = 'noopener noreferrer sponsored';
-        card.style.cssText = 'display:flex;align-items:center;gap:20px;padding:20px;margin:2rem 0;border:1px solid #555;border-radius:8px;color:inherit;text-decoration:none';
+        card.classList.add('media-amazon-card');
 
         const cover = link ? link.querySelector('img') : null;
         if (cover) {
@@ -212,12 +212,24 @@ const htmlLang = getHtmlLang(config);
         content.append(brand, title);
         card.append(content);
 
-        const arrow = document.createElement('span');
-        arrow.textContent = '↗';
-        arrow.setAttribute('aria-hidden', 'true');
-        arrow.style.cssText =
-          'margin-left:auto;color:#afd59b;font-size:1.2rem';
-        card.append(arrow);
+        // 外部リンクアイコン（SVG）
+        const ns = 'http://www.w3.org/2000/svg';
+        const icon = document.createElementNS(ns, 'svg');
+        icon.setAttribute('class', 'media-amazon-card__icon');
+        icon.setAttribute('viewBox', '0 0 24 24');
+        icon.setAttribute('aria-hidden', 'true');
+
+        for (const d of [
+          'M15 3h6v6',
+          'M10 14 21 3',
+          'M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6'
+        ]) {
+          const path = document.createElementNS(ns, 'path');
+          path.setAttribute('d', d);
+          icon.append(path);
+        }
+
+        card.append(icon);
         paragraph.replaceWith(card);
       }
     });
@@ -350,6 +362,70 @@ const htmlLang = getHtmlLang(config);
 
   .media-review-body a {
     color: #b7ff00;
+  }
+
+  /* Amazonカード：本文から約3段落分の余白 */
+  .media-review-body a.media-amazon-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin: 6rem 0 2rem;
+    padding: 22px 24px;
+    border: 1px solid #505750;
+    border-radius: 10px;
+    background: #0d0f0d;
+    color: #d8ddd7;
+    text-decoration: none;
+    transition:
+      background-color .22s ease,
+      border-color .22s ease,
+      box-shadow .22s ease,
+      transform .22s ease;
+  }
+
+  .media-review-body a.media-amazon-card:hover,
+  .media-review-body a.media-amazon-card:focus-visible {
+    background: #151b12;
+    border-color: #afd59b;
+    box-shadow: 0 0 0 1px rgba(175, 213, 155, .18);
+    transform: translateY(-2px);
+  }
+
+  .media-review-body a.media-amazon-card:focus-visible {
+    outline: 2px solid #afd59b;
+    outline-offset: 3px;
+  }
+
+  .media-amazon-card__icon {
+    flex: none;
+    width: 21px;
+    height: 21px;
+    margin-left: auto;
+    fill: none;
+    stroke: #afd59b;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform .22s ease;
+  }
+
+  .media-amazon-card:hover .media-amazon-card__icon,
+  .media-amazon-card:focus-visible .media-amazon-card__icon {
+    transform: translate(2px, -2px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .media-review-body a.media-amazon-card,
+    .media-amazon-card__icon {
+      transition: none;
+    }
+
+    .media-review-body a.media-amazon-card:hover,
+    .media-review-body a.media-amazon-card:focus-visible,
+    .media-amazon-card:hover .media-amazon-card__icon,
+    .media-amazon-card:focus-visible .media-amazon-card__icon {
+      transform: none;
+    }
   }
 
   .media-review-body img,
