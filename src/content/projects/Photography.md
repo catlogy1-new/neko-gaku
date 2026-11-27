@@ -34,8 +34,8 @@ galleryImages:
   - src: /images/IMG_1692.JPG
     title: 秘すれば花なり
     alt: Temporary portfolio sample
-  - src: /images/portfolio/remains-010.jpg
-    title: SAMPLE IMAGE / 010
+  - src: /Portfolio/image2.jpeg
+    title: Sanya
     alt: Temporary portfolio sample
   - src: /images/portfolio/remains-011.jpg
     title: SAMPLE IMAGE / 011
