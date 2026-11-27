@@ -74,16 +74,23 @@ const htmlLang = getHtmlLang(config);
   function convertMediaLinks() {
     document.querySelectorAll('.media-review-body p').forEach((paragraph) => {
       const links = paragraph.querySelectorAll('a[href]');
-      if (links.length !== 1) return;
+      const rawUrl = paragraph.textContent.trim();
+      const plainUrl = (
+        links.length === 0 &&
+        /^https:\/\/\S+$/i.test(rawUrl) &&
+        !paragraph.querySelector('img, iframe, video')
+      ) ? rawUrl : null;
 
-      const link = links[0];
-      if (Array.from(paragraph.childNodes).some((node) =>
+      if (links.length !== 1 && !plainUrl) return;
+
+      const link = links[0] ?? null;
+      if (link && Array.from(paragraph.childNodes).some((node) =>
         node !== link &&
         (node.nodeType !== Node.TEXT_NODE || node.textContent.trim())
       )) return;
 
       let url;
-      try { url = new URL(link.href); }
+      try { url = new URL(link ? link.href : plainUrl); }
       catch { return; }
       if (url.protocol !== 'https:') return;
 
@@ -125,7 +132,7 @@ const htmlLang = getHtmlLang(config);
         card.rel = 'noopener noreferrer sponsored';
         card.style.cssText = 'display:flex;align-items:center;gap:20px;padding:20px;margin:2rem 0;border:1px solid #555;border-radius:8px;color:inherit;text-decoration:none';
 
-        const cover = link.querySelector('img');
+        const cover = link ? link.querySelector('img') : null;
         if (cover) {
           const image = cover.cloneNode(true);
           image.style.cssText = 'width:92px;max-height:140px;object-fit:contain';
@@ -134,7 +141,9 @@ const htmlLang = getHtmlLang(config);
 
         const title = document.createElement('span');
         title.style.cssText = 'overflow-wrap:anywhere';
-        title.textContent = link.textContent.trim() || 'Amazonで書籍を見る';
+        title.textContent = link
+          ? (link.textContent.trim() || 'Amazonで書籍を見る')
+          : 'Amazonで商品を見る';
         card.append(title);
         paragraph.replaceWith(card);
       }
@@ -147,6 +156,40 @@ const htmlLang = getHtmlLang(config);
     convertMediaLinks();
   }
   document.addEventListener('astro:page-load', convertMediaLinks);
+
+  // TinaCMSがレビュー本文を書き換えた場合にも再変換する。
+  let observer = null;
+  let observedBody = null;
+
+  function watchMediaBody() {
+    const body = document.querySelector('.media-review-body');
+
+    if (!body || body === observedBody) return;
+
+    if (observer) observer.disconnect();
+
+    observedBody = body;
+
+    observer = new MutationObserver(() => {
+      convertMediaLinks();
+    });
+
+    observer.observe(body, {
+      childList: true,
+      subtree: true,
+      characterData: true
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', watchMediaBody, {
+      once: true
+    });
+  } else {
+    watchMediaBody();
+  }
+
+  document.addEventListener('astro:page-load', watchMediaBody);
 })();
 </script>
 
