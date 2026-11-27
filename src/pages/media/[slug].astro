@@ -188,12 +188,36 @@ const htmlLang = getHtmlLang(config);
           card.append(image);
         }
 
+        // URLを貼っただけなら、長いURLを表示しない。
+        const originalText = link?.textContent?.trim() || '';
+        const displayText = (
+          !originalText ||
+          /^https?:\/\/\S+$/i.test(originalText)
+        ) ? 'Amazonで商品を見る' : originalText;
+
+        const content = document.createElement('span');
+        content.style.cssText =
+          'display:flex;flex-direction:column;gap:4px;min-width:0';
+
+        const brand = document.createElement('small');
+        brand.textContent = 'AMAZON';
+        brand.style.cssText =
+          'color:#afd59b;font-size:.7rem;letter-spacing:.14em';
+
         const title = document.createElement('span');
-        title.style.cssText = 'overflow-wrap:anywhere';
-        title.textContent = link
-          ? (link.textContent.trim() || 'Amazonで書籍を見る')
-          : 'Amazonで商品を見る';
-        card.append(title);
+        title.textContent = displayText;
+        title.style.cssText =
+          'font-size:1rem;font-weight:600;overflow-wrap:anywhere';
+
+        content.append(brand, title);
+        card.append(content);
+
+        const arrow = document.createElement('span');
+        arrow.textContent = '↗';
+        arrow.setAttribute('aria-hidden', 'true');
+        arrow.style.cssText =
+          'margin-left:auto;color:#afd59b;font-size:1.2rem';
+        card.append(arrow);
         paragraph.replaceWith(card);
       }
     });
