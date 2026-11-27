@@ -380,6 +380,11 @@ export default defineConfig({
         label: "Media",
         path: "src/content/media",
         format: "mdx",
+        defaultItem: () => ({
+          title: "タイトル未設定",
+          creator: "未設定",
+          type: "album",
+        }),
         ui: {
           router: async ({ document }) => {
             const relativePath = document._sys.relativePath;
