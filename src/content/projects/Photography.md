@@ -43,8 +43,8 @@ galleryImages:
   - src: /Portfolio/image0.jpeg
     title: Untitled
     alt: Temporary portfolio sample
-  - src: /images/portfolio/remains-013.jpg
-    title: SAMPLE IMAGE / 013
+  - src: /Portfolio/image3.jpeg
+    title: Untitled
     alt: Temporary portfolio sample
   - src: /images/portfolio/remains-014.jpg
     title: SAMPLE IMAGE / 014
