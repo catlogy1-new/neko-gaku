@@ -52,7 +52,13 @@ for (const post of blogPosts) {
 for (const project of projectPosts) {
   const key = toDateKey(project.data.date);
   projectsByDate.set(key, (projectsByDate.get(key) ?? 0) + 1);
-  if (!projectHrefByDate.has(key)) projectHrefByDate.set(key, `/projects/${project.id}/`);
+  if (!projectHrefByDate.has(key)) {
+    const href =
+      project.id.toLowerCase() === 'photography'
+        ? '/projects/'
+        : `/projects/${project.id}/`;
+    projectHrefByDate.set(key, href);
+  }
 }
 
 
