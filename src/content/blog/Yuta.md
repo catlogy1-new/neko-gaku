@@ -2,7 +2,7 @@
 title: Yuta
 headerKicker: the loss of a child
 description: Separation from My Child
-date: '2026-11-29'
+date: '2026-11-30'
 draft: false
 tags:
   - Mental Health
