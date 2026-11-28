@@ -151,7 +151,7 @@ const tinaEditHref = blogArticleId
         {
           heroImagePosition !== "below-title" && showHeroImage && heroImage && (
             <figure class="article-hero-image editorial-hero">
-              <SmartImage width={1200} height={800} src={heroImage} alt="" />
+              <SmartImage width={1200} src={heroImage} alt="" />
             </figure>
           )
         }
@@ -163,7 +163,7 @@ const tinaEditHref = blogArticleId
 
           {heroImagePosition === "below-title" && showHeroImage && heroImage && (
             <figure class="article-hero-image editorial-hero editorial-hero-below-title">
-              <SmartImage width={1200} height={800} src={heroImage} alt="" />
+              <SmartImage width={1200} src={heroImage} alt="" />
             </figure>
           )}
 
@@ -2875,4 +2875,26 @@ const tinaEditHref = blogArticleId
       margin: 20px auto 20px !important;
     }
   }
+</style>
+
+<style is:global>
+/* BLOG HERO: PRESERVE ORIGINAL IMAGE ASPECT RATIO */
+body.blog-detail-page
+.article-header:not(.article-header-archive)
+figure.article-hero-image.editorial-hero {
+  height: auto !important;
+  aspect-ratio: auto !important;
+  overflow: visible !important;
+}
+
+body.blog-detail-page
+.article-header:not(.article-header-archive)
+figure.article-hero-image.editorial-hero > img {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  max-height: none !important;
+  aspect-ratio: auto !important;
+  object-fit: contain !important;
+}
 </style>
