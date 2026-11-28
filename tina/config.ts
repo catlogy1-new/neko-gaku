@@ -334,7 +334,6 @@ export default defineConfig({
             type: "string",
             name: "mood",
             label: "Mood",
-            ui: { component: "hidden" },
           },
           {
             type: "string",
