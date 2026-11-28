@@ -555,6 +555,10 @@ export default defineConfig({
               delete: true,
               createNestedFolder: false,
             },
+            beforeSubmit: async ({ values }) => ({
+              ...values,
+              updatedDate: new Date().toISOString(),
+            }),
             router: async ({ document }) => {
               const relativePath = document._sys.relativePath;
 
@@ -620,6 +624,12 @@ export default defineConfig({
               name: 'date',
               label: 'Date',
               required: true,
+            },
+            {
+              type: 'datetime',
+              name: 'updatedDate',
+              label: 'Updated Date',
+              ui: { component: 'hidden' },
             },
 
             {

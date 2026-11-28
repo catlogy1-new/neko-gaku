@@ -50,7 +50,7 @@ for (const post of blogPosts) {
 }
 
 for (const project of projectPosts) {
-  const key = toDateKey(project.data.date);
+  const key = toDateKey(project.data.updatedDate ?? project.data.date);
   projectsByDate.set(key, (projectsByDate.get(key) ?? 0) + 1);
   if (!projectHrefByDate.has(key)) {
     const href =

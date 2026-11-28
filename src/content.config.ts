@@ -510,6 +510,7 @@ const projects = defineCollection({
   loader: glob({ base: `${contentBase}/projects`, pattern: '**/*.{md,mdx}' }),
   schema: (context) =>
     articleSchema(context).extend({
+      updatedDate: z.coerce.date().optional(),
       photographyNote: z.object({
         index: z.string().optional(),
         year: z.string().optional(),
